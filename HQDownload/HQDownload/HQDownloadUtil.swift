@@ -43,7 +43,7 @@ public typealias HQDownloaderProgressClosure = ((_ data: Data?, _ receivedSize: 
 public typealias HQDownloaderCompletedClosure = ((_ error: Error?)->Void)
 
 
-internal class HQDownloadCallback: Equatable {
+public class HQDownloadCallback: Equatable {
     var progressClosure: HQDownloaderProgressClosure?
     var completedClosure: HQDownloaderCompletedClosure?
     
@@ -57,14 +57,14 @@ internal class HQDownloadCallback: Equatable {
         return UnsafeRawPointer(Unmanaged.passUnretained(obj).toOpaque())
     }
     
-    static func ==(lhs: HQDownloadCallback, rhs: HQDownloadCallback) -> Bool {
+    public static func ==(lhs: HQDownloadCallback, rhs: HQDownloadCallback) -> Bool {
         let lp = getPointer(lhs)
         let rp = getPointer(rhs)
         return lp == rp && rp == lp
     }
 }
 
-internal struct HQDownloadToken {
+public struct HQDownloadToken {
     var url: URL
     var operationToken: AnyObject?
     weak var operation: HQDownloadOperation?
@@ -72,6 +72,18 @@ internal struct HQDownloadToken {
     func cancel() {
         if let operation = operation {
             let _ = operation.cancel(operationToken)
+        }
+    }
+}
+
+
+public enum HQDownloadError: Error, CustomStringConvertible {
+    case taskInitFailure(String, Int)
+    
+    public var description: String {
+        switch self {
+        case .taskInitFailure(let file, let line):
+            return "Task initialize failure in file (\(file)) and lines \(line)!"
         }
     }
 }
