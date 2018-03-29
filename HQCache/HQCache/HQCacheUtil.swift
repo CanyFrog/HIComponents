@@ -6,6 +6,9 @@
 //  Copyright © 2018年 com.personal.HQ. All rights reserved.
 //
 
+
+
+
 /// Object lock
 func synchronized(_ lock: AnyObject, closure: () -> ()) {
     objc_sync_enter(lock)

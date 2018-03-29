@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Cache background queue protocol
 protocol HQCacheInBackProtocol: HQCacheProtocol {
     func exist(forKey key: String, inBackThreadCallback callback: @escaping (_ key: String, _ isExists: Bool) -> Void)
     
