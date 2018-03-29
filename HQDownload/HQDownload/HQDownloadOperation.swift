@@ -9,36 +9,37 @@
 import Foundation
 
 public final class HQDownloadOperation: Operation {
-    // MARK: Public property
-
-    /// The request used by the operation's task
-    public private(set) var request: URLRequest!
-   
-    public private(set) var dataTask: URLSessionTask?
+    // MARK: - network relevant
     
     /// The credential used for authentication challenges in `-URLSession:task:didReceiveChallenge:completionHandler:`.
     /// This will be overridden by any shared credentials that exist for the username or password of the request URL, if present.
     public var credential: URLCredential?
     
+    /// The request used by the operation's task
+    public private(set) var request: URLRequest!
+    
+    public private(set) var dataTask: URLSessionTask?
+    
     public private(set) var response: URLResponse?
-    
-    
-    public var currentSize: Int = 0
-    
-    /// The excepted size of data
-    public var expectedSize: Int = Int.max
     
     public private(set) var options: HQDownloadOptions!
     
-    open override var isConcurrent: Bool {
-        return true
-    }
+    public private(set) var sessionConfig: URLSessionConfiguration!
     
-    open override var isAsynchronous: Bool {
-        return true
-    }
+    public private(set) var currentSize: Int = 0
     
-    // MARK: Private property
+    /// The excepted size of data
+    public private(set) var expectedSize: Int = Int.max
+    
+    
+    // MARK: - opertion property
+    
+    open override var isConcurrent: Bool { return true }
+    
+    open override var isAsynchronous: Bool { return true }
+    
+    
+    // MARK: - private
     private var callbackLists = [HQDownloadCallback]()
     
     private var _executing = false {
@@ -58,35 +59,52 @@ public final class HQDownloadOperation: Operation {
         }
     }
     
-    /// This is weak because it is injected by whoever manages this session. If this gets nil-ed out, we won't be able to run; the task associated with this operation
-    private weak var unownedSession: URLSession?
+    /// This is weak because it is injected by whoever manages this session. If this gets nil-ed out, we won't be able to run the task associated with this operation
+    private weak var injectSession: URLSession?
     
     /// This is set if we're using not using an injected NSURLSession. We're responsible of invalidating this one
-    private var ownedSession: URLSession?
+    private lazy var taskSession: URLSession = {
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 15.0
+        return URLSession(configuration: config, delegate: self, delegateQueue: nil)
+    }()
     
+    private var session: URLSession { return injectSession ?? taskSession }
     private var callbacksLock = DispatchSemaphore(value: 1)
     
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
     
-
+    /// Serial queue invokes blocks serially in FIFO order
+    private lazy var handleQueue = DispatchQueue(label: "com.operation.download.personal.HQ")
     
-    public init(request: URLRequest, inSession session: URLSession, options: HQDownloadOptions) {
+    
+    public init(request: URLRequest, options: HQDownloadOptions, session: URLSession?) {
         super.init()
         self.request = request
         self.options = options
-        self.unownedSession = session
+        injectSession = session
     }
     
-    override open func cancel() {
-        objc_sync_enter(self)
-        cancelTiming()
-        objc_sync_exit(self)
-    }
     
-    open override func start() {
-        objc_sync_enter(self)
+}
 
-        // adjust whether or not cancelled
+// MARK: - Override function
+public extension HQDownloadOperation {
+    public override func cancel() {
+        if isFinished { return }
+        super.cancel()
+        if let task = dataTask {
+            task.cancel()
+            // add judge to avoid trigger KVO
+            if isExecuting { _executing = false }
+            if !isFinished { _finished = true }
+        }
+        reset()
+    }
+    
+    public override func start() {
+        objc_sync_enter(self)
+        
         if isCancelled {
             _finished = true
             reset()
@@ -96,9 +114,6 @@ public final class HQDownloadOperation: Operation {
         // background task
         addBackgroundTask()
         
-        // get or creat session
-        let session = getOrCreateSession()
-        
         // add task
         dataTask = session.dataTask(with: request!)
         _executing = true
@@ -107,17 +122,17 @@ public final class HQDownloadOperation: Operation {
         
         configTask()
         
-        // when task finished, close background task
-        endBackgroundTask()
+        // if task finished, remove background task
+        removeBackgroundTask()
     }
 }
 
-// MARK: - Public functions
-public extension HQDownloadOperation {
+// MARK: - Public function
+extension HQDownloadOperation {
     public func addHandlers(forProgress progress: HQDownloaderProgressClosure?, completed: HQDownloaderCompletedClosure?) -> AnyObject? {
         
         let callback = HQDownloadCallback(progress: progress, completed: completed)
-
+        
         // lock success
         if callbacksLock.wait(timeout: DispatchTime.distantFuture) == .success {
             callbackLists.append(callback)
@@ -126,7 +141,7 @@ public extension HQDownloadOperation {
         }
         return nil
     }
-
+    
     public func cancel(_ token: AnyObject?) -> Bool {
         guard let dict = token as? HQDownloadCallback else { return false }
         var shouldCancel = false
@@ -145,7 +160,52 @@ public extension HQDownloadOperation {
     }
 }
 
-// MARK: private functions
+
+// MARK: - Operation task step
+private extension HQDownloadOperation {
+    func addBackgroundTask() {
+        if !options.contains(.continueInBackground) { return }
+        backgroundTaskId = UIApplication.shared.beginBackgroundTask { [weak self] in
+            if let wSelf = self {
+                wSelf.cancel()
+                UIApplication.shared.endBackgroundTask(wSelf.backgroundTaskId!)
+                wSelf.backgroundTaskId = UIBackgroundTaskInvalid
+            }
+        }
+    }
+    
+    func removeBackgroundTask() {
+        // set end background task
+        if let backgroundTaskId = backgroundTaskId, backgroundTaskId != UIBackgroundTaskInvalid {
+            UIApplication.shared.endBackgroundTask(backgroundTaskId)
+            self.backgroundTaskId = UIBackgroundTaskInvalid
+        }
+    }
+    
+    func configTask() {
+        guard let task = dataTask else {
+            invokeCompletedClosure(error: HQDownloadError.taskInitFailure(#file, #line))
+            done()
+            return
+        }
+        
+        if task.responds(to: #selector(setter: URLSessionTask.priority)) {
+            if options.contains(.highPriority) {
+                task.priority = URLSessionTask.highPriority
+            }
+            else if options.contains(.lowPriority) {
+                task.priority = URLSessionTask.lowPriority
+            }
+        }
+        
+        task.resume()
+        
+        invokeProgressClosure(data: nil, receivedSize: 0, expectedSize: expectedSize, targetUrl: request.url!)
+    }
+}
+
+
+// MARK: - State & Helper function
 private extension HQDownloadOperation {
     func invokeCompletedClosure(error: Error?) {
         let _ = callbackLists.map { (callback) -> Void in
@@ -169,10 +229,7 @@ private extension HQDownloadOperation {
             callbacksLock.signal()
         }
         dataTask = nil
-        if ownedSession != nil {
-            ownedSession!.invalidateAndCancel()
-            ownedSession = nil
-        }
+        session.invalidateAndCancel()
     }
     
     func done() {
@@ -180,77 +237,15 @@ private extension HQDownloadOperation {
         _executing = false
         reset()
     }
-    
-    func cancelTiming() {
-        if isFinished { return }
-        super.cancel()
-        
-        if let task = dataTask {
-            task.cancel()
-            if isExecuting { _executing = false }
-            if !isFinished { _finished = true }
-        }
-        
-        reset()
-    }
-    
-    func addBackgroundTask() {
-        if !options.contains(.continueInBackground) { return }
-        backgroundTaskId = UIApplication.shared.beginBackgroundTask { [weak self] in
-            if let wSelf = self {
-                wSelf.cancel()
-                UIApplication.shared.endBackgroundTask(wSelf.backgroundTaskId!)
-                wSelf.backgroundTaskId = UIBackgroundTaskInvalid
-            }
-        }
-    }
-    
-    func endBackgroundTask() {
-        // set end background task
-        if let backgroundTaskId = backgroundTaskId, backgroundTaskId != UIBackgroundTaskInvalid {
-            UIApplication.shared.endBackgroundTask(backgroundTaskId)
-            self.backgroundTaskId = UIBackgroundTaskInvalid
-        }
-    }
-    
-    func getOrCreateSession() -> URLSession {
-        guard ownedSession == nil else { return ownedSession! }
-        
-        let sessionConfig = URLSessionConfiguration.default
-        sessionConfig.timeoutIntervalForRequest = 15
-        // We send nil as delegate queue so that the session creates a serial operation queue for performing all delegate method calls and completion handler calls.
-        ownedSession = URLSession(configuration: sessionConfig, delegate: self, delegateQueue: nil)
-        return ownedSession!
-    }
-    
-    func configTask() {
-        guard let task = dataTask else {
-            // TODO: params 2 is error infomation post completed callback
-            invokeCompletedClosure(error: nil)
-            done()
-            return
-        }
-        
-        if task.responds(to: #selector(setter: URLSessionTask.priority)) {
-            if options.contains(.highPriority) {
-                task.priority = URLSessionTask.highPriority
-            }
-            else if options.contains(.lowPriority) {
-                task.priority = URLSessionTask.lowPriority
-            }
-        }
-        
-        task.resume()
-        
-        invokeProgressClosure(data: nil, receivedSize: 0, expectedSize: expectedSize, targetUrl: request.url!)
-    }
 }
 
 
-// MARK: URLSessionDataDelegate
+// MARK: - HQDownloadOperationProtocol
 extension HQDownloadOperation: URLSessionDataDelegate {
+    
     /// datatask first receive response
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+        
         var disposition = URLSession.ResponseDisposition.allow
         expectedSize = max(Int(response.expectedContentLength), 0)
         self.response = response
@@ -275,45 +270,37 @@ extension HQDownloadOperation: URLSessionDataDelegate {
             invokeProgressClosure(data: nil, receivedSize: 0, expectedSize: expectedSize, targetUrl: request.url!)
         }
         else {
-            // if not valid, cancel task
+            // if not valid, cancel request. the session will call complete delegate function, so do not need invoke complete callback
             disposition = .cancel
         }
         
         completionHandler(disposition)
     }
     
-    /// request callback
+    
+    /// request receive data callback
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        // insert callback handle data
+        // FIXME: wait insert tool do something in handleQueue
+        
         currentSize += data.count
         invokeProgressClosure(data: data, receivedSize: currentSize, expectedSize: expectedSize, targetUrl: request.url!)
     }
+
     
-    /// task finish and will cache
-    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
-        
-        // remove response prevent use cache
-        completionHandler(options.contains(.useUrlCache) ? proposedResponse : nil)
-        
-    }
-}
-
-
-// MARK: - URLSessionTaskDelegate
-extension HQDownloadOperation: URLSessionTaskDelegate {
     /// task completed
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         objc_sync_enter(self)
         dataTask = nil
         objc_sync_exit(self)
         
-        /// error may be is nil
+        /// error is nil means task complete, otherwise is error interrupt request
         invokeCompletedClosure(error: error)
         done()
     }
     
+    
     /// task begin and authentication
-    public func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         var disposition = URLSession.AuthChallengeDisposition.performDefaultHandling
         var inlineCred: URLCredential? = nil
         if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust { // method is trust server
@@ -339,5 +326,12 @@ extension HQDownloadOperation: URLSessionTaskDelegate {
         }
         
         completionHandler(disposition, inlineCred)
+    }
+    
+    /// Handle session cache
+    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
+        
+        // remove response prevent use cache
+        completionHandler(options.contains(.useUrlCache) ? proposedResponse : nil)
     }
 }

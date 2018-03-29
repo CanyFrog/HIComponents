@@ -1,5 +1,5 @@
 //
-//  HQDownloader.swift
+//  HQDownloadScheduler.swift
 //  HQDownload
 //
 //  Created by qihuang on 2018/3/28.
@@ -8,17 +8,18 @@
 
 import Foundation
 
-class HQDownloader: NSObject {
-    enum ExecutionOrder {
+public class HQDownloadScheduler: NSObject {
+    
+    public static let scheduler: HQDownloadScheduler = HQDownloadScheduler(sessionConfig: URLSessionConfiguration.default)
+    
+    public enum ExecutionOrder {
         case FIFO // first in first out
         case LIFO // last in first out
     }
     
-    var executionOrder: ExecutionOrder = .FIFO
+    public var executionOrder: ExecutionOrder = .FIFO
     
-    static let downloader: HQDownloader = HQDownloader(sessionConfig: URLSessionConfiguration.default)
-    
-    var maxConcurrentDownloaders: Int {
+    public var maxConcurrentDownloaders: Int {
         set {
             downloadQueue.maxConcurrentOperationCount = maxConcurrentDownloaders
         }
@@ -27,49 +28,52 @@ class HQDownloader: NSObject {
         }
     }
     
-    var currentDownloaders: Int {
+    public var currentDownloaders: Int {
         return downloadQueue.operationCount
     }
     
-    var downloadTimeout: TimeInterval = 15
+    public var downloadTimeout: TimeInterval = 15
     
-    var sessionConfig: URLSessionConfiguration? {
+    public var sessionConfig: URLSessionConfiguration? {
         return ownSession?.configuration
     }
     
-    var headersFilter: ((_ url: URL, _ headers: [String: String]?)-> [String: String])?
+    public var headersFilter: ((_ url: URL, _ headers: [String: String]?)-> [String: String])?
     
-    /// authentication
-    var urlCredential: URLCredential?
-    var username: String?
-    var password: String?
+    // MARK: - authentication
+    public var urlCredential: URLCredential?
+    public var username: String?
+    public var password: String?
     
     init(sessionConfig: URLSessionConfiguration) {
         super.init()
-        downloadQueue.name = "com.download.personal.HQ"
+        downloadQueue.name = "com.scheduler.download.personal.HQ"
         downloadQueue.maxConcurrentOperationCount = 6
         changeSession(withConfig: sessionConfig)
     }
     
     deinit {
+        downloadQueue.cancelAllOperations()
         ownSession?.invalidateAndCancel()
         ownSession = nil
-        downloadQueue.cancelAllOperations()
     }
     
+    
     // MARK: - private property
-    var downloadQueue = OperationQueue()
-    var operationsDict = [URL: HQDownloadOperation]()
-    var operationsLock = DispatchSemaphore(value: 1)
-    var headersLock = DispatchSemaphore(value: 1)
-    var ownSession: URLSession!
-    var headers = [String: String]()
-    weak var lastedOperation: Operation?
+    
+    private var downloadQueue = OperationQueue()
+    private var operationsDict = [URL: HQDownloadOperation]()
+    private var operationsLock = DispatchSemaphore(value: 1)
+    private var headersLock = DispatchSemaphore(value: 1)
+    private var ownSession: URLSession!
+    private var headers = [String: String]()
+    private weak var lastedOperation: Operation?
     
 }
 
-extension HQDownloader {
-    
+
+// MARK: - Public functions
+public extension HQDownloadScheduler {
     public func download(url: URL, options: HQDownloadOptions, progress: @escaping HQDownloaderProgressClosure, completed: @escaping HQDownloaderCompletedClosure) -> HQDownloadToken {
         let _ = operationsLock.wait(timeout: .distantFuture)
         var operation = operationsDict[url]
@@ -95,8 +99,49 @@ extension HQDownloader {
         return downloadToken
     }
     
+    /// return callback token, if failure return nil
+    public func addCustomOperation(url: URL, progress: HQDownloaderProgressClosure?, completed: HQDownloaderCompletedClosure?, operation: HQDownloadOperation? = nil) -> HQDownloadToken? {
+        
+        let _ = operationsLock.wait()
+        
+        var op = operationsDict[url]
+        
+        if op == nil && operation == nil {
+            operationsLock.signal()
+            return nil
+        }
+        
+        if op == nil && operation != nil {
+            op!.completionBlock = { [weak self] in
+                let _ = self?.operationsLock.wait()
+                self?.operationsDict.removeValue(forKey: url)
+                self?.operationsLock.signal()
+            }
+            operationsDict[url] = operation
+            downloadQueue.addOperation(operation!)
+            op = operation
+        }
+        operationsLock.signal()
+        
+        let t = op!.addHandlers(forProgress: progress, completed: completed)
+        return HQDownloadToken(url: url, operationToken: t, operation: op)
+    }
+    
+    /// return callback token
+    public func addCustomOperation(url: URL, operation: HQDownloadOperation) {
+        let _ = operationsLock.wait()
+        operation.completionBlock = { [weak self] in
+            let _ = self?.operationsLock.wait()
+            self?.operationsDict.removeValue(forKey: url)
+            self?.operationsLock.signal()
+        }
+        operationsDict[url] = operation
+        downloadQueue.addOperation(operation)
+        operationsLock.signal()
+    }
+    
     /**
-     * Forces SDWebImageDownloader to create and use a new NSURLSession that is
+     * Forces Downloader to create and use a new NSURLSession that is
      * initialized with the given configuration.
      * @note All existing download operations in the queue will be cancelled.
      * @note `timeoutIntervalForRequest` is going to be overwritten.
@@ -110,8 +155,8 @@ extension HQDownloader {
             session.invalidateAndCancel()
         }
         
+        config.timeoutIntervalForRequest = downloadTimeout
         ownSession = URLSession(configuration: config, delegate: self, delegateQueue: nil)
-        ownSession?.configuration.timeoutIntervalForRequest = downloadTimeout
     }
     
     /**
@@ -121,7 +166,7 @@ extension HQDownloader {
      * @note Calling this method on the shared downloader has no effect.
      */
     public func invalidateAndCancelSession(cancelPendingOperations: Bool = true) {
-//        if self == HQDownloader.downloader { return }
+        if self == HQDownloadScheduler.scheduler { return }
         if cancelPendingOperations {
             ownSession?.invalidateAndCancel()
         }
@@ -170,13 +215,11 @@ extension HQDownloader {
             operationsLock.signal()
         }
     }
-    
-//    func appointOperation(operCls: AnyClass) {
-//    }
 }
 
 
-private extension HQDownloader {
+// MARK: - Private functions
+private extension HQDownloadScheduler {
     func createOperation(url: URL, options: HQDownloadOptions) -> HQDownloadOperation {
         let timeout = downloadTimeout == 0 ? 15 : downloadTimeout
         
@@ -193,7 +236,7 @@ private extension HQDownloader {
             request.allHTTPHeaderFields = headers
         }
         
-        let operation = HQDownloadOperation(request: request, inSession: ownSession, options: options)
+        let operation = HQDownloadOperation(request: request, options: options, session: ownSession)
         if let cred = urlCredential {
             operation.credential = cred
         }
@@ -216,68 +259,65 @@ private extension HQDownloader {
         return operation
     }
     
-    func getOperation(task: URLSessionTask) -> HQDownloadOperation {
+    
+    func getOperation(task: URLSessionTask) -> HQDownloadOperation? {
         return downloadQueue.operations.filter({ (operation) -> Bool in
             return (operation as! HQDownloadOperation).dataTask!.taskIdentifier == task.taskIdentifier
-        }).first! as! HQDownloadOperation
+        }).first as? HQDownloadOperation
     }
 }
 
-// MARK: - URLSessionDataDelegate & URLSessionTaskDelegate
-extension HQDownloader: URLSessionDataDelegate {
-    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
-        let dataOperation = getOperation(task: dataTask)
-        if dataOperation.responds(to: #selector(HQDownloadOperation.urlSession(_:dataTask:didReceive:completionHandler:))) {
-            dataOperation.urlSession(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
+
+// MARK: - URLSessionDataDelegate, own session delegate, needs to pass to operation
+extension HQDownloadScheduler: URLSessionDataDelegate {
+    /// datatask first receive response
+    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+        
+        if let operation = getOperation(task: dataTask) {
+            operation.urlSession(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
         }
         else {
             completionHandler(URLSession.ResponseDisposition.allow)
         }
     }
     
-    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        let dataOperation = getOperation(task: dataTask)
-        if dataOperation.responds(to: #selector(HQDownloadOperation.urlSession(_:dataTask:didReceive:))) {
-            dataOperation.urlSession(session, dataTask: dataTask, didReceive: data)
+    
+    /// request receive data callback
+    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+
+        if let operation = getOperation(task: dataTask) {
+            operation.urlSession(session, dataTask: dataTask, didReceive: data)
         }
     }
     
-    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
-        let dataOperation = getOperation(task: dataTask)
-        if dataOperation.responds(to: #selector(HQDownloadOperation.urlSession(_:dataTask:willCacheResponse:completionHandler:))) {
-            dataOperation.urlSession(session, dataTask: dataTask, willCacheResponse: proposedResponse, completionHandler: completionHandler)
+    
+    /// task completed
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        
+        if let operation = getOperation(task: task) {
+            operation.urlSession(session, task: task, didCompleteWithError: error)
+        }
+
+    }
+    
+    /// task begin and authentication
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        if let operation = getOperation(task: task) {
+            operation.urlSession(session, task: task, didReceive: challenge, completionHandler: completionHandler)
+        }
+        else {
+            completionHandler(.performDefaultHandling, nil)
+        }
+    }
+    
+    /// Handle session cache
+    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
+        
+        if let operation = getOperation(task: dataTask) {
+            operation.urlSession(session, dataTask: dataTask, willCacheResponse: proposedResponse, completionHandler: completionHandler)
         }
         else {
             completionHandler(proposedResponse)
         }
     }
-    
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        let dataOperation = getOperation(task: task)
-        if dataOperation.responds(to: #selector(HQDownloadOperation.urlSession(_:task:didCompleteWithError:))) {
-            dataOperation.urlSession(session, task: task, didCompleteWithError: error)
-        }
-    }
-    
-    func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
-        let dataOperation = getOperation(task: task)
-        if dataOperation.responds(to: #selector(urlSession(_:task:willPerformHTTPRedirection:newRequest:completionHandler:))) {
-//            dataOperation.urlSession(session, task: task, willPerformHTTPRedirection: response, newRequest: request, completionHandler: completionHandler)
-        }
-        else {
-            completionHandler(request)
-        }
-    }
-    
-    func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-        let dataOperation = getOperation(task: task)
-        if dataOperation.responds(to: #selector(HQDownloadOperation.urlSession(_:didReceive:completionHandler:))) {
-            dataOperation.urlSession(session, didReceive: challenge, completionHandler: completionHandler)
-        }
-        else {
-            completionHandler(URLSession.AuthChallengeDisposition.performDefaultHandling, nil)
-        }
-    }
 }
-
-
