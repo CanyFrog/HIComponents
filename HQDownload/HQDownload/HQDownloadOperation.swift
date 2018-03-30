@@ -8,7 +8,9 @@
 
 import Foundation
 
+
 public final class HQDownloadOperation: Operation {
+    
     // MARK: - network relevant
     
     /// The credential used for authentication challenges in `-URLSession:task:didReceiveChallenge:completionHandler:`.
@@ -40,6 +42,7 @@ public final class HQDownloadOperation: Operation {
     
     
     // MARK: - private
+    /// callback dictionary list
     private var callbackLists = [HQDownloadCallback]()
     
     private var _executing = false {
@@ -75,7 +78,7 @@ public final class HQDownloadOperation: Operation {
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
     
     /// Serial queue invokes blocks serially in FIFO order
-    private lazy var handleQueue = DispatchQueue(label: "com.operation.download.personal.HQ")
+//    private lazy var handleQueue = DispatchQueue(label: "com.operation.download.personal.HQ")
     
     
     public init(request: URLRequest, options: HQDownloadOptions, session: URLSession?) {
@@ -129,33 +132,41 @@ public extension HQDownloadOperation {
 
 // MARK: - Public function
 extension HQDownloadOperation {
-    public func addHandlers(forProgress progress: HQDownloaderProgressClosure?, completed: HQDownloaderCompletedClosure?) -> AnyObject? {
-        
-        let callback = HQDownloadCallback(progress: progress, completed: completed)
-        
-        // lock success
-        if callbacksLock.wait(timeout: DispatchTime.distantFuture) == .success {
-            callbackLists.append(callback)
-            callbacksLock.signal()
-            return callback as AnyObject
-        }
-        return nil
+    public func addCallback(_ callback: HQDownloadCallback) {
+        let _ = callbacksLock.wait(timeout: .distantFuture)
+        callback.url = request.url
+        callback.operation = self
+        callbackLists.append(callback)
+        callbacksLock.signal()
     }
     
-    public func cancel(_ token: AnyObject?) -> Bool {
-        guard let dict = token as? HQDownloadCallback else { return false }
+    public func addCallbacks(_ callbacks: [HQDownloadCallback]) {
+        let _ = callbacksLock.wait(timeout: .distantFuture)
+        callbackLists.append(contentsOf: callbacks.map { [weak self] (cb) -> HQDownloadCallback in
+            cb.url = self?.request.url
+            cb.operation = self
+            return cb
+        })
+        callbacksLock.signal()
+    }
+    
+    @discardableResult
+    public func addCallback(progress: HQDownloaderProgressClosure?, completed: HQDownloaderCompletedClosure?) -> HQDownloadCallback? {
+        guard progress != nil || completed != nil else { return nil }
+        let callback = HQDownloadCallback(url: request.url, operation: self, progress: progress, completed: completed)
+        addCallback(callback)
+        return callback
+    }
+    
+    @discardableResult
+    public func cancel(_ token: HQDownloadCallback) -> Bool {
         var shouldCancel = false
         if callbacksLock.wait(timeout: .distantFuture) == .success {
-            if let index = callbackLists.index(where: { $0 == dict }) {
-                callbackLists.remove(at: index)
-            }
+            callbackLists = callbackLists.filter{ $0 != token }
             shouldCancel = callbackLists.isEmpty
             callbacksLock.signal()
         }
-        
-        if shouldCancel {
-            cancel()
-        }
+        if shouldCancel { cancel() }
         return shouldCancel
     }
 }
@@ -183,11 +194,7 @@ private extension HQDownloadOperation {
     }
     
     func configTask() {
-        guard let task = dataTask else {
-            invokeCompletedClosure(error: HQDownloadError.taskInitFailure(#file, #line))
-            done()
-            return
-        }
+        guard let task = dataTask else { fatalError("URLSessionTask not initialize success") }
         
         if task.responds(to: #selector(setter: URLSessionTask.priority)) {
             if options.contains(.highPriority) {
