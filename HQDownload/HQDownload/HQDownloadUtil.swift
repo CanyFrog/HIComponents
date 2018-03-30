@@ -28,62 +28,7 @@ public struct HQDownloadOptions: OptionSet {
     
     public static let highPriority         = HQDownloadOptions(rawValue: 1 << 5)
     
-    /// Save while downloading
-    public static let streamDownload       = HQDownloadOptions(rawValue: 1 << 6)
-    
-    /// Save cache, can offline continue
-    public static let offLineContinue      = HQDownloadOptions(rawValue: 1 << 7)
-    
     public init(rawValue: HQDownloadOptions.RawValue) {
         self.rawValue = rawValue
-    }
-}
-
-public typealias HQDownloaderProgressClosure = ((_ data: Data?, _ receivedSize: Int, _ expectedSize: Int, _ targetUrl: URL)->Void)
-public typealias HQDownloaderCompletedClosure = ((_ error: Error?)->Void)
-
-
-public class HQDownloadCallback: Equatable {
-    var progressClosure: HQDownloaderProgressClosure?
-    var completedClosure: HQDownloaderCompletedClosure?
-    
-    init(progress: HQDownloaderProgressClosure?, completed: HQDownloaderCompletedClosure?) {
-        progressClosure = progress
-        completedClosure = completed
-    }
-    
-    private static func getPointer(_ obj: HQDownloadCallback?) -> UnsafeRawPointer? {
-        guard let obj = obj else { return nil }
-        return UnsafeRawPointer(Unmanaged.passUnretained(obj).toOpaque())
-    }
-    
-    public static func ==(lhs: HQDownloadCallback, rhs: HQDownloadCallback) -> Bool {
-        let lp = getPointer(lhs)
-        let rp = getPointer(rhs)
-        return lp == rp && rp == lp
-    }
-}
-
-public struct HQDownloadToken {
-    var url: URL
-    var operationToken: AnyObject?
-    weak var operation: HQDownloadOperation?
-    
-    func cancel() {
-        if let operation = operation {
-            let _ = operation.cancel(operationToken)
-        }
-    }
-}
-
-
-public enum HQDownloadError: Error, CustomStringConvertible {
-    case taskInitFailure(String, Int)
-    
-    public var description: String {
-        switch self {
-        case .taskInitFailure(let file, let line):
-            return "Task initialize failure in file (\(file)) and lines \(line)!"
-        }
     }
 }

@@ -19,6 +19,7 @@
 		8A650B4F206BD61800C95462 /* HQDownloadScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4E206BD61800C95462 /* HQDownloadScheduler.swift */; };
 		8A650B51206BD64C00C95462 /* HQDownloadUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B50206BD64C00C95462 /* HQDownloadUtil.swift */; };
 		8A650B53206D15B400C95462 /* HQDownloadProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B52206D15B400C95462 /* HQDownloadProtocol.swift */; };
+		8A650B55206DB41800C95462 /* HQDownloadCallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B54206DB41800C95462 /* HQDownloadCallback.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		8A650B4E206BD61800C95462 /* HQDownloadScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadScheduler.swift; sourceTree = "<group>"; };
 		8A650B50206BD64C00C95462 /* HQDownloadUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadUtil.swift; sourceTree = "<group>"; };
 		8A650B52206D15B400C95462 /* HQDownloadProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadProtocol.swift; sourceTree = "<group>"; };
+		8A650B54206DB41800C95462 /* HQDownloadCallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadCallback.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				8A650B4E206BD61800C95462 /* HQDownloadScheduler.swift */,
 				8A650B4A206A79D000C95462 /* HQDownloadOperation.swift */,
 				8A650B52206D15B400C95462 /* HQDownloadProtocol.swift */,
+				8A650B54206DB41800C95462 /* HQDownloadCallback.swift */,
 			);
 			path = HQDownload;
 			sourceTree = "<group>";
@@ -277,6 +280,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8A650B51206BD64C00C95462 /* HQDownloadUtil.swift in Sources */,
+				8A650B55206DB41800C95462 /* HQDownloadCallback.swift in Sources */,
 				8A650B4B206A79D000C95462 /* HQDownloadOperation.swift in Sources */,
 				8A650B53206D15B400C95462 /* HQDownloadProtocol.swift in Sources */,
 				8A650B4F206BD61800C95462 /* HQDownloadScheduler.swift in Sources */,

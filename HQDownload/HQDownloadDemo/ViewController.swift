@@ -13,8 +13,15 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let op = TestOperation()
-        print("done")
+        let uri = URL(string: "https://www.apple.com/")
+        let request = URLRequest(url: uri!)
+        let operation = HQDownloadOperation(request: request, options: [], session: nil)
+        let callback = operation.addHandlers(forProgress: { (data, re, ex, url) in
+            print(data)
+        }) { (error) in
+            print("end......................")
+        }
+        operation.start()
     }
 
 }
