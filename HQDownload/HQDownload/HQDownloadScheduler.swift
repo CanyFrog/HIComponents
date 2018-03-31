@@ -80,7 +80,7 @@ public class HQDownloadScheduler: NSObject {
 public extension HQDownloadScheduler {
     
     public func download(url: URL, options: HQDownloadOptions, progress: HQDownloaderProgressClosure?, completed: HQDownloaderCompletedClosure?) -> HQDownloadCallback? {
-        let callback = HQDownloadCallback(url: url, operation: nil, progress: progress, completed: completed)
+        let callback = HQDownloadCallback(progress: progress, completed: completed)
         download(url: url, options: options, callbacks: [callback])
         return callback
     }
