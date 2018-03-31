@@ -38,12 +38,15 @@ public class HQDownloadScheduler: NSObject {
         return ownSession?.configuration
     }
     
+    /// Only change create current operation headers,
     public var headersFilter: ((_ url: URL, _ headers: [String: String]?)-> [String: String])?
     
     // MARK: - authentication
     public var urlCredential: URLCredential?
     public var username: String?
     public var password: String?
+    
+    public private(set) var operationsDict = [URL: HQDownloadOperation]()
     
     init(sessionConfig: URLSessionConfiguration) {
         super.init()
@@ -62,10 +65,10 @@ public class HQDownloadScheduler: NSObject {
     // MARK: - private property
     
     private var downloadQueue = OperationQueue()
-    private var operationsDict = [URL: HQDownloadOperation]()
     private var operationsLock = DispatchSemaphore(value: 1)
     private var headersLock = DispatchSemaphore(value: 1)
     private var ownSession: URLSession!
+    // global headers
     private var headers = [String: String]()
     private weak var lastedOperation: Operation?
     
@@ -73,70 +76,37 @@ public class HQDownloadScheduler: NSObject {
 
 
 // MARK: - Public functions
-public extension HQDownloadScheduler {
 
+public extension HQDownloadScheduler {
+    
     public func download(url: URL, options: HQDownloadOptions, progress: HQDownloaderProgressClosure?, completed: HQDownloaderCompletedClosure?) -> HQDownloadCallback? {
-        let _ = operationsLock.wait(timeout: .distantFuture)
-        var operation = operationsDict[url]
-        operationsLock.signal()
-        
-        guard operation == nil else { return operation?.addCallback(progress: progress, completed: completed) }
-        operation = createOperation(url: url, options: options)
-        addCustomOperation(url: url, operation: operation!)
-        return operation!.addCallback(progress: progress, completed: completed)
+        let callback = HQDownloadCallback(url: url, operation: nil, progress: progress, completed: completed)
+        download(url: url, options: options, callbacks: [callback])
+        return callback
     }
     
-    /// return callback token, if failure return nil
-    /// if url associate operation is exists, will not change
+    public func download(url: URL, options: HQDownloadOptions, callbacks: [HQDownloadCallback] = [HQDownloadCallback]()) {
+        let operation = createOperation(url: url, options: options)
+        // first add callback
+        operation.addCallbacks(callbacks)
+        addCustomOperation(url: url, operation: operation)
+    }
+    
+    /// if url associate operation is exists, will remove all task and change it
     public func addCustomOperation(url: URL, operation: HQDownloadOperation) {
-        let _ = operationsLock.wait()
-        defer { operationsLock.signal() }
-        guard operationsDict[url] == nil else { return }
         // add to queue asynchronously execute, so this will not cause deadlock
         operation.completionBlock = { [weak self] in
             let _ = self?.operationsLock.wait()
             self?.operationsDict.removeValue(forKey: url)
             self?.operationsLock.signal()
         }
+        // add or replace operation
+        let _ = operationsLock.wait()
         operationsDict[url] = operation
+        operationsLock.signal()
+        
+        // start operation
         downloadQueue.addOperation(operation)
-    }
-    
-    public func addCallbacks(url: URL, callbacks: [HQDownloadCallback]) {
-        let _ = operationsLock.wait()
-        defer { operationsLock.signal() }
-        
-        if let operation = operationsDict[url] {
-            operation.addCallbacks(callbacks)
-        }
-        else {
-            fatalError("The url \(url.description) associate operation is not found")
-        }
-    }
-    
-    public func addCallback(url: URL, callback: HQDownloadCallback) {
-        let _ = operationsLock.wait()
-        defer { operationsLock.signal() }
-        
-        if let operation = operationsDict[url] {
-            operation.addCallback(callback)
-        }
-        else {
-            fatalError("The url \(url.description) associate operation is not found")
-        }
-    }
-    
-    
-    public func addCallback(url: URL, progress: HQDownloaderProgressClosure?, completed: HQDownloaderCompletedClosure?) -> HQDownloadCallback? {
-        let _ = operationsLock.wait()
-        defer { operationsLock.signal() }
-        
-        if let operation = operationsDict[url] {
-            return operation.addCallback(progress: progress, completed: completed)
-        }
-        else {
-            fatalError("The url \(url.description) associate operation is not found")
-        }
     }
     
     /**
@@ -154,12 +124,11 @@ public extension HQDownloadScheduler {
         ownSession = URLSession(configuration: config, delegate: self, delegateQueue: nil)
     }
     
-    /**
-     * Invalidates the managed session, optionally canceling pending operations.
-     * @note If you use custom downloader instead of the shared downloader, you need call this method when you do not use it to avoid memory leak
-     * @param cancelPendingOperations Whether or not to cancel pending operations.
-     * @note Calling this method on the shared downloader has no effect.
-     */
+    
+    /// Invalidates the managed session, optionally canceling pending operations.
+    /// - Note If you use custom downloader instead of the shared downloader, you need call this method when you do not use it to avoid memory leak
+    /// - Note Calling this method on the shared downloader has no effect.
+    /// - Parameter cancelPendingOperations: cancelPendingOperations Whether or not to cancel pending operations.
     public func invalidateAndCancelSession(cancelPendingOperations: Bool = true) {
         if self == HQDownloadScheduler.scheduler { return }
         if cancelPendingOperations {
@@ -199,6 +168,9 @@ public extension HQDownloadScheduler {
     
     public func cancelAllDownloaders() {
         downloadQueue.cancelAllOperations()
+        let _ = operationsLock.wait(timeout: .distantFuture)
+        operationsDict.removeAll()
+        operationsLock.signal()
     }
     
     func cancel(_ token: HQDownloadCallback) {
