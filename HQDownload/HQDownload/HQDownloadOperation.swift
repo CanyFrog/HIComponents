@@ -17,6 +17,10 @@ public final class HQDownloadOperation: Operation {
     /// This will be overridden by any shared credentials that exist for the username or password of the request URL, if present.
     public var credential: URLCredential?
     
+    public var sessionConfig: URLSessionConfiguration {
+        return session.configuration
+    }
+    
     /// The request used by the operation's task
     public private(set) var request: URLRequest!
     
@@ -26,13 +30,13 @@ public final class HQDownloadOperation: Operation {
     
     public private(set) var options: HQDownloadOptions!
     
-    public private(set) var sessionConfig: URLSessionConfiguration!
-    
     public private(set) var currentSize: Int = 0
     
     /// The excepted size of data
     public private(set) var expectedSize: Int = Int.max
     
+    /// callback dictionary list
+    public private(set) var callbackLists = Set<HQDownloadCallback>()
     
     // MARK: - opertion property
     
@@ -42,8 +46,6 @@ public final class HQDownloadOperation: Operation {
     
     
     // MARK: - private
-    /// callback dictionary list
-    private var callbackLists = [HQDownloadCallback]()
     
     private var _executing = false {
         willSet {
@@ -131,27 +133,38 @@ public extension HQDownloadOperation {
 }
 
 // MARK: - Public function
+// FIXME: When task start, add callback will not received data that before added callback time; so must be add before start
+
 extension HQDownloadOperation {
     public func addCallback(_ callback: HQDownloadCallback) {
+        guard isReady || !isExecuting || !isFinished else {
+            fatalError("Cannot add a callback to an already started operation because the previous data could not be received")
+        }
         let _ = callbacksLock.wait(timeout: .distantFuture)
         callback.url = request.url
         callback.operation = self
-        callbackLists.append(callback)
+        callbackLists.insert(callback)
         callbacksLock.signal()
     }
     
     public func addCallbacks(_ callbacks: [HQDownloadCallback]) {
+        guard isReady || !isExecuting || !isFinished else {
+            fatalError("Cannot add a callback to an already started operation because the previous data could not be received")
+        }
         let _ = callbacksLock.wait(timeout: .distantFuture)
-        callbackLists.append(contentsOf: callbacks.map { [weak self] (cb) -> HQDownloadCallback in
+        let _ = callbacks.map { [weak self] (cb) -> Void in
             cb.url = self?.request.url
             cb.operation = self
-            return cb
-        })
+            self?.callbackLists.insert(cb)
+        }
         callbacksLock.signal()
     }
     
     @discardableResult
     public func addCallback(progress: HQDownloaderProgressClosure?, completed: HQDownloaderCompletedClosure?) -> HQDownloadCallback? {
+        guard isReady || !isExecuting || !isFinished else {
+            fatalError("Cannot add a callback to an already started operation because the previous data could not be received")
+        }
         guard progress != nil || completed != nil else { return nil }
         let callback = HQDownloadCallback(url: request.url, operation: self, progress: progress, completed: completed)
         addCallback(callback)
@@ -159,13 +172,13 @@ extension HQDownloadOperation {
     }
     
     @discardableResult
-    public func cancel(_ token: HQDownloadCallback) -> Bool {
+    public func cancel(_ callback: HQDownloadCallback) -> Bool {
         var shouldCancel = false
-        if callbacksLock.wait(timeout: .distantFuture) == .success {
-            callbackLists = callbackLists.filter{ $0 != token }
-            shouldCancel = callbackLists.isEmpty
-            callbacksLock.signal()
-        }
+        let _ = callbacksLock.wait(timeout: .distantFuture)
+        callbackLists = callbackLists.filter{ $0 != callback }
+        shouldCancel = callbackLists.isEmpty
+        callbacksLock.signal()
+        
         if shouldCancel { cancel() }
         return shouldCancel
     }
@@ -264,7 +277,7 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         
         var valid = statusCode < 400
         
-        //'304 Not Modified' is an exceptional one. It should be treated as cancelled if no cache data  如果是 304 并且没有缓存就是失败
+        //'304 Not Modified' is an exceptional one. It should be treated as cancelled if no cache data  
         //URLSession current behavior will return 200 status code when the server respond 304 and URLCache hit. But this is not a standard behavior and we just add a check
         var urlCache: URLCache! = session.configuration.urlCache
         if urlCache == nil { urlCache = URLCache.shared }
