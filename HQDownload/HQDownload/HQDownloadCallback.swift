@@ -12,30 +12,112 @@ import Foundation
 public typealias HQDownloaderProgressClosure = ((_ data: Data?, _ receivedSize: Int, _ expectedSize: Int, _ targetUrl: URL)->Void)
 public typealias HQDownloaderCompletedClosure = ((_ error: Error?)->Void)
 
+public class HQDownloadCallback: Hashable {
 
-
-public class HQDownloadCallback: NSObject {
-
+    private let createTimestamp: TimeInterval = Date().timeIntervalSince1970 * 1000 * 1000
     public var url: URL?
     public weak var operation: HQDownloadOperation?
     public var progressClosure: HQDownloaderProgressClosure?
     public var completedClosure: HQDownloaderCompletedClosure?
 
-    public convenience init(url: URL?, operation: HQDownloadOperation?, progress: HQDownloaderProgressClosure?, completed: HQDownloaderCompletedClosure?) {
+    public init() { }
+    
+    public convenience init(url: URL? = nil, operation: HQDownloadOperation? = nil, progress: HQDownloaderProgressClosure?, completed: HQDownloaderCompletedClosure?) {
         self.init()
         self.url = url
         self.operation = operation
-        progressClosure = progress
-        completedClosure = completed
+        self.progressClosure = progress
+        self.completedClosure = completed
     }
-
+    
     public func cancel() {
         operation?.cancel(self)
     }
-}
-
-//// TODO: Stream callback / Save callback / Decoder image callback
-public class HQDownloadSaveCallback: HQDownloadCallback {
     
+    public var hashValue: Int {
+        return Int(createTimestamp)
+    }
+    
+    public static func ==(lhs: HQDownloadCallback, rhs: HQDownloadCallback) -> Bool {
+        return lhs.hashValue == rhs.hashValue
+    }
 }
 
+public class HQDownloadOutputStreamCallback: HQDownloadCallback {
+    private var stream: OutputStream?
+    private var saveDir: String!
+    
+    private override init() {
+        super.init()
+        progressClosure = createProgressClosure()
+        completedClosure = createCompletedClosure()
+    }
+    
+    public convenience init(directory: String = NSTemporaryDirectory()) {
+        self.init()
+        saveDir = directory.last! == "/" ? directory : directory.appending("/")
+    }
+    
+    private func createProgressClosure() -> HQDownloaderProgressClosure {
+        return { [weak self] (data, recv, total, url) in
+            if let d = data {
+                self?.stream?.write([UInt8](d), maxLength: d.count)
+            }
+            else {
+                self?.openStream(url)
+            }
+        }
+    }
+    
+    private func createCompletedClosure() -> HQDownloaderCompletedClosure {
+        return { [weak self] (err) in
+            self?.closeStream()
+        }
+    }
+    
+    private func openStream(_ url: URL) {
+        if stream == nil { stream = OutputStream(toFileAtPath: "\(saveDir)\(url.lastPathComponent.utf8)", append: true) }
+        if stream?.streamStatus == .notOpen {
+            stream?.schedule(in: RunLoop.current, forMode: .defaultRunLoopMode)
+            stream?.open()
+        }
+    }
+    
+    private func closeStream() {
+        stream?.close()
+        stream?.remove(from: RunLoop.current, forMode: .defaultRunLoopMode)
+    }
+    
+    deinit {
+        closeStream()
+        self.cancel()
+    }
+}
+
+//extension HQDownloadSaveCallback: StreamDelegate, NSObjectProtocol {
+//    public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
+//        print(eventCode)
+//    }
+//}
+
+
+/*
+ App file structure:
+ 
+ /Sandbox
+     /Bundle Container
+     /iCloud Container
+     /Data container
+         /Documents  // stored user info data, itunes backup
+         /Library
+             /Preferences   // UserDefaults save app settings
+             /Caches        // cache directory
+         /Temp   // temp directory
+ */
+public struct HQDirectoryUtil {
+    static let root: String = NSHomeDirectory()
+    static let document: String? = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
+    static let library: String? = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).last
+    static let caches: String? = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first
+    static let temp: String = NSTemporaryDirectory()
+}

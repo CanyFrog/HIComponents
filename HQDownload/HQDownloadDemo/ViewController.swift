@@ -13,15 +13,8 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let uri = URL(string: "https://www.apple.com/")
-        let request = URLRequest(url: uri!)
-        let operation = HQDownloadOperation(request: request, options: [], session: nil)
-        let callback = operation.addHandlers(forProgress: { (data, re, ex, url) in
-            print(data)
-        }) { (error) in
-            print("end......................")
-        }
-        operation.start()
+        let save = HQDownloadOutputStreamCallback("/Users/huangcong/Desktop/sss/fadfasf", isDirectory: false)
+        HQDownloadScheduler.scheduler.download(url: URL(string: "http://static.smartisanos.cn/common/video/m1-white.mp4")!, options: [], callbacks: [save as HQDownloadCallback])
     }
 
 }
