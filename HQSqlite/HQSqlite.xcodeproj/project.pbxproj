@@ -15,6 +15,9 @@
 		609FF12C206CC1B6004092B1 /* HQSqliteConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609FF12B206CC1B6004092B1 /* HQSqliteConnection.swift */; };
 		609FF130206CC2A0004092B1 /* HQSqliteUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609FF12F206CC2A0004092B1 /* HQSqliteUtil.swift */; };
 		609FF132206CC312004092B1 /* HQSqliteError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609FF131206CC312004092B1 /* HQSqliteError.swift */; };
+		8A77B6ED20706DE200E5CA66 /* HQSqliteConnectionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A77B6EC20706DE200E5CA66 /* HQSqliteConnectionTest.swift */; };
+		8A77B6EF2070A79800E5CA66 /* HQSqliteStatementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A77B6EE2070A79800E5CA66 /* HQSqliteStatementTest.swift */; };
+		8A77B6F12070A7BB00E5CA66 /* HQSqliteErrorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A77B6F02070A7BB00E5CA66 /* HQSqliteErrorTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +42,9 @@
 		609FF12B206CC1B6004092B1 /* HQSqliteConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQSqliteConnection.swift; sourceTree = "<group>"; };
 		609FF12F206CC2A0004092B1 /* HQSqliteUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQSqliteUtil.swift; sourceTree = "<group>"; };
 		609FF131206CC312004092B1 /* HQSqliteError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQSqliteError.swift; sourceTree = "<group>"; };
+		8A77B6EC20706DE200E5CA66 /* HQSqliteConnectionTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQSqliteConnectionTest.swift; sourceTree = "<group>"; };
+		8A77B6EE2070A79800E5CA66 /* HQSqliteStatementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQSqliteStatementTest.swift; sourceTree = "<group>"; };
+		8A77B6F02070A7BB00E5CA66 /* HQSqliteErrorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQSqliteErrorTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +102,9 @@
 			isa = PBXGroup;
 			children = (
 				609FF11F206CC185004092B1 /* HQSqliteTests.swift */,
+				8A77B6F02070A7BB00E5CA66 /* HQSqliteErrorTest.swift */,
+				8A77B6EC20706DE200E5CA66 /* HQSqliteConnectionTest.swift */,
+				8A77B6EE2070A79800E5CA66 /* HQSqliteStatementTest.swift */,
 				609FF121206CC185004092B1 /* Info.plist */,
 			);
 			path = HQSqliteTests;
@@ -224,7 +233,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A77B6EF2070A79800E5CA66 /* HQSqliteStatementTest.swift in Sources */,
+				8A77B6ED20706DE200E5CA66 /* HQSqliteConnectionTest.swift in Sources */,
 				609FF120206CC185004092B1 /* HQSqliteTests.swift in Sources */,
+				8A77B6F12070A7BB00E5CA66 /* HQSqliteErrorTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

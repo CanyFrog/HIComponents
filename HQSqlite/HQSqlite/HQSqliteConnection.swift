@@ -7,7 +7,7 @@
 //
 // Study and mock from SQLite https://github.com/stephencelis/SQLite.swift
 
-// TODO: Transaction & Function & Hook
+// TODO: & Function
 // Now only simple support insert update delete and select
 
 import Foundation
@@ -105,7 +105,7 @@ public final class HQSqliteConnection {
     /// - Parameter callback: A callback invoked with the `Operation` (one of
     ///   `.Insert`, `.Update`, or `.Delete`), database name, table name, and
     ///   rowid.
-    public func updateHook(_ callback: ((_ operation: HQSqliteOperation, _ db: String, _ table: String, _ rowid: Int64) -> Void)?) {
+    public func updateHook(_ callback: ((_ operation: SqliteOperation, _ db: String, _ table: String, _ rowid: Int64) -> Void)?) {
         guard let callback = callback else {
             sqlite3_update_hook(handle, nil, nil)
             updateHook = nil
@@ -114,7 +114,7 @@ public final class HQSqliteConnection {
         
         let box: UpdateHook = {
             callback(
-                HQSqliteOperation(rawValue: $0),
+                SqliteOperation(rawValue: $0),
                 String(cString: $1),
                 String(cString: $2),
                 $3
@@ -187,8 +187,128 @@ public final class HQSqliteConnection {
     }
     fileprivate typealias RollbackHook = @convention(block) () -> Void
     fileprivate var rollbackHook: RollbackHook?
+    
+    
+    
+    // MARK: - Trace execute result
+    
+    /// Sets a handler to call when a statement is executed with the compiled
+    /// SQL.
+    ///
+    /// - Parameter callback: This block is invoked when a statement is executed
+    ///   with the compiled SQL as its argument.
+    ///
+    ///       db.trace { SQL in print(SQL) }
+    public func trace(_ callback: ((String) -> Void)?) {
+        guard let callback = callback else {
+            if #available(iOS 10.0, OSX 10.12, tvOS 10.0, watchOS 3.0, *) {
+                // If the X callback is NULL or if the M mask is zero, then tracing is disabled.
+                sqlite3_trace_v2(handle, 0 /* mask */, nil /* xCallback */, nil /* pCtx */)
+            } else {
+               sqlite3_trace(handle, nil /* xCallback */, nil /* pCtx */)
+            }
+            trace = nil
+            return
+        }
+        
+        let box: Trace = { (pointer: UnsafeRawPointer) in
+            callback(String(cString: pointer.assumingMemoryBound(to: UInt8.self)))
+        }
+        
+        if #available(iOS 10.0, OSX 10.12, tvOS 10.0, watchOS 3.0, *) {
+            sqlite3_trace_v2(handle,
+                             UInt32(SQLITE_TRACE_STMT) /* mask */,
+                {
+                    // A trace callback is invoked with four arguments: callback(T,C,P,X).
+                    // The T argument is one of the SQLITE_TRACE constants to indicate why the
+                    // callback was invoked. The C argument is a copy of the context pointer.
+                    // The P and X arguments are pointers whose meanings depend on T.
+                    (T: UInt32, C: UnsafeMutableRawPointer?, P: UnsafeMutableRawPointer?, X: UnsafeMutableRawPointer?) in
+                    if let P = P,
+                        let expandedSQL = sqlite3_expanded_sql(OpaquePointer(P)) {
+                        unsafeBitCast(C, to: Trace.self)(expandedSQL)
+                        sqlite3_free(expandedSQL)
+                    }
+                    return Int32(0) // currently ignored
+            },
+                unsafeBitCast(box, to: UnsafeMutableRawPointer.self) /* pCtx */
+            )
+        } else {
+            sqlite3_trace(handle,
+                          {
+                            (C: UnsafeMutableRawPointer?, SQL: UnsafePointer<Int8>?) in
+                            if let C = C, let SQL = SQL {
+                                unsafeBitCast(C, to: Trace.self)(SQL)
+                            }
+            },
+                          unsafeBitCast(box, to: UnsafeMutableRawPointer.self)
+            )
+        }
+        trace = box
+    }
+    
+    private typealias Trace = @convention(block) (UnsafeRawPointer) -> Void
+    private var trace: Trace?
 }
 
+
+// MARK: - Transaction
+/// Runs a transaction with the given mode.
+///
+/// - Note: Transactions cannot be nested. To nest transactions, see
+///   `savepoint()`, instead.
+///
+/// - Parameters:
+///
+///   - mode: The mode in which a transaction acquires a lock.
+///
+///     Default: `.deferred`
+///
+///   - block: A closure to run SQL statements within the transaction.
+///     The transaction will be committed when the block returns. The block
+///     must throw to roll the transaction back.
+///
+/// - Throws: `Result.Error`, and rethrows.
+extension HQSqliteConnection {
+    public func transaction(_ mode: TransactionMode = .deferred, block: () throws -> Void) throws {
+        try transaction("BEGIN \(mode.rawValue) TRANSACTION", block, "COMMIT TRANSACTION", or: "ROLLBACK TRANSACTION")
+    }
+    
+    /// Runs a transaction with the given savepoint name (if omitted, it will
+    /// generate a UUID).
+    ///
+    /// - SeeAlso: `transaction()`.
+    ///
+    /// - Parameters:
+    ///
+    ///   - savepointName: A unique identifier for the savepoint (optional).
+    ///
+    ///   - block: A closure to run SQL statements within the transaction.
+    ///     The savepoint will be released (committed) when the block returns.
+    ///     The block must throw to roll the savepoint back.
+    ///
+    /// - Throws: `SQLite.Result.Error`, and rethrows.
+    public func savepoint(_ name: String = UUID().uuidString, block: () throws -> Void) throws {
+        // replace \' character to \'' and surround by ''
+        let name = "'\(name.reduce("") { (str, c) -> String in return str + (c == "'" ? "''" : "\(c)")})'"
+        let savepoint = "SAVEPOINT \(name)"
+        
+        try transaction(savepoint, block, "RELEASE \(savepoint)", or: "ROLLBACK TO \(savepoint)")
+    }
+    
+    private func transaction(_ begin: String, _ block: () throws -> Void, _ commit: String, or rollback: String) throws {
+        return try sync {
+            try self.run(begin)
+            do {
+                try block()
+                try self.run(commit)
+            } catch {
+                try self.run(rollback)
+                throw error
+            }
+        }
+    }
+}
 
 // MARK: - Prepare
 /// Prepares a single SQL statement (with optional parameter bindings).
@@ -252,10 +372,7 @@ public extension HQSqliteConnection {
     public func execute(_ SQL: String) throws {
         let _ = try sync { try self.checkCode(sqlite3_exec(self.handle, SQL, nil, nil, nil)) }
     }
-    
-//    public func prepare(_ statement: String, _ bindings: )
-//    public func bind
-    
+
     /// Interrupts any long-running queries.
     public func interrupt() {
         sqlite3_interrupt(handle)
@@ -282,4 +399,14 @@ internal extension HQSqliteConnection {
             return try queue.sync(execute: block) // otherwise back to queue sync execute
         }
     }
+}
+
+
+
+// MARK: - Connection filename
+extension HQSqliteConnection : CustomStringConvertible {
+    public var description: String {
+        return String(cString: sqlite3_db_filename(handle, nil))
+    }
+    
 }

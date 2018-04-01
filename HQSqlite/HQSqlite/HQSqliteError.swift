@@ -26,7 +26,7 @@ extension HQSqliteError: CustomStringConvertible {
         switch self {
         case let .error(msg, code, stmt):
             if let stmt = stmt {
-                return "\(msg) -- (\(stmt)) (code: \(code))"
+                return "\(msg) (\(stmt)) (code: \(code))"
             }
             else {
                 return "\(msg) (code: \(code))"
