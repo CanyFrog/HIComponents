@@ -5,6 +5,9 @@
 //  Created by Magee Huang on 3/30/18.
 //  Copyright © 2018 HQ.Personal.modules. All rights reserved.
 //
+// Study and mock from SQLite https://github.com/stephencelis/SQLite.swift
+
+
 import SQLite3
 
 /// Protocol to mapping swift types to sqlite types
@@ -58,7 +61,7 @@ extension HQSqliteCursor {
 
     public subscript(idx: Int) -> Bool {
         let v = sqlite3_column_int(handle, Int32(idx))
-        return v == 0 ? false : true
+        return v != 0
     }
     
     public subscript(idx: Int) -> Int {

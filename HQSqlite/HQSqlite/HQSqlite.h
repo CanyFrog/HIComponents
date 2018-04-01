@@ -5,6 +5,7 @@
 //  Created by Magee Huang on 3/29/18.
 //  Copyright © 2018 HQ.Personal.modules. All rights reserved.
 //
+// Study and mock from SQLite https://github.com/stephencelis/SQLite.swift
 
 #import <UIKit/UIKit.h>
 

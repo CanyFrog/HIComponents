@@ -28,7 +28,7 @@ public class HQSqliteStatement {
         String(cString: sqlite3_column_name(self.handle, $0))
     }
     
-    public lazy var cursor: HQSqliteCursor = HQSqliteCursor(self)
+    public lazy var cursor = HQSqliteCursor(self)
 }
 
 
@@ -53,7 +53,9 @@ extension HQSqliteStatement {
         guard values.count == Int(sqlite3_bind_parameter_count(handle)) else {
             fatalError("\(sqlite3_bind_parameter_count(handle)) values expected, \(values.count) passed")
         }
-        for (idx, value) in values.enumerated() { bind(value, atIndex: idx+1) } // idx start from 1
+        for (idx, value) in values.enumerated() {
+            bind(value, atIndex: idx+1)
+        } // idx start from 1
         return self
     }
     
@@ -105,7 +107,7 @@ extension HQSqliteStatement {
     public func run(_ bindings: HQSqliteMapping?...) throws -> HQSqliteStatement {
         guard bindings.isEmpty else { return try run(bindings) }
         
-        reset(true)
+        reset(false)
         repeat {} while try step() // repear until success
         return self
     }
