@@ -12,7 +12,7 @@ public final class HQMemoryCache: HQCacheProtocol {
     
     private var cacheMap = HQCacheLinkMap()
     
-    private let queue = DispatchQueue(label: "com.HQPerson.cache.memory", qos: .default, attributes: DispatchQueue.Attributes.concurrent)
+    private let queue = DispatchQueue(label: "com.memory.cache.personal.HQ", qos: .default, attributes: DispatchQueue.Attributes.concurrent)
     
     private let mutex = Mutex()
     

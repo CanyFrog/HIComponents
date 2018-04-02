@@ -7,7 +7,6 @@
 //
 
 import Foundation
-//import SQLite3
 
 public class HQDiskCache: HQCacheInBackProtocol {
     public var name: String = "DiskCache"
@@ -107,7 +106,7 @@ extension HQDiskCache {
     }
     
     public func insertOrUpdate(object obj: Any, forKey key: String, cost: UInt = 0) {
-        let data = Data()
+        
     }
     
     public func delete(objectForKey key: String) {
