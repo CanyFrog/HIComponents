@@ -129,7 +129,6 @@ extension HQSqliteStatement {
     }
 }
 
-
 // MARK: - Private helper functions
 extension HQSqliteStatement {
     private func reset(_ clearBindings: Bool = true) {
