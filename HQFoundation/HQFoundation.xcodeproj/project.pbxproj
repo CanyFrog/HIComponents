@@ -11,6 +11,7 @@
 		601BA7622071F77500C62A11 /* HQFoundationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA7612071F77500C62A11 /* HQFoundationTests.swift */; };
 		601BA7642071F77600C62A11 /* HQFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 601BA7562071F77500C62A11 /* HQFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		601BA76F2071F79A00C62A11 /* HQLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA76E2071F79A00C62A11 /* HQLock.swift */; };
+		601BA7732071FAB100C62A11 /* HQTimer+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA7722071FAB100C62A11 /* HQTimer+extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +32,8 @@
 		601BA7612071F77500C62A11 /* HQFoundationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQFoundationTests.swift; sourceTree = "<group>"; };
 		601BA7632071F77600C62A11 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		601BA76E2071F79A00C62A11 /* HQLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQLock.swift; sourceTree = "<group>"; };
+		601BA7722071FAB100C62A11 /* HQTimer+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HQTimer+extension.swift"; sourceTree = "<group>"; };
+		601BA7742071FCD100C62A11 /* Runloop.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Runloop.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +76,7 @@
 		601BA7552071F77500C62A11 /* HQFoundation */ = {
 			isa = PBXGroup;
 			children = (
+				601BA7702071FA8D00C62A11 /* Extension */,
 				601BA76D2071F78E00C62A11 /* Lock */,
 				601BA7562071F77500C62A11 /* HQFoundation.h */,
 				601BA7572071F77500C62A11 /* Info.plist */,
@@ -95,6 +99,23 @@
 				601BA76E2071F79A00C62A11 /* HQLock.swift */,
 			);
 			path = Lock;
+			sourceTree = "<group>";
+		};
+		601BA7702071FA8D00C62A11 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				601BA7712071FA9800C62A11 /* Timer */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		601BA7712071FA9800C62A11 /* Timer */ = {
+			isa = PBXGroup;
+			children = (
+				601BA7722071FAB100C62A11 /* HQTimer+extension.swift */,
+				601BA7742071FCD100C62A11 /* Runloop.playground */,
+			);
+			path = Timer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -208,6 +229,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				601BA7732071FAB100C62A11 /* HQTimer+extension.swift in Sources */,
 				601BA76F2071F79A00C62A11 /* HQLock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
