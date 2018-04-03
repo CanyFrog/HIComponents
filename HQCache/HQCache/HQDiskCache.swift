@@ -7,6 +7,147 @@
 //
 
 import Foundation
+import HQSqlite
+
+/*
+ Structure:
+ /Path/
+        diskcache.sqlite
+        diskcache.sqlite-shm
+        diskcache.sqlite-wal
+        /data/
+                /data-files
+                /....
+        /trash/
+                /wait for delete files
+                /...
+ 
+ SQLite/
+ diskcache (
+ key TEXT NOT NULL PRIMARY KEY,  # cache key
+ filename TEXT,                  # if value save as file, this stored file path
+ size INTEGER DEFAULT 0,         # value size
+ save_time INTEGER,              # save timestamp
+ access_time INTEGER INDEX       # cache last access timestamp
+ data BLOB                       # value save as data
+ )
+ 
+ */
+
+class HQCacheSqliteUtil {
+    
+    private var connect: HQSqliteConnection!
+    private var stmtDict = [String: HQSqliteStatement]()
+    
+    init(_ path: String) {
+        connect = try! HQSqliteConnection(path)
+        initDBTable()
+        connect.trace { (sql) in
+            
+        }
+    }
+    
+    private func insert(key: String, filename: String? = nil, size: Int64 = 0, data: Data? = nil) -> Bool {
+        var stmt = stmtDict["insertSQL"]
+        if stmt == nil {
+            stmt = try! connect.prepare("insert or replace into diskcache (key, filename, size, save_time, access_time, data) values (?, ?, ?, ?, ?, ?);")
+            stmtDict["insertSQL"] = stmt
+        }
+        let current = CFAbsoluteTimeGetCurrent()
+        let _ = stmt?.bind(key, filename, size, current, current, data)
+        return (try? stmt!.step()) ?? false
+    }
+    
+    private func updateAccessTime(_ keys: [String]) -> Bool {
+        var stmt = stmtDict["updateAccessTimeSQL"]
+        if stmt == nil {
+            stmt = try! connect.prepare("update diskcache set access_time = ? where key in (?);")
+            stmtDict["updateAccessTimeSQL"] = stmt
+        }
+        let _ = stmt?.bind(CFAbsoluteTimeGetCurrent(), keys.joined(separator: ","))
+        return (try? stmt!.step()) ?? false
+    }
+    
+    private func delete(_ keys: [String]) -> Bool {
+        var stmt = stmtDict["deleteItemSQL"]
+        if stmt == nil {
+            stmt = try! connect.prepare("delete from diskcache where key in (?);")
+            stmtDict["deleteItemSQL"] = stmt
+        }
+        let _ = stmt?.bind(keys.joined(separator: ","))
+        return (try? stmt!.step()) ?? false
+    }
+    
+    private func deleteSizeLargerThan(_ size: Int) -> Bool {
+        var stmt = stmtDict["deleteItemSizeLargerThanSQL"]
+        if stmt == nil {
+            stmt = try! connect.prepare("delete from diskcache where size > ?;")
+            stmtDict["deleteItemSizeLargerThanSQL"] = stmt
+        }
+        let _ = stmt?.bind(size)
+        return (try? stmt!.step()) ?? false
+    }
+    
+    private func deleteTimerEarlierThan(_ time: TimeInterval) -> Bool {
+        var stmt = stmtDict["deleteItemTimeEarlierThanSQL"]
+        if stmt == nil {
+            stmt = try! connect.prepare("delete from diskcache where access_time < ?;")
+            stmtDict["deleteItemTimeEarlierThanSQL"] = stmt
+        }
+        let _ = stmt?.bind(time)
+        return (try? stmt!.step()) ?? false
+    }
+    
+    private func query(_ key: String) -> [String: Any]? {
+        var stmt = stmtDict["queryItemSQL"]
+        if stmt == nil {
+            stmt = try! connect.prepare("select * from diskcache where key = ?;")
+            stmtDict["queryItemSQL"] = stmt
+        }
+        let _ = stmt?.bind(key)
+        if let succ = try? stmt!.step(), succ  == true {
+            var result = [String: Any]()
+            for i in 0 ..< stmt!.columnCount {
+                 result[stmt!.columnNames[i]] = stmt!.cursor[i]
+            }
+            return result
+        }
+        return nil
+    }
+    
+    private func query(_ keys: [String]) -> [[String: Any]]? {
+        var stmt = stmtDict["queryItemSQL"]
+        if stmt == nil {
+            stmt = try! connect.prepare("select * from diskcache where key = ?;")
+            stmtDict["queryItemSQL"] = stmt
+        }
+        let _ = stmt?.bind(key)
+        if let succ = try? stmt!.step(), succ  == true {
+            var result = [String: Any]()
+            for i in 0 ..< stmt!.columnCount {
+                result[stmt!.columnNames[i]] = stmt!.cursor[i]
+            }
+            return result
+        }
+        return nil
+    }
+    
+    private func initDBTable() {
+        let initTable = """
+            PRAGMA JOURNAL_MODE = WAL;
+            PRAGMA SYNCHRONOUS = NORMAL;
+            CREATE TABLE IF NOT EXISTS diskcache (
+                key TEXT NOT NULL PRIMARY KEY,
+                filename TEXT,
+                size INTEGER DEFAULT 0,
+                save_time INTEGER,
+                access_time INTEGER INDEX,
+                data BLOB
+            );
+        """
+        try! connect.execute(initTable)
+    }
+}
 
 public class HQDiskCache: HQCacheInBackProtocol {
     public var name: String = "DiskCache"
