@@ -8,13 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		6043654520688D74001605FC /* HQDiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6043654420688D74001605FC /* HQDiskCache.swift */; };
+		604A7D92207361C80060A869 /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604A7D91207361C80060A869 /* HQSqlite.framework */; };
 		8A650AD6206869CD00C95462 /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A650ACC206869CD00C95462 /* HQCache.framework */; };
 		8A650ADB206869CD00C95462 /* HQCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650ADA206869CD00C95462 /* HQCacheTests.swift */; };
 		8A650ADD206869CD00C95462 /* HQCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A650ACF206869CD00C95462 /* HQCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8A650AE720686A1F00C95462 /* HQCacheProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650AE620686A1F00C95462 /* HQCacheProtocol.swift */; };
 		8A650AE920686A4300C95462 /* HQMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650AE820686A4300C95462 /* HQMemoryCache.swift */; };
 		8A650AEB20686A7200C95462 /* HQCacheUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650AEA20686A7200C95462 /* HQCacheUtil.swift */; };
-		8A77B70620725D1B00E5CA66 /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A77B70520725D1B00E5CA66 /* HQSqlite.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +29,7 @@
 
 /* Begin PBXFileReference section */
 		6043654420688D74001605FC /* HQDiskCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDiskCache.swift; sourceTree = "<group>"; };
+		604A7D91207361C80060A869 /* HQSqlite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQSqlite.framework; path = Carthage/Build/iOS/HQSqlite.framework; sourceTree = "<group>"; };
 		8A650ACC206869CD00C95462 /* HQCache.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HQCache.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A650ACF206869CD00C95462 /* HQCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HQCache.h; sourceTree = "<group>"; };
 		8A650AD0206869CD00C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -46,7 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A77B70620725D1B00E5CA66 /* HQSqlite.framework in Frameworks */,
+				604A7D92207361C80060A869 /* HQSqlite.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +106,7 @@
 		8A77B70420725D1B00E5CA66 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				604A7D91207361C80060A869 /* HQSqlite.framework */,
 				8A77B70520725D1B00E5CA66 /* HQSqlite.framework */,
 			);
 			name = Frameworks;
@@ -132,6 +134,7 @@
 				8A650AC8206869CD00C95462 /* Frameworks */,
 				8A650AC9206869CD00C95462 /* Headers */,
 				8A650ACA206869CD00C95462 /* Resources */,
+				604A7D93207361CE0060A869 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -215,6 +218,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		604A7D93207361CE0060A869 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/HQSqlite.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8A650AC7206869CD00C95462 /* Sources */ = {
@@ -374,6 +394,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = HQCache/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -402,6 +423,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = HQCache/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
