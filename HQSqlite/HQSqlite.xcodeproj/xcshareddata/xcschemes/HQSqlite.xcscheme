@@ -29,26 +29,7 @@
       language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "609FF119206CC185004092B1"
-               BuildableName = "HQSqliteTests.xctest"
-               BlueprintName = "HQSqliteTests"
-               ReferencedContainer = "container:HQSqlite.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "609FF110206CC185004092B1"
-            BuildableName = "HQSqlite.framework"
-            BlueprintName = "HQSqlite"
-            ReferencedContainer = "container:HQSqlite.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
