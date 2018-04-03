@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		602D547C206CC67400CE9AE0 /* HQSqliteStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602D547B206CC67400CE9AE0 /* HQSqliteStatement.swift */; };
 		602D547E206DDED800CE9AE0 /* HQSqliteMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602D547D206DDED800CE9AE0 /* HQSqliteMapping.swift */; };
+		604A7D6620734EE50060A869 /* HQSqliteUtil.swift in Headers */ = {isa = PBXBuildFile; fileRef = 609FF12F206CC2A0004092B1 /* HQSqliteUtil.swift */; };
+		604A7D6720734EE80060A869 /* HQSqliteConnection.swift in Headers */ = {isa = PBXBuildFile; fileRef = 609FF12B206CC1B6004092B1 /* HQSqliteConnection.swift */; };
+		604A7D6820734EEB0060A869 /* HQSqliteError.swift in Headers */ = {isa = PBXBuildFile; fileRef = 609FF131206CC312004092B1 /* HQSqliteError.swift */; };
+		604A7D6920734EED0060A869 /* HQSqliteStatement.swift in Headers */ = {isa = PBXBuildFile; fileRef = 602D547B206CC67400CE9AE0 /* HQSqliteStatement.swift */; };
+		604A7D6A20734EF00060A869 /* HQSqliteMapping.swift in Headers */ = {isa = PBXBuildFile; fileRef = 602D547D206DDED800CE9AE0 /* HQSqliteMapping.swift */; };
 		609FF11B206CC185004092B1 /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 609FF111206CC185004092B1 /* HQSqlite.framework */; };
 		609FF120206CC185004092B1 /* HQSqliteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609FF11F206CC185004092B1 /* HQSqliteTests.swift */; };
 		609FF122206CC185004092B1 /* HQSqlite.h in Headers */ = {isa = PBXBuildFile; fileRef = 609FF114206CC185004092B1 /* HQSqlite.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -118,6 +123,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				609FF122206CC185004092B1 /* HQSqlite.h in Headers */,
+				604A7D6620734EE50060A869 /* HQSqliteUtil.swift in Headers */,
+				604A7D6A20734EF00060A869 /* HQSqliteMapping.swift in Headers */,
+				604A7D6920734EED0060A869 /* HQSqliteStatement.swift in Headers */,
+				604A7D6720734EE80060A869 /* HQSqliteConnection.swift in Headers */,
+				604A7D6820734EEB0060A869 /* HQSqliteError.swift in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
