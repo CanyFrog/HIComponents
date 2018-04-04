@@ -7,10 +7,23 @@
 //
 
 
+func dispatchAutoLock(_ lock: DispatchSemaphore, closure: () -> Void) {
+    let _ = lock.wait(timeout: .distantFuture)
+    defer { lock.signal() }
+    closure()
+}
+
+@discardableResult
+func dispatchAutoLock<T>(_ lock: DispatchSemaphore, closure: () -> T) -> T {
+    let _ = lock.wait(timeout: .distantFuture)
+    defer { lock.signal() }
+    return closure()
+}
+
 
 
 /// Object lock
-func synchronized(_ lock: AnyObject, closure: () -> ()) {
+func synchronized(_ lock: AnyObject, closure: () -> Void) {
     objc_sync_enter(lock)
     defer { objc_sync_exit(lock) }
     closure()
