@@ -10,20 +10,14 @@ import Foundation
 
 public final class HQMemoryCache: HQCacheProtocol {
     
-    private var cacheMap = HQCacheLinkMap()
-    
-    private let queue = DispatchQueue(label: "com.memory.cache.personal.HQ", qos: .default, attributes: DispatchQueue.Attributes.concurrent)
-    
-    private let mutex = Mutex()
-    
-    
+    // MARK: - Public property
     public var name: String = "MemoryCache"
     
-    public var countLimit: UInt = UInt.max
+    public var countLimit: Int = Int.max
     
-    public var costLimit: UInt = UInt.max
+    public var costLimit: Int = Int.max
     
-    public var ageLimit: TimeInterval = TimeInterval(UINTMAX_MAX)
+    public var ageLimit: TimeInterval = TimeInterval(INTMAX_MAX)
     
     public var autoTrimInterval: TimeInterval = 5.0
     
@@ -63,6 +57,12 @@ public final class HQMemoryCache: HQCacheProtocol {
         }
     }
     
+    // MARK: - Private property
+    private var cacheMap = HQCacheLinkMap()
+    private let queue = DispatchQueue(label: "com.memory.cache.personal.HQ", qos: .default, attributes: DispatchQueue.Attributes.concurrent)
+    private let mutex = Mutex()
+    
+    // MARk: - Life cycle
     public init() {
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveMemoryWarning), name: NSNotification.Name.UIApplicationDidReceiveMemoryWarning, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(AppDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
@@ -78,6 +78,7 @@ public final class HQMemoryCache: HQCacheProtocol {
 }
 
 
+// MARK: - Query and Check
 extension HQMemoryCache {
     public func exist(forKey key: String) -> Bool {
         mutex.lock()
@@ -86,16 +87,35 @@ extension HQMemoryCache {
         return contains
     }
     
-    public func query(objectForKey key: String) -> Any? {
+    public func query<T>(objectForKey key: String) -> T? {
         mutex.lock()
         defer { mutex.unlock() }
         guard let node = cacheMap.dict[key] else { return nil }
         node.time = CACurrentMediaTime()
         cacheMap.toHead(node: node)
-        return node.value
+        return node.value as? T
     }
     
-    public func insertOrUpdate(object obj: Any, forKey key: String, cost: UInt = 0) {
+    public func getTotalCount() -> Int {
+        mutex.lock()
+        let count = cacheMap.totalCount
+        mutex.unlock()
+        return count
+    }
+    
+    public func getTotalCost() -> Int {
+        mutex.lock()
+        let cost = cacheMap.totalCost
+        mutex.unlock()
+        return cost
+    }
+    
+}
+
+
+// MARK: - Insert & update
+extension HQMemoryCache {
+    public func insertOrUpdate<T>(object obj: T, forKey key: String, cost: Int = 0) {
         mutex.lock()
         let now = CACurrentMediaTime()
         if let node = cacheMap.dict[key] {
@@ -123,7 +143,11 @@ extension HQMemoryCache {
             clearCacheCondition(cond: cacheMap.totalCost > costLimit)
         }
     }
-    
+}
+
+
+// MARK: - Delete
+extension HQMemoryCache {
     public func delete(objectForKey key: String) {
         mutex.lock()
         guard let node = cacheMap.dict[key] else {
@@ -148,7 +172,7 @@ extension HQMemoryCache {
         mutex.unlock()
     }
     
-    public func deleteCache(exceedToCost cost: UInt) {
+    public func deleteCache(exceedToCost cost: Int) {
         if cost <= 0 {
             deleteAllCache()
             return
@@ -158,7 +182,7 @@ extension HQMemoryCache {
         clearCacheCondition(cond: cacheMap.totalCost > cost)
     }
     
-    public func deleteCache(exceedToCount count: UInt) {
+    public func deleteCache(exceedToCount count: Int) {
         if count <= 0 {
             deleteAllCache()
             return
@@ -185,24 +209,11 @@ extension HQMemoryCache {
         
         clearCacheCondition(cond: cacheMap.tail != nil && (now - cacheMap.tail!.time) > age )
     }
-    
-    public func getTotalCount() -> UInt {
-        mutex.lock()
-        let count = cacheMap.totalCount
-        mutex.unlock()
-        return count
-    }
-    
-    public func getTotalCost() -> UInt {
-        mutex.lock()
-        let cost = cacheMap.totalCost
-        mutex.unlock()
-        return cost
-    }
-    
+
 }
 
 
+// MARK: - Private clear cache helper
 private extension HQMemoryCache {
     
     func clearCacheCondition(cond: @autoclosure () -> Bool) {
@@ -265,16 +276,13 @@ private extension HQMemoryCache {
 }
 
 
-
-
-/* Data Struct */
-
+// MARK: - Data Struct -- Link table
 fileprivate class HQCacheLinkNode {
     weak var prev: HQCacheLinkNode?
     weak var next: HQCacheLinkNode?
     var key: String!
     var value: Any!
-    var cost: UInt = 0
+    var cost: Int = 0
     var time: TimeInterval!
 }
 
@@ -286,8 +294,8 @@ extension HQCacheLinkNode: Equatable {
 
 fileprivate struct HQCacheLinkMap {
     var dict = Dictionary<String, HQCacheLinkNode>()
-    var totalCost: UInt = 0
-    var totalCount: UInt = 0
+    var totalCost: Int = 0
+    var totalCount: Int = 0
     var head: HQCacheLinkNode?
     var tail: HQCacheLinkNode?
     

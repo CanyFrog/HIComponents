@@ -135,7 +135,7 @@ class HQMemoryCacheTest: XCTestCase {
         group.enter()
         queue1.async {
             for i in 0 ... 10 {
-                memoryCache.insertOrUpdate(object: i, forKey: "\(i)", cost: UInt(i))
+                memoryCache.insertOrUpdate(object: i, forKey: "\(i)", cost: i)
             }
             group.leave()
         }
@@ -143,7 +143,7 @@ class HQMemoryCacheTest: XCTestCase {
         group.enter()
         queue2.async {
             for i in 0 ... 10 {
-                memoryCache.insertOrUpdate(object: i*10, forKey: "\(i)", cost: UInt(i*10))
+                memoryCache.insertOrUpdate(object: i*10, forKey: "\(i)", cost: i*10)
             }
             group.leave()
         }
@@ -151,7 +151,7 @@ class HQMemoryCacheTest: XCTestCase {
         group.enter()
         queue3.async {
             for i in 0 ... 10 {
-                memoryCache.insertOrUpdate(object: i*100, forKey: "\(i)", cost: UInt(i*100))
+                memoryCache.insertOrUpdate(object: i*100, forKey: "\(i)", cost: i*100)
             }
             group.leave()
         }

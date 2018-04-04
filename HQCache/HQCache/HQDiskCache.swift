@@ -24,31 +24,64 @@ import HQSqlite
  */
 
 public class HQDiskCache: HQCacheInBackProtocol {
-    var connect: HQSqliteConnection!
-    var stmtDict = [String: HQSqliteStatement]()
-    
-    public var name: String = "DiskCache"
 
-    private(set) var cachePath: String!
+    enum CacheLocation {
+        case sqlite, file, mixed
+    }
+    
+    // MARK: - Public
+    public var name: String = "DiskCache"
 
     public var errorEnable = false
 
-    public var countLimit: UInt = UInt.max
+    public var countLimit: Int = Int.max
 
-    public var costLimit: UInt = UInt.max
+    public var costLimit: Int = Int.max
 
-    public var ageLimit: TimeInterval = TimeInterval(UINTMAX_MAX)
+    public var ageLimit: TimeInterval = TimeInterval(INTMAX_MAX)
 
     public var autoTrimInterval: TimeInterval = 7 * 24 * 60 * 60
 
     /// The minimum free disk space (in bytes) which the cache should kept
-    public var freeDiskSpaceLimit: UInt = 0
+    public var freeDiskSpaceLimit: Int = 0
 
+    
+    // MARK: - Save to disk or sqlite limits
+    
     /// When object data size bigger than this value, stored as file; otherwise stored as data to sqlite will be faster
-    /// value is 0 mean all object save as file, Uint.max mean all save to sqlite
-    public var saveToDiskCritical: UInt = 20 * 1024
-
-
+    /// value is 0 mean all object save as file, Int.max mean all save to sqlite
+    public private(set) var saveToDiskCritical: Int = 20 * 1024 {
+        didSet {
+            if saveToDiskCritical == 0 {
+                location = .file
+            }
+            else if saveToDiskCritical == Int.max {
+                location = .sqlite
+            }
+            else {
+                location = .mixed
+            }
+        }
+    }
+    internal var location: CacheLocation = .mixed
+    
+    
+    
+    // MARK: - Cache path
+    public private(set) var cachePath: String! {
+        didSet {
+            dataPath = "\(cachePath)/data"
+            trashPath = "\(cachePath)/trash"
+        }
+    }
+    internal var dataPath: String!
+    internal var trashPath: String!
+    internal var backgroundTrashQueue = DispatchQueue(label: "com.trash.disk.cache.personal.HQ", qos: .utility, attributes: .concurrent)
+    internal var taskLock = DispatchSemaphore(value: 1)
+    internal var taskQueue = DispatchQueue(label: "com.disk.cache.personal.HQ", qos: .default, attributes: .concurrent)
+    
+    
+    // MARK: - Custom Closure
     /// Custom archive or unarchive object closure, if nil, use NSCoding
     public var customArchiveObjectClosure: ((Any)->Data)?
 
@@ -56,153 +89,213 @@ public class HQDiskCache: HQCacheInBackProtocol {
 
     public var customNamedFileClosure: ((_ key: String)->String)?
 
-    private var backgroundTrashQueue = DispatchQueue(label: "com.disk_trash.cache.personal.HQ", qos: .utility, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
-
+    
+    // MARK: - Sqlite
+    internal var connect: HQSqliteConnection!
+    internal var stmtDict = [String: HQSqliteStatement]()
+    
+    
     init?(_ path: String) {
         if path.isEmpty || path.count > PATH_MAX - 128 { fatalError("Error: Path is invalid") }
-        cachePath = path.last == "/" ? path : "\(path)/"
+        var path = path
+        cachePath = path.last == "/" ? String(path.removeLast()) : path
         do {
             try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
-            try FileManager.default.createDirectory(atPath: "\(path)data", withIntermediateDirectories: true, attributes: nil)
-            try FileManager.default.createDirectory(atPath: "\(path)trash", withIntermediateDirectories: true, attributes: nil)
-            connectDB(path)
-            emptyTrash(path: <#T##String#>, inBackQueue: <#T##DispatchQueue#>)
+            try FileManager.default.createDirectory(atPath: dataPath, withIntermediateDirectories: true, attributes: nil)
+            try FileManager.default.createDirectory(atPath: trashPath, withIntermediateDirectories: true, attributes: nil)
+            if !dbConnect() { return nil }
+            emptyTrashInBackground()
         } catch {
-            
+            return nil
         }
     }
 }
 
+
+
+// MARK: - Query & Check
 extension HQDiskCache {
-    public func exist(forKey key: String, inBackThreadCallback callback: @escaping (String, Bool) -> Void) {
-
-    }
-
-    public func query(objectForKey key: String, inBackThreadCallback callback: @escaping (String, Any?) -> Void) {
-
-    }
-
-    public func insertOrUpdate(object obj: Any, forKey key: String, inBackThreadCallback callback: @escaping () -> Void) {
-
-    }
-
-    public func delete(objectForKey key: String, inBackThreadCallback callback: @escaping (String) -> Void) {
-
-    }
-
-    public func deleteAllCache(inBackThread callback: @escaping () -> Void) {
-
-    }
-
-    public func deleteAllCache(withProgressClosure progress: @escaping (UInt, UInt, Bool) -> Void) {
-
-    }
-
-    public func deleteCache(exceedToCount count: UInt, inBackThread complete: @escaping () -> Void) {
-
-    }
-
-    public func deleteCache(exceedToCost cost: UInt, inBackThread complete: @escaping () -> Void) {
-
-    }
-
-    public func deleteCache(exceedToAge: TimeInterval, inBackThread complete: @escaping () -> Void) {
-
-    }
-
-    public func getTotalCount(inBackThread closure: @escaping (UInt) -> Void) {
-
-    }
-
-    public func getTotalCost(inBackThread closure: @escaping (UInt) -> Void) {
-
-    }
-
-    public func exist(forKey key: String) -> Bool {
-        return false
-    }
-
-    public func query(objectForKey key: String) -> Any? {
+    
+    func query<T>(objectForKey key: String) -> T? {
         return nil
     }
-
-    public func insertOrUpdate(object obj: Any, forKey key: String, cost: UInt = 0) {
+    func query<T>(objectForKey key: String, inBackThreadCallback callback: @escaping (String, T?) -> Void) {
 
     }
+    
+//    /// query cache data
+//    /// - Returns: object
+//    public func query<T: NSCoding>(objectForKey key: String) -> T? {
+//        guard !key.isEmpty else { return nil }
+//
+//        let _ = taskLock.wait(timeout: .distantFuture)
+//        _ = dbQuery(key)
+//        taskLock.signal()
+//
+//    //        if let data = dict["data"] {
+//    //            if
+//    //        }
+//        return nil
+//    }
+//
+//    public func query<T: NSCoding>(objectForKey key: String, inBackThreadCallback callback: @escaping (String, T?) -> Void) {
+//
+//    }
+//
+    
+    
+    /// query cache file
+    ///
+    /// - Returns: file path
+    func query(filePathForKey key: String) -> String? {
+        return nil
+    }
+    
+    func query(filePathForKey key: String, inBackThreadCallback callback: @escaping (String, String?) -> Void) {
+        
+    }
+    
+    
+    /// Check
+    public func exist(forKey key: String) -> Bool {
+        guard !key.isEmpty else { return false }
+        return dispatchAutoLock(taskLock, closure: { () -> Bool in
+            return self.dbQuery(key) != nil
+        })
+    }
+    
+    public func exist(forKey key: String, inBackThreadCallback callback: @escaping (String, Bool) -> Void) {
+        taskQueue.async { [weak self] in
+            callback(key, self?.exist(forKey: key) ?? false)
+        }
+    }
+    
+    
+    public func getTotalCount() -> Int {
+        return dispatchAutoLock(taskLock, closure: { () -> Int in
+            return self.dbQueryTotalItemCount()
+        })
+    }
+    
+    public func getTotalCount(inBackThread closure: @escaping (Int) -> Void) {
+        taskQueue.async { [weak self] in
+            closure(self?.getTotalCount() ?? 0)
+        }
+    }
+    
+    
+    public func getTotalCost() -> Int {
+        return dispatchAutoLock(taskLock) { () -> Int in
+            return self.dbQueryTotalItemSize()
+        }
+    }
+    
+    public func getTotalCost(inBackThread closure: @escaping (Int) -> Void) {
+        taskQueue.async { [weak self] in
+            closure(self?.getTotalCount() ?? 0)
+        }
+    }
+}
+
+// MARK: - Insert & Update
+extension HQDiskCache {
+    
+    public func insertOrUpdate(file path: String, forKey key: String) {
+        
+    }
+
+    public func insertOrUpdate(file path: String, forKey key: String, inBackThreadCallback callback: @escaping () -> Void) {
+        
+    }
+    
+    
+    public func insertOrUpdate<T>(object obj: T, forKey key: String, cost: Int = 0) {
+        
+    }
+    
+    public func insertOrUpdate<T>(object obj: T, forKey key: String, cost: Int = 0, inBackThreadCallback callback: @escaping () -> Void) {
+        
+    }
+}
+
+
+
+// MARK: - Delete
+extension HQDiskCache {
 
     public func delete(objectForKey key: String) {
-
+        guard !key.isEmpty else { return }
+        dispatchAutoLock(taskLock) {
+            self.dbDelete([key])
+        }
+    }
+    public func delete(objectForKey key: String, inBackThreadCallback callback: @escaping (String) -> Void) {
+        taskQueue.async { [weak self] in
+            self?.delete(objectForKey: key)
+            callback(key)
+        }
     }
 
+    
     public func deleteAllCache() {
+//        dispatchAutoLock(taskLock) {
+//            try? FileManager.default.removeItem(at: convertToUrl(cachePath))
+//        }
+    }
+    
+    public func deleteAllCache(inBackThread callback: @escaping () -> Void) {
+        taskQueue.async { [weak self] in
+            self?.deleteAllCache()
+            callback()
+        }
+    }
+
+    public func deleteAllCache(withProgressClosure progress: @escaping (Int, Int, Bool) -> Void) {
 
     }
 
-    public func deleteCache(exceedToCount count: UInt) {
-
+    
+    public func deleteCache(exceedToCount count: Int) {
+        if count <= 0 {
+            deleteAllCache()
+        }
+        else {
+            dispatchAutoLock(taskLock, closure: {
+                
+            })
+        }
+    }
+    
+    public func deleteCache(exceedToCount count: Int, inBackThread complete: @escaping () -> Void) {
+        taskQueue.async { [weak self] in
+            self?.deleteCache(exceedToCount: count)
+            complete()
+        }
     }
 
-    public func deleteCache(exceedToCost cost: UInt) {
-
+    
+    public func deleteCache(exceedToCost cost: Int) {
+        
+    }
+    
+    public func deleteCache(exceedToCost cost: Int, inBackThread complete: @escaping () -> Void) {
+        taskQueue.async { [weak self] in
+            self?.deleteCache(exceedToCost: cost)
+            complete()
+        }
     }
 
+    
     public func deleteCache(exceedToAge age: TimeInterval) {
-
-    }
-
-    public func getTotalCount() -> UInt {
-        return 0
-    }
-
-    public func getTotalCost() -> UInt {
-        return 0
-    }
-}
-
-
-// MARK: - File manager helper
-private extension HQDiskCache {
-    func convertUrl(_ path: String) -> URL {
-        return URL(fileURLWithPath: path)
-    }
-
-    func save(data: Data, withPath path: String) throws {
-        try data.write(to: convertUrl(path))
-    }
-
-    func read(dataFromPath path: String) throws -> Data {
-        return try Data(contentsOf: convertUrl(path))
-    }
-
-    func delete(fileWithPath path: String) throws {
-        try FileManager.default.removeItem(atPath: path)
-    }
-
-    func moveFileToTrash(path: String) throws {
-        let trashPath = path.appending(String(path.hashValue))
-        do {
-            try FileManager.default.moveItem(atPath: path, toPath: trashPath)
-            try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
-        } catch let err {
-            throw err
+        dispatchAutoLock(taskLock) {
+            self.dbDeleteTimerEarlierThan(age)
         }
     }
-
-    func emptyTrash(path: String, inBackQueue queue: DispatchQueue) {
-        let trashPath = path.appending(String(path.hashValue))
-        queue.async {
-            let fileManager = FileManager()
-            if let trashs = try? fileManager.contentsOfDirectory(atPath: trashPath) {
-                let _ = trashs.map{ p in
-                    try? fileManager.removeItem(atPath: trashPath.appending(p))
-                }
-            }
+    
+    public func deleteCache(exceedToAge age: TimeInterval, inBackThread complete: @escaping () -> Void) {
+        taskQueue.async { [weak self] in
+            self?.deleteCache(exceedToAge: age)
+            complete()
         }
     }
 }
-
-
-
-
-
-
