@@ -14,11 +14,6 @@ class HQSqliteTests: XCTestCase {
     var connect: HQSqliteConnection!
     var trace: [String: Int]!
     
-//    let file = "/Users/huangcong/Desktop/sss/test.sqlite"
-//    if !FileManager.default.fileExists(atPath: file) {
-//    FileManager.default.createFile(atPath: file, contents: nil, attributes: nil)
-//    }
-    
     override func setUp() {
         super.setUp()
         connect = try! HQSqliteConnection()
