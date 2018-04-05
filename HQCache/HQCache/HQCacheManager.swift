@@ -46,7 +46,7 @@ extension HQCacheManager {
         }
     }
     
-    public func query<T: NSCoding>(objectForKey key: String) -> T? {
+    public func query<T: HQCacheSerializable>(objectForKey key: String) -> T? {
         var obj: T? = memoryCache.query(objectForKey: key)
         if obj == nil {
             obj = diskCache.query(objectForKey: key)
@@ -57,7 +57,7 @@ extension HQCacheManager {
         return obj
     }
     
-    public func query<T: NSCoding>(objectForKey key: String, inBackThreadCallback callback: @escaping (String, T?) -> Void) {
+    public func query<T: HQCacheSerializable>(objectForKey key: String, inBackThreadCallback callback: @escaping (String, T?) -> Void) {
         if let obj: T? = memoryCache.query(objectForKey: key) {
             DispatchQueue.global(qos: .default).async {
                 callback(key, obj)
@@ -74,12 +74,12 @@ extension HQCacheManager {
     }
     
     
-    public func insert<T: NSCoding>(object obj: T, forKey key: String) {
+    public func insert<T: HQCacheSerializable>(object obj: T, forKey key: String) {
         memoryCache.insertOrUpdate(object: obj, forKey: key)
-        diskCache.insert(object: obj, forKey: key)
+        diskCache.insertOrUpdate(object: obj, forKey: key)
     }
     
-    public func insertOrUpdate<T: NSCoding>(object obj: T, forKey key: String, inBackThreadCallback callback: @escaping () -> Void) {
+    public func insertOrUpdate<T: HQCacheSerializable>(object obj: T, forKey key: String, inBackThreadCallback callback: @escaping () -> Void) {
         memoryCache.insertOrUpdate(object: obj, forKey: key)
         diskCache.insertOrUpdate(object: obj, forKey: key, inBackThreadCallback: callback)
     }

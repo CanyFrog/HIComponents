@@ -25,10 +25,7 @@ import HQSqlite
 */
 
 public class HQDiskCache: HQCacheInBackProtocol {
-    enum CacheLocation {
-        case sqlite, file, mixed
-    }
-    
+
     // MARK: - Public
     public var name: String = "DiskCache"
 
@@ -38,7 +35,7 @@ public class HQDiskCache: HQCacheInBackProtocol {
 
     public var ageLimit: TimeInterval = TimeInterval(INTMAX_MAX)
 
-    public var autoTrimInterval: TimeInterval = 7 * 24 * 60 * 60
+    public var autoTrimInterval: TimeInterval = 15
 
     /// The minimum free disk space (in bytes) which the cache should kept
     public var freeDiskSpaceLimit: Int = 0
@@ -48,60 +45,33 @@ public class HQDiskCache: HQCacheInBackProtocol {
     
     /// When object data size bigger than this value, stored as file; otherwise stored as data to sqlite will be faster
     /// value is 0 mean all object save as file, Int.max mean all save to sqlite
-    public private(set) var saveToDiskCritical: Int = 20 * 1024 {
-        didSet {
-            if saveToDiskCritical == 0 {
-                location = .file
-            }
-            else if saveToDiskCritical == Int.max {
-                location = .sqlite
-            }
-            else {
-                location = .mixed
-            }
-        }
-    }
-    internal var location: CacheLocation = .mixed
-    
+    public private(set) var saveToDiskCritical: Int = 20 * 1024
     
     
     // MARK: - Cache path
-    public private(set) var cachePath: String! {
-        didSet {
-            dataPath = "\(cachePath)/data"
-            trashPath = "\(cachePath)/trash"
-            sqlitePath = "\(cachePath)/sqlite"
-        }
-    }
-    internal var sqlitePath: String!
-    internal var dataPath: String!
-    internal var trashPath: String!
+    public private(set) var cachePath: String!
+    internal var dbPath: String { return "\(cachePath!)/diskcache.sqlite" }
+    internal var dbWalPath: String { return "\(cachePath!)/diskcache.sqlite-wal" }
+    internal var dbShmPath: String { return "\(cachePath!)/diskcache.sqlite-shm" }
+    internal var dataPath: String { return "\(cachePath!)/data" }
+    internal var trashPath: String { return "\(cachePath!)/trash" }
     
     internal var backgroundTrashQueue = DispatchQueue(label: "com.trash.disk.cache.personal.HQ", qos: .utility, attributes: .concurrent)
     internal var taskLock = DispatchSemaphore(value: 1)
     internal var taskQueue = DispatchQueue(label: "com.disk.cache.personal.HQ", qos: .default, attributes: .concurrent)
     
-    
-    // MARK: - Custom Closure
-    /// Custom archive or unarchive object closure, if nil, use NSCoding
-    public var customArchiveObjectClosure: ((Any)->Data)?
-
-    public var customUnarchiveObjectClosure: ((Data)->Any)?
-
-//    public var customNamedFileClosure: ((_ key: String)->String)?
-
-    
     // MARK: - Sqlite
-    internal var connect: HQSqliteConnection!
+    internal var connect: HQSqliteConnection?
     internal var stmtDict = [String: HQSqliteStatement]()
     
     
     init?(_ path: String) {
         if path.isEmpty || path.count > PATH_MAX - 128 { fatalError("Error: Path is invalid") }
-        var path = path
-        cachePath = path.last == "/" ? String(path.removeLast()) : path
+        cachePath = path
+        if cachePath!.last == "/" { cachePath.removeLast(1) }
+
         do {
-            try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+            try FileManager.default.createDirectory(atPath: cachePath, withIntermediateDirectories: true, attributes: nil)
             try FileManager.default.createDirectory(atPath: dataPath, withIntermediateDirectories: true, attributes: nil)
             try FileManager.default.createDirectory(atPath: trashPath, withIntermediateDirectories: true, attributes: nil)
             if !dbConnect() { return nil }
@@ -118,13 +88,12 @@ public class HQDiskCache: HQCacheInBackProtocol {
 // MARK: - Query & Check
 extension HQDiskCache {
     
-    public func query<T: NSCoding>(objectForKey key: String) -> T? {
+    public func query<T: HQCacheSerializable>(objectForKey key: String) -> T? {
         guard !key.isEmpty, let data = queryDataFromSqlite(key) else { return nil }
-        if let unar = customUnarchiveObjectClosure { return unar(data) as? T }
-        return NSKeyedUnarchiver.unarchiveObject(with: data) as? T
+        return T.unSerialize(data)
     }
     
-    public func query<T: NSCoding>(objectForKey key: String, inBackThreadCallback callback: @escaping (String, T?) -> Void) {
+    public func query<T: HQCacheSerializable>(objectForKey key: String, inBackThreadCallback callback: @escaping (String, T?) -> Void) {
         taskQueue.async { [weak self] in
             let value: T? = self?.query(objectForKey: key)
             callback(key, value)
@@ -191,7 +160,7 @@ extension HQDiskCache {
     
     public func getTotalCost(inBackThread closure: @escaping (Int) -> Void) {
         taskQueue.async { [weak self] in
-            closure(self?.getTotalCount() ?? 0)
+            closure(self?.getTotalCost() ?? 0)
         }
     }
 }
@@ -199,58 +168,53 @@ extension HQDiskCache {
 // MARK: - Insert
 extension HQDiskCache {
     
-    public func insert(originFile path: String, size: Int = 0, forKey key: String) {
+    public func insertOrUpdate(originFile path: String, size: Int = 0, forKey key: String) {
         let fileM = FileManager.default
         guard fileM.fileExists(atPath: path) && !key.isEmpty else { return }
-        let newPath = "\(cachePath)/\(convertToUrl(path).lastPathComponent)"
+        let name = path.components(separatedBy: "/").last
+        let newPath = "\(dataPath)/\(name!)"
         do {
             try fileM.moveItem(atPath: path, toPath: newPath)
             HQDispatchLock.semaphore(taskLock) {
-                self.dbInsert(key: key, filename: newPath, size: Int64(size), data: nil)
+                self.dbInsert(key: key, filename: newPath, size: size, data: nil)
             }
         } catch {
         }
     }
 
-    public func insert(originFile path: String, size: Int = 0, forKey key: String, inBackThreadCallback callback: @escaping () -> Void) {
+    public func insertOrUpdate(originFile path: String, size: Int = 0, forKey key: String, inBackThreadCallback callback: @escaping () -> Void) {
         taskQueue.async { [weak self] in
-            self?.insert(originFile: path, size: size, forKey: key)
+            self?.insertOrUpdate(originFile: path, size: size, forKey: key)
             callback()
         }
     }
     
     
-    public func insert<T: NSCoding>(object obj: T, forKey key: String) {
+    public func insertOrUpdate<T: HQCacheSerializable>(object obj: T, forKey key: String) {
         guard !key.isEmpty else { return }
-        var data: Data? = nil
-        if let arch = customArchiveObjectClosure {
-            data = arch(obj)
-        }
-        else {
-            data = NSKeyedArchiver.archivedData(withRootObject: obj)
-        }
-        guard let value = data, value.count > 0 else { return }
+
+        guard let value = obj.serialize(), value.count > 0 else { return }
         
         if value.count >= saveToDiskCritical {
             do {
                 try save(data: value, withFilename: String(key.hashValue))
                 let path = "\(dataPath)/\(key.hashValue)"
                 HQDispatchLock.semaphore(taskLock) {
-                    self.dbInsert(key: key, filename: path, size: Int64(value.count), data: nil)
+                    self.dbInsert(key: key, filename: path, size: value.count, data: nil)
                 }
             }
             catch {}
         }
         else {
             HQDispatchLock.semaphore(taskLock) {
-                self.dbInsert(key: key, filename: nil, size: Int64(value.count), data: value)
+                self.dbInsert(key: key, filename: nil, size: value.count, data: value)
             }
         }
     }
     
-    public func insertOrUpdate<T: NSCoding>(object obj: T, forKey key: String, inBackThreadCallback callback: @escaping () -> Void) {
+    public func insertOrUpdate<T: HQCacheSerializable>(object obj: T, forKey key: String, inBackThreadCallback callback: @escaping () -> Void) {
         taskQueue.async { [weak self] in
-            self?.insert(object: obj, forKey: key)
+            self?.insertOrUpdate(object: obj, forKey: key)
             callback()
         }
     }
@@ -277,6 +241,10 @@ extension HQDiskCache {
     public func deleteAllCache() {
         HQDispatchLock.semaphore(taskLock) {
             self.connect = nil // close sqlite
+            self.stmtDict.removeAll()
+            try? FileManager.default.removeItem(atPath: dbPath)
+            try? FileManager.default.removeItem(atPath: dbWalPath)
+            try? FileManager.default.removeItem(atPath: dbShmPath)
             self.moveAllFileToTrash()
             self.emptyTrashInBackground()
             let _ = self.dbConnect()
@@ -313,7 +281,7 @@ extension HQDiskCache {
                     if let file = item["filename"] as? String {
                         try? delete(fileWithFilename: file)
                     }
-                    isSuc = dbDelete(item["key"] as! String)
+                    isSuc = dbDelete((item["key"] as! String))
                     left -= 1
                 }
                 else {
@@ -417,7 +385,7 @@ extension HQDiskCache {
             return
         }
         
-        let current = CFAbsoluteTimeGetCurrent()
+        let current = CACurrentMediaTime()
         if current <= age { return } // future time
         let timeDelta = current - age
         if timeDelta >= Double(Int.max) { return }
@@ -463,7 +431,7 @@ private extension HQDiskCache {
         guard let item = resDict else { return nil }
         let _ = dbUpdateAccessTime(key)
         if let data = item["data"] as? Data { return data }
-        if let file = item["filename"] as? String { return try? Data(contentsOf: convertToUrl(file)) }
+        if let file = item["filename"] as? String { return try? Data(contentsOf: URL(fileURLWithPath: file)) }
         
         let _ = dbDelete(key) // this item no filename and no data, remove it
         return nil
