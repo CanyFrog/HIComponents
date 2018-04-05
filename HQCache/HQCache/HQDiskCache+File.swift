@@ -25,10 +25,12 @@ internal extension HQDiskCache {
         try FileManager.default.removeItem(at: convertToUrl(name))
     }
     
-    func moveAllFileToTrash() throws {
+    func moveAllFileToTrash() {
         let tmpPath = "\(trashPath)/\(UUID().uuidString)"
-        try FileManager.default.moveItem(atPath: dataPath, toPath: tmpPath) // move file to trash temp directory
-        try FileManager.default.createDirectory(atPath: dataPath, withIntermediateDirectories: true, attributes: nil)
+        try? FileManager.default.moveItem(atPath: dataPath, toPath: tmpPath) // move file to trash temp directory
+        try? FileManager.default.moveItem(atPath: sqlitePath, toPath: tmpPath)
+        try? FileManager.default.createDirectory(atPath: dataPath, withIntermediateDirectories: true, attributes: nil)
+        try? FileManager.default.createDirectory(atPath: sqlitePath, withIntermediateDirectories: true, attributes: nil)
     }
     
     func emptyTrashInBackground() {

@@ -20,10 +20,21 @@ import HQSqlite
  )
  */
 
+
+internal struct HQSqliteItem {
+    var key: String!
+    var filename: String?
+    var size: Int = 0
+    var saveTime: TimeInterval!
+    var accessTime: TimeInterval!
+    var data: Data?
+}
+
 extension HQDiskCache {
     // MARK: - Connect to sqlite
     func dbConnect() -> Bool {
-        connect = try? HQSqliteConnection(cachePath)
+        connect = try? HQSqliteConnection(sqlitePath)
+        connect.busyTimeout = 0.5
         return dbInitTable()
     }
 
@@ -37,18 +48,18 @@ extension HQDiskCache {
         return (try? stmt.step()) ?? false
     }
     
-    func dbUpdateAccessTime(_ keys: [String]) -> Bool {
-        guard let stmt = getOrCreateStatement("updateItemAccessTimeSQL", "update diskcache set access_time = ? where key in (?);") else { return false }
+    func dbUpdateAccessTime(_ key: String) -> Bool {
+        guard let stmt = getOrCreateStatement("updateItemAccessTimeSQL", "update diskcache set access_time = ? where key = ?;") else { return false }
         
-        let _ = stmt.bind(CFAbsoluteTimeGetCurrent(), keys.joined(separator: ","))
+        let _ = stmt.bind(CFAbsoluteTimeGetCurrent(), key)
         return (try? stmt.step()) ?? false
     }
     
     
     // MARK: - Delete
-    func dbDelete(_ keys: [String]) -> Bool {
-        guard let stmt = getOrCreateStatement("deleteItemSQL", "delete from diskcache where key in (?);") else { return false }
-        let _ = stmt.bind(keys.joined(separator: ","))
+    func dbDelete(_ key: String) -> Bool {
+        guard let stmt = getOrCreateStatement("deleteItemSQL", "delete from diskcache where key = ?;") else { return false }
+        let _ = stmt.bind(key)
         return (try? stmt.step()) ?? false
     }
     
@@ -79,26 +90,6 @@ extension HQDiskCache {
         return nil
     }
     
-    func dbQuery(_ keys: [String]) -> [[String: Any]]? {
-        guard let stmt = getOrCreateStatement("queryItemsSQL", "select * from diskcache where key in (?);") else { return nil }
-        let _ = stmt.bind(keys.joined(separator: ","))
-        var results = [[String: Any]]()
-        
-        repeat {
-            if let succ = try? stmt.step(), succ  == true {
-                var res = [String: Any]()
-                for i in 0 ..< stmt.columnCount {
-                    res[stmt.columnNames[i]] = stmt.cursor[i]
-                }
-                results.append(res)
-            }
-            else {
-                break
-            }
-        } while true
-        
-        return results
-    }
     
     func dbQueryFilename(sizeLargerThan size: Int) -> [String]? {
         guard let stmt = getOrCreateStatement("queryFilenameSizeSQL", "select filename from diskcache where size > ? and filename is not null;") else { return nil }
@@ -137,7 +128,7 @@ extension HQDiskCache {
     
     
     func dbQueryCacheInfo(orderByTimeAsc limit: Int) -> [[String: Any]]? {
-        guard let stmt = getOrCreateStatement("queryItemsInfoSQL", "select key, filename, size from diskcache order by access_time asc limit ?;") else { return nil }
+        guard let stmt = getOrCreateStatement("queryItemsTimeOrderSQL", "select key, filename, size from diskcache order by access_time asc limit ?;") else { return nil }
 
         let _ = stmt.bind(limit)
         var results = [[String: Any]]()
