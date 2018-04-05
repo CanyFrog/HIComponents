@@ -240,8 +240,8 @@ extension HQDiskCache {
 
     public func deleteAllCache() {
         HQDispatchLock.semaphore(taskLock) {
-            self.connect = nil // close sqlite
             self.stmtDict.removeAll()
+            self.connect = nil // close sqlite
             try? FileManager.default.removeItem(atPath: dbPath)
             try? FileManager.default.removeItem(atPath: dbWalPath)
             try? FileManager.default.removeItem(atPath: dbShmPath)

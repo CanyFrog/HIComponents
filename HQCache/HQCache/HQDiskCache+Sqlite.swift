@@ -34,6 +34,7 @@ extension HQDiskCache {
     // MARK: - Connect to sqlite
     func dbConnect() -> Bool {
         connect = try? HQSqliteConnection(dbPath)
+        connect?.busyTimeout = 0.1
         return connect != nil && !dbInitTable()
     }
 
