@@ -60,7 +60,11 @@ public final class HQSqliteConnection {
     }
     
     deinit {
-        sqlite3_close(handle)
+        if #available(iOS 8.2, *) {
+            sqlite3_close_v2(handle)
+        } else {
+            sqlite3_close(handle)
+        }
     }
     
     
@@ -164,8 +168,6 @@ public final class HQSqliteConnection {
     }
     fileprivate typealias CommitHook = @convention(block) () -> Int32
     fileprivate var commitHook: CommitHook?
-
-    
     
     // MARK: - Rollback hook
     /// Registers a callback to be invoked whenever a transaction rolls back.
