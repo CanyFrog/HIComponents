@@ -6,7 +6,7 @@
 //  Copyright © 2018 com.personal.HQ. All rights reserved.
 //
 
-import Foundation
+import HQFoundation
 import HQSqlite
 
 /*
@@ -158,7 +158,7 @@ extension HQDiskCache {
     /// Check
     public func exist(forKey key: String) -> Bool {
         guard !key.isEmpty else { return false }
-        return dispatchAutoLock(taskLock, closure: { () -> Bool in
+        return HQDispatchLock.semaphore(taskLock, closure: { () -> Bool in
             return self.dbQuery(key) != nil
         })
     }
@@ -171,7 +171,7 @@ extension HQDiskCache {
     
     
     public func getTotalCount() -> Int {
-        return dispatchAutoLock(taskLock, closure: { () -> Int in
+        return HQDispatchLock.semaphore(taskLock, closure: { () -> Int in
             return self.dbQueryTotalItemCount()
         })
     }
@@ -184,7 +184,7 @@ extension HQDiskCache {
     
     
     public func getTotalCost() -> Int {
-        return dispatchAutoLock(taskLock) { () -> Int in
+        return HQDispatchLock.semaphore(taskLock) { () -> Int in
             return self.dbQueryTotalItemSize()
         }
     }
@@ -205,7 +205,7 @@ extension HQDiskCache {
         let newPath = "\(cachePath)/\(convertToUrl(path).lastPathComponent)"
         do {
             try fileM.moveItem(atPath: path, toPath: newPath)
-            dispatchAutoLock(taskLock) {
+            HQDispatchLock.semaphore(taskLock) {
                 self.dbInsert(key: key, filename: newPath, size: Int64(size), data: nil)
             }
         } catch {
@@ -235,14 +235,14 @@ extension HQDiskCache {
             do {
                 try save(data: value, withFilename: String(key.hashValue))
                 let path = "\(dataPath)/\(key.hashValue)"
-                dispatchAutoLock(taskLock) {
+                HQDispatchLock.semaphore(taskLock) {
                     self.dbInsert(key: key, filename: path, size: Int64(value.count), data: nil)
                 }
             }
             catch {}
         }
         else {
-            dispatchAutoLock(taskLock) {
+            HQDispatchLock.semaphore(taskLock) {
                 self.dbInsert(key: key, filename: nil, size: Int64(value.count), data: value)
             }
         }
@@ -263,7 +263,7 @@ extension HQDiskCache {
 
     public func delete(objectForKey key: String) {
         guard !key.isEmpty else { return }
-        dispatchAutoLock(taskLock) {
+        HQDispatchLock.semaphore(taskLock) {
             self.dbDelete(key)
         }
     }
@@ -275,7 +275,7 @@ extension HQDiskCache {
     }
 
     public func deleteAllCache() {
-        dispatchAutoLock(taskLock) {
+        HQDispatchLock.semaphore(taskLock) {
             self.connect = nil // close sqlite
             self.moveAllFileToTrash()
             self.emptyTrashInBackground()
@@ -422,7 +422,7 @@ extension HQDiskCache {
         let timeDelta = current - age
         if timeDelta >= Double(Int.max) { return }
         
-        dispatchAutoLock(taskLock) {
+        HQDispatchLock.semaphore(taskLock) {
             self.dbDeleteTimerEarlierThan(timeDelta)
         }
     }
@@ -453,8 +453,6 @@ extension HQDiskCache {
         }
     }
 }
-
-
 
 // MARK: - Private function helper
 private extension HQDiskCache {

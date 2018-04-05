@@ -6,7 +6,7 @@
 //  Copyright © 2018年 com.personal.HQ. All rights reserved.
 //
 
-import Foundation
+import HQFoundation
 
 public final class HQMemoryCache: HQCacheProtocol {
     
@@ -60,7 +60,7 @@ public final class HQMemoryCache: HQCacheProtocol {
     // MARK: - Private property
     private var cacheMap = HQCacheLinkMap()
     private let queue = DispatchQueue(label: "com.memory.cache.personal.HQ", qos: .default, attributes: DispatchQueue.Attributes.concurrent)
-    private let mutex = Mutex()
+    private let mutex = HQMutexLock()
     
     // MARk: - Life cycle
     public init() {
