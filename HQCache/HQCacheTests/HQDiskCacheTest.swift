@@ -221,31 +221,142 @@ class HQDiskCacheTest: XCTestCase {
         XCTAssertEqual(2, disk.getTotalCount())
     }
     
-//    func testDiskDeleteAllInBackground() {
-//        let count = 10
-//        insertMultiItems(count)
-//        XCTAssertEqual(count, disk.getTotalCount())
-//        async { (done) in
-//            disk.deleteAllCache {
-//                XCTAssertEqual(0, self.disk.getTotalCount())
-//                done()
-//            }
-//        }
-//    }
+    func testDiskDeleteAllInBackground() {
+        let count = 10
+        insertMultiItems(count)
+        XCTAssertEqual(count, disk.getTotalCount())
+        async { (done) in
+            disk.deleteAllCache {
+                XCTAssertEqual(0, self.disk.getTotalCount())
+                done()
+            }
+        }
+    }
     
 //    func testDiskDeleteProgress() {
-//        let count = 50
 //        insertMultiItems(50)
 //        async { (done) in
 //            disk.deleteAllCache(withProgressClosure: { (cur, tot, isSuc) in
-//                XCTAssertEqual(count, tot)
-//                XCTAssertLessThanOrEqual(cur, count)
+//                XCTAssertLessThanOrEqual(cur, tot)
 //                if isSuc {
 //                    XCTAssertEqual(0, self.disk.getTotalCount())
+//                    done()
 //                }
-//                done()
 //            })
 //        }
+//    }
+    
+    func testDiskClearToCount() {
+        insertMultiItems(50)
+        disk.deleteCache(exceedToCount: 20)
+        XCTAssertEqual(20, disk.getTotalCount())
+    }
+    
+    func testDiskClearToCountInBackground() {
+        insertMultiItems(50)
+        async { (done) in
+            disk.deleteCache(exceedToCount: 20, inBackThread: {
+                XCTAssertEqual(20, self.disk.getTotalCount())
+                done()
+            })
+        }
+    }
+    
+    func testDiskClearToCost() {
+        insertMultiItems(20)
+        disk.deleteCache(exceedToCost: 300)
+        XCTAssertLessThanOrEqual(disk.getTotalCost(), 300)
+    }
+    
+    func testDiskClearToCostInBackground() {
+        insertMultiItems(20)
+        async { (done) in
+            disk.deleteCache(exceedToCost: 300, inBackThread: {
+                XCTAssertLessThanOrEqual(self.disk.getTotalCost(), 300)
+                done()
+            })
+        }
+    }
+    
+    func testDiskClearToAge() {
+        insertMultiItems(10)
+        sleep(3) // wait 3 seconds, All the previous 10 elements have expired
+        disk.deleteCache(exceedToAge: 2) // clears the elements before 2 seconds
+        XCTAssertEqual(0, disk.getTotalCount())
+    }
+    
+    func testDiskClearToAgeInBackground() {
+        insertMultiItems(10)
+        sleep(3)
+        async { (done) in
+            disk.deleteCache(exceedToAge: 2) {
+                XCTAssertEqual(0, self.disk.getTotalCount())
+                done()
+            }
+        }
+    }
+    
+    func testDiskClearToFreeSpace() {
+        // get free space
+        let attr = try! FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory())
+        let freeSize = attr[FileAttributeKey.systemFreeSize] as! Int
+        
+        // insert total size
+        let cost = insertMultiItems(100)
+        
+        disk.deleteCache(toFreeSpace: freeSize + cost/2) // clear half of cost
+        XCTAssertLessThanOrEqual(disk.getTotalCost(), cost/2)
+    }
+    
+    func testDiskClearToFreeSpaceInBackground() {
+        // get free space
+        let attr = try! FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory())
+        let freeSize = attr[FileAttributeKey.systemFreeSize] as! Int
+        
+        // insert total size
+        let cost = insertMultiItems(100)
+        
+        async { (done) in
+            disk.deleteCache(toFreeSpace: freeSize + cost/2) {
+                XCTAssertLessThanOrEqual(self.disk.getTotalCost(), cost/2)
+                done()
+            }
+        }
+    }
+    
+//    func testDiskSpaceLimit() {
+//        // get free space
+//        let attr = try! FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory())
+//        let freeSize = attr[FileAttributeKey.systemFreeSize] as! Int
+//
+//
+//        disk.autoTrimInterval = 1
+//
+//        // insert total size
+//        let cost = insertMultiItems(100)
+//        disk.freeDiskSpaceLimit = freeSize + cost/2
+//
+//        sleep(2) // wait auto clear
+//        XCTAssertLessThanOrEqual(disk.getTotalCost(), cost/2)
+//    }
+//
+//
+//    func testDiskAgeLimit() {
+//        disk.autoTrimInterval = 1
+//        disk.ageLimit = 1
+//
+//        insertMultiItems(10)
+//
+//        sleep(5)
+//        XCTAssertEqual(0, disk.getTotalCount())
+//    }
+//
+//    func testDiskCountLimit() {
+//
+//    }
+//
+//    func testDiskCostLimit() {
+//
 //    }
 }
 

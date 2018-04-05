@@ -241,13 +241,14 @@ extension HQDiskCache {
     public func deleteAllCache() {
         HQDispatchLock.semaphore(taskLock) {
             self.stmtDict.removeAll()
+            // FIXME: BUG IN CLIENT OF libsqlite3.dylib: database integrity compromised by API violation: vnode unlinked while in use:
             self.connect = nil // close sqlite
             try? FileManager.default.removeItem(atPath: dbPath)
             try? FileManager.default.removeItem(atPath: dbWalPath)
             try? FileManager.default.removeItem(atPath: dbShmPath)
             self.moveAllFileToTrash()
             self.emptyTrashInBackground()
-            let _ = self.dbConnect()
+            let _ = self.dbConnect() // reconnect
         }
     }
     
@@ -347,7 +348,7 @@ extension HQDiskCache {
             return
         }
         
-        var total = dbQueryTotalItemCount()
+        var total = dbQueryTotalItemSize()
         if total < 0 || total < cost { return }
         
         var items = [[String: Any]]()
@@ -403,15 +404,20 @@ extension HQDiskCache {
     }
     
     public func deleteCache(toFreeSpace space: Int) {
-        if space == 0 { return }
-        let totalBytes = dbQueryTotalItemCount()
-        if totalBytes < 0 { return }
+        if space <= 0 { return }
+        
+        let totalBytes = HQDispatchLock.semaphore(taskLock) { () -> Int in
+            return self.dbQueryTotalItemSize()
+        }
+        if totalBytes <= 0 { return }
         guard let attr = try? FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory()) else { return }
         let freeSize = attr[FileAttributeKey.systemFreeSize] as? Int
-        if let free = freeSize, free > 0 {
-            let needDelete = totalBytes - free
-            deleteCache(exceedToCost: max(0, needDelete))
-        }
+        guard let free = freeSize else { return } // not get system free size
+        let needDelete = space - free
+        if needDelete <= 0 { return } // now free space larger than target
+        
+        let costLimit = totalBytes - needDelete // need hold item'size
+        deleteCache(exceedToCost: max(0, costLimit))
     }
     
     public func deleteCache(toFreeSpace space: Int, inBackThread complete: @escaping () -> Void) {
@@ -438,9 +444,10 @@ private extension HQDiskCache {
     }
     
     func clearCacheTiming() {
-        DispatchQueue.global(qos: .utility).asyncAfter(deadline: DispatchTime.now() + autoTrimInterval) {
-            self.clearInBackground()
-            self.clearCacheTiming()
+        DispatchQueue.global(qos: .utility).asyncAfter(deadline: DispatchTime.now() + autoTrimInterval) {[weak self] in
+            guard let wself = self else { return }
+            wself.clearInBackground()
+            wself.clearCacheTiming()
         }
     }
     

@@ -250,7 +250,6 @@ private extension HQMemoryCache {
     
     func clearCacheTiming() {
         DispatchQueue.global(qos: .utility).asyncAfter(deadline: DispatchTime.now() + autoTrimInterval) {[weak self] in
-            print("\n\nclearn timing\n\n")
             guard let wself = self else { return }
             wself.clearInBackground()
             wself.clearCacheTiming() // cycle execute
@@ -258,10 +257,11 @@ private extension HQMemoryCache {
     }
     
     func clearInBackground() {
-        queue.async {
-            self.deleteCache(exceedToAge: self.ageLimit)
-            self.deleteCache(exceedToCost: self.costLimit)
-            self.deleteCache(exceedToCount: self.countLimit)
+        queue.async { [weak self] in
+            guard let wself = self else { return }
+            wself.deleteCache(exceedToAge: wself.ageLimit)
+            wself.deleteCache(exceedToCost: wself.costLimit)
+            wself.deleteCache(exceedToCount: wself.countLimit)
         }
     }
     
