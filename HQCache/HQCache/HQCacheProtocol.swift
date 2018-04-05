@@ -8,22 +8,27 @@
 
 import Foundation
 
+public protocol HQCacheSerializable: Codable {
+    func serialize() -> Data?
+    static func unSerialize<T: Decodable>(_ encoded: Data) -> T?
+}
+
+extension HQCacheSerializable {
+    func serialize() -> Data? {
+        return try? JSONEncoder().encode(self)
+    }
+    
+    static func unSerialize<T: Decodable>(_ encoded: Data) -> T? {
+        return try? JSONDecoder().decode(T.self, from: encoded)
+    }
+}
+
+
+
 /// Cache background queue protocol
 protocol HQCacheInBackProtocol: HQCacheProtocol {
     
     func exist(forKey key: String, inBackThreadCallback callback: @escaping (_ key: String, _ isExists: Bool) -> Void)
-    
-//    func query<T: NSCoding>(objectForKey key: String) -> T?
-//    func query<T>(objectForKey key: String, inBackThreadCallback callback: @escaping (_ key: String, _ obj: T?) -> Void)
-//
-//    func query(filePathForKey key: String) -> String?
-//    func query(filePathForKey key: String, inBackThreadCallback callback: @escaping (_ key: String, _ path: String?) -> Void)
-    
-//    func insertOrUpdate<T: NSCoding>(object obj: T, forKey key: String)
-//    func insertOrUpdate<T>(object obj: T, forKey key: String, cost: Int, inBackThreadCallback callback: @escaping () -> Void)
-//
-//    func insertOrUpdate(file path: String, forKey key: String)
-//    func insertOrUpdate(file path: String, forKey key: String, inBackThreadCallback callback: @escaping () -> Void)
     
     // delete
     func delete(objectForKey key: String, inBackThreadCallback callback: @escaping (_ key: String) -> Void)
@@ -54,12 +59,6 @@ protocol HQCacheProtocol {
     
     // query
     func exist(forKey key: String) -> Bool
-    
-//    func query<T>(objectForKey key: String) -> T?    // optional
-    
-    
-    // insert and update
-//    func insertOrUpdate<T>(object obj: T, forKey key: String, cost: Int) // optional
     
     // delete
     func delete(objectForKey key: String)

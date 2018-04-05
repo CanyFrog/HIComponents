@@ -33,16 +33,15 @@ internal struct HQSqliteItem {
 extension HQDiskCache {
     // MARK: - Connect to sqlite
     func dbConnect() -> Bool {
-        connect = try? HQSqliteConnection(sqlitePath)
-        connect.busyTimeout = 0.5
-        return dbInitTable()
+        connect = try? HQSqliteConnection(dbPath)
+        return connect != nil && !dbInitTable()
     }
 
     // MARK: - Insert
-    func dbInsert(key: String, filename: String? = nil, size: Int64 = 0, data: Data? = nil) -> Bool {
+    func dbInsert(key: String, filename: String? = nil, size: Int = 0, data: Data? = nil) -> Bool {
         guard let stmt = getOrCreateStatement("insertItemSQL", "insert or replace into diskcache (key, filename, size, save_time, access_time, data) values (?, ?, ?, ?, ?, ?);") else { return false }
         
-        let current = CFAbsoluteTimeGetCurrent()
+        let current = CACurrentMediaTime()
         let _ = stmt.bind(key, filename, size, current, current, data)
         
         return (try? stmt.step()) ?? false
@@ -51,7 +50,7 @@ extension HQDiskCache {
     func dbUpdateAccessTime(_ key: String) -> Bool {
         guard let stmt = getOrCreateStatement("updateItemAccessTimeSQL", "update diskcache set access_time = ? where key = ?;") else { return false }
         
-        let _ = stmt.bind(CFAbsoluteTimeGetCurrent(), key)
+        let _ = stmt.bind(CACurrentMediaTime(), key)
         return (try? stmt.step()) ?? false
     }
     
@@ -186,10 +185,11 @@ extension HQDiskCache {
                 filename TEXT,
                 size INTEGER DEFAULT 0,
                 save_time INTEGER,
-                access_time INTEGER INDEX,
+                access_time INTEGER,
                 data BLOB
             );
+            create index if not exists access_time_idx on diskcache(access_time);
         """
-        return (try? connect.execute(initTable)) == nil
+        return (try? connect?.execute(initTable)) == nil
     }
 }

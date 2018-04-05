@@ -18,6 +18,7 @@
 		8AD5F0C92075B59B001C9C6F /* HQCacheProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD5F0C82075B59B001C9C6F /* HQCacheProtocol.swift */; };
 		8AD5F0CD2075B94E001C9C6F /* HQFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AD5F0CC2075B94E001C9C6F /* HQFoundation.framework */; };
 		8AD5F0CF2075BA3E001C9C6F /* HQMemoryCacheTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD5F0CE2075BA3E001C9C6F /* HQMemoryCacheTest.swift */; };
+		8AD9FA3E2075DBB8007224E9 /* HQDiskCacheTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD9FA3D2075DBB8007224E9 /* HQDiskCacheTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,7 @@
 		8AD5F0C82075B59B001C9C6F /* HQCacheProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HQCacheProtocol.swift; sourceTree = "<group>"; };
 		8AD5F0CC2075B94E001C9C6F /* HQFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQFoundation.framework; path = Carthage/Build/iOS/HQFoundation.framework; sourceTree = "<group>"; };
 		8AD5F0CE2075BA3E001C9C6F /* HQMemoryCacheTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQMemoryCacheTest.swift; sourceTree = "<group>"; };
+		8AD9FA3D2075DBB8007224E9 /* HQDiskCacheTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDiskCacheTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				8AD5F0CE2075BA3E001C9C6F /* HQMemoryCacheTest.swift */,
+				8AD9FA3D2075DBB8007224E9 /* HQDiskCacheTest.swift */,
 				8A650ADC206869CD00C95462 /* Info.plist */,
 			);
 			path = HQCacheTests;
@@ -265,6 +268,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8AD9FA3E2075DBB8007224E9 /* HQDiskCacheTest.swift in Sources */,
 				8AD5F0CF2075BA3E001C9C6F /* HQMemoryCacheTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
