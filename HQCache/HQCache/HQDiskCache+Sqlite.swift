@@ -60,7 +60,10 @@ extension HQDiskCache {
     func dbDelete(_ key: String) -> Bool {
         guard let stmt = getOrCreateStatement("deleteItemSQL", "delete from diskcache where key = ?;") else { return false }
         let _ = stmt.bind(key)
-        return (try? stmt.step()) ?? false
+        
+        // delete result is SQLITE_DONE, will return false; So no error is success
+        if let _ = try? stmt.step() { return true }
+        return false
     }
     
     func dbDeleteSizeLargerThan(_ size: Int) -> Bool {
@@ -151,14 +154,14 @@ extension HQDiskCache {
     
     func dbQueryTotalItemSize() -> Int {
         guard let stmt = getOrCreateStatement("queryTotalItemSize", "select sum(size) from diskcache;") else { return -1 }
-        
+        stmt.reset(false)
         let isSucc = (try? stmt.step()) ?? false
         return isSucc ? stmt.cursor[0] : -1
     }
     
     func dbQueryTotalItemCount() -> Int {
         guard let stmt = getOrCreateStatement("queryTotalItemCount", "select count(*) from diskcache;") else { return -1 }
-
+        stmt.reset(false)
         let isSucc = (try? stmt.step()) ?? false
         return isSucc ? stmt.cursor[0] : -1
     }
