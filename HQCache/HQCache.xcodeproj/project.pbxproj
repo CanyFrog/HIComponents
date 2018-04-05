@@ -14,9 +14,10 @@
 		8A650AD6206869CD00C95462 /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A650ACC206869CD00C95462 /* HQCache.framework */; };
 		8A650ADB206869CD00C95462 /* HQCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650ADA206869CD00C95462 /* HQCacheTests.swift */; };
 		8A650ADD206869CD00C95462 /* HQCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A650ACF206869CD00C95462 /* HQCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8A650AE720686A1F00C95462 /* HQCacheProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650AE620686A1F00C95462 /* HQCacheProtocol.swift */; };
 		8A650AE920686A4300C95462 /* HQMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650AE820686A4300C95462 /* HQMemoryCache.swift */; };
 		8A650AEB20686A7200C95462 /* HQCacheUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650AEA20686A7200C95462 /* HQCacheUtil.swift */; };
+		8AD5F0C72075AE18001C9C6F /* HQCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD5F0C62075AE18001C9C6F /* HQCacheManager.swift */; };
+		8AD5F0C92075B59B001C9C6F /* HQCacheProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD5F0C82075B59B001C9C6F /* HQCacheProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,10 +41,11 @@
 		8A650AD5206869CD00C95462 /* HQCacheTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HQCacheTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A650ADA206869CD00C95462 /* HQCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQCacheTests.swift; sourceTree = "<group>"; };
 		8A650ADC206869CD00C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8A650AE620686A1F00C95462 /* HQCacheProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQCacheProtocol.swift; sourceTree = "<group>"; };
 		8A650AE820686A4300C95462 /* HQMemoryCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQMemoryCache.swift; sourceTree = "<group>"; };
 		8A650AEA20686A7200C95462 /* HQCacheUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQCacheUtil.swift; sourceTree = "<group>"; };
 		8A77B70520725D1B00E5CA66 /* HQSqlite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQSqlite.framework; path = Frameworks/HQSqlite.framework; sourceTree = "<group>"; };
+		8AD5F0C62075AE18001C9C6F /* HQCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQCacheManager.swift; sourceTree = "<group>"; };
+		8AD5F0C82075B59B001C9C6F /* HQCacheProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HQCacheProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,7 +92,8 @@
 			children = (
 				8A650ACF206869CD00C95462 /* HQCache.h */,
 				8A650AEA20686A7200C95462 /* HQCacheUtil.swift */,
-				8A650AE620686A1F00C95462 /* HQCacheProtocol.swift */,
+				8AD5F0C82075B59B001C9C6F /* HQCacheProtocol.swift */,
+				8AD5F0C62075AE18001C9C6F /* HQCacheManager.swift */,
 				8A650AE820686A4300C95462 /* HQMemoryCache.swift */,
 				6043654420688D74001605FC /* HQDiskCache.swift */,
 				604A7D9820748F730060A869 /* HQDiskCache+File.swift */,
@@ -250,9 +253,10 @@
 				6043654520688D74001605FC /* HQDiskCache.swift in Sources */,
 				8A650AE920686A4300C95462 /* HQMemoryCache.swift in Sources */,
 				8A650AEB20686A7200C95462 /* HQCacheUtil.swift in Sources */,
+				8AD5F0C72075AE18001C9C6F /* HQCacheManager.swift in Sources */,
 				604A7D97207371D90060A869 /* HQDiskCache+Sqlite.swift in Sources */,
 				604A7D9920748F730060A869 /* HQDiskCache+File.swift in Sources */,
-				8A650AE720686A1F00C95462 /* HQCacheProtocol.swift in Sources */,
+				8AD5F0C92075B59B001C9C6F /* HQCacheProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
