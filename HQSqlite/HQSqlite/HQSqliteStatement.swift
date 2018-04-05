@@ -129,9 +129,9 @@ extension HQSqliteStatement {
     }
 }
 
-// MARK: - Private helper functions
+// MARK: - Reset functions
 extension HQSqliteStatement {
-    private func reset(_ clearBindings: Bool = true) {
+    public func reset(_ clearBindings: Bool = true) {
         sqlite3_reset(handle)
         if clearBindings { sqlite3_clear_bindings(handle) }
     }
