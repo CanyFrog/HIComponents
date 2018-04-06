@@ -6,127 +6,30 @@
 //  Copyright © 2018年 com.personal.HQ. All rights reserved.
 //
 
-import Foundation
+import HQFoundation
 
-fileprivate class HQCacheLinkNode {
-    weak var prev: HQCacheLinkNode?
-    weak var next: HQCacheLinkNode?
-    var key: String!
-    var value: Any!
-    var cost: UInt = 0
-    var time: TimeInterval!
-}
-
-extension HQCacheLinkNode: Equatable {
-    static func ==(lhs: HQCacheLinkNode, rhs: HQCacheLinkNode) -> Bool {
-        return lhs.key == rhs.key
-    }
-}
-
-fileprivate struct HQCacheLinkMap {
-    // dictionary is hash map, query fast than array
-    //    var dict: CFMutableDictionary = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, [kCFTypeDictionaryKeyCallBacks], [kCFTypeDictionaryValueCallBacks])
-    var dict = Dictionary<String, HQCacheLinkNode>()
-    var totalCost: UInt = 0
-    var totalCount: UInt = 0
-    var head: HQCacheLinkNode?
-    var tail: HQCacheLinkNode?
+public final class HQMemoryCache: HQCacheProtocol {
     
-    var releaseOnMainThread = false
-    var releaseAsynchronously = true
-    
-    mutating func insert(node: HQCacheLinkNode) {
-        //        CFDictionarySetValue(dict, &node.key, Unmanaged.passUnretained(node).toOpaque())
-        dict[node.key] = node
-        totalCost += node.cost
-        totalCount += 1
-        if let h = head {
-            node.next = h
-            h.prev = node
-            head = node
-        }
-        else {
-            head = node
-            tail = node
-        }
-    }
-    
-    mutating func toHead(node: HQCacheLinkNode) {
-        guard let h = head, h != node else { return }
-        if tail! == node {
-            tail = node.prev
-            tail?.next = nil
-        }
-        else {
-            node.next?.prev = node.prev
-            node.prev?.next = node.next
-        }
-        
-        node.next = head
-        node.prev = nil
-        head?.prev = node
-        head = node
-    }
-    
-    mutating func remove(node: HQCacheLinkNode) {
-        //        CFDictionaryRemoveValue(dict, &node.key)
-        dict.removeValue(forKey: node.key)
-        totalCost -= node.cost
-        totalCount -= 1
-        if let n = node.next { n.prev = node.prev }
-        if let p = node.prev { p.next = node.next }
-        if head! == node { head = node.next }
-        if tail! == node { tail = node.prev }
-    }
-    
-    mutating func removeTail() -> HQCacheLinkNode? {
-        guard let t = tail else { return nil }
-        remove(node: t)
-        return t
-    }
-    
-    mutating func removeAll() {
-        totalCost = 0
-        totalCount = 0
-        tail = nil
-        head = nil
-        // CFDictionaryGetCount(dict) > 0
-        if !dict.isEmpty {
-            var holder = dict
-            dict = Dictionary()
-            //CFDictionaryCreateMutable(kCFAllocatorDefault, 0, [kCFTypeDictionaryKeyCallBacks], [kCFTypeDictionaryValueCallBacks])
-            
-            if releaseAsynchronously {
-                let queue = releaseOnMainThread ? DispatchQueue.main : DispatchQueue.global(qos: .utility)
-                queue.async { holder.removeAll() }
-            }
-            else if releaseOnMainThread && pthread_main_np() == 0 { // back to main thread release
-                DispatchQueue.main.async { holder.removeAll() }
-            }
-            // auto release
-        }
-    }
-}
-
-public class HQMemoryCache: HQCacheProtocol {
-    
-    private var cacheMap = HQCacheLinkMap()
-    private let queue = DispatchQueue(label: "com.HQPerson.cache.memory", qos: .default, attributes: DispatchQueue.Attributes.concurrent)
-    private let mutex = Mutex()
-    
+    // MARK: - Public property
     public var name: String = "MemoryCache"
-    public var countLimit: UInt = UInt(UINTMAX_MAX)
-    public var costLimit: UInt = UInt(UINTMAX_MAX)
-    public var ageLimit: TimeInterval = TimeInterval(UINTMAX_MAX)
+    
+    public var countLimit: Int = Int.max
+    
+    public var costLimit: Int = Int.max
+    
+    public var ageLimit: TimeInterval = TimeInterval(INTMAX_MAX)
+    
     public var autoTrimInterval: TimeInterval = 5.0
     
-    var autoEmptyCacheOnMemoryWarning = true
-    var autoEmptyCacheWhenEnteringBackground = true
+    public var autoEmptyCacheOnMemoryWarning = true
     
-    var didReceiveMemoryWarningClosure: ((HQMemoryCache)->Void)?
-    var didEnterBackgroundClosure: ((HQMemoryCache)->Void)?
+    public var autoEmptyCacheWhenEnteringBackground = true
     
-    var releaseAsynchronously: Bool {
+    public var didReceiveMemoryWarningClosure: ((HQMemoryCache)->Void)?
+    
+    public var didEnterBackgroundClosure: ((HQMemoryCache)->Void)?
+    
+    public var releaseAsynchronously: Bool {
         get {
             mutex.lock()
             let release = cacheMap.releaseAsynchronously
@@ -139,7 +42,8 @@ public class HQMemoryCache: HQCacheProtocol {
             mutex.unlock()
         }
     }
-    var releaseOnMainThread: Bool {
+    
+    public var releaseOnMainThread: Bool {
         get {
             mutex.lock()
             let release = cacheMap.releaseOnMainThread
@@ -153,6 +57,12 @@ public class HQMemoryCache: HQCacheProtocol {
         }
     }
     
+    // MARK: - Private property
+    private var cacheMap = HQCacheLinkMap()
+    private let queue = DispatchQueue(label: "com.memory.cache.personal.HQ", qos: .default, attributes: DispatchQueue.Attributes.concurrent)
+    private let mutex = HQMutexLock()
+    
+    // MARk: - Life cycle
     public init() {
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveMemoryWarning), name: NSNotification.Name.UIApplicationDidReceiveMemoryWarning, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(AppDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
@@ -168,35 +78,46 @@ public class HQMemoryCache: HQCacheProtocol {
 }
 
 
+// MARK: - Query and Check
 extension HQMemoryCache {
     public func exist(forKey key: String) -> Bool {
-        //        var k = key
         mutex.lock()
-        //        let contains = CFDictionaryContainsKey(cacheMap.dict, &k)
         let contains = cacheMap.dict.keys.contains(key)
         mutex.unlock()
         return contains
     }
     
-    public func query(objectForKey key: String) -> Any? {
-        //        var k = key
-        
+    public func query<T>(objectForKey key: String) -> T? {
         mutex.lock()
         defer { mutex.unlock() }
-        //        guard let pointer = CFDictionaryGetValue(cacheMap.dict, &k) else { return nil }
-        //        let node = Unmanaged<HQCacheLinkNode>.fromOpaque(pointer).takeUnretainedValue()
         guard let node = cacheMap.dict[key] else { return nil }
         node.time = CACurrentMediaTime()
         cacheMap.toHead(node: node)
-        return node.value
+        return node.value as? T
     }
     
-    public func insertOrUpdate(object obj: Any, forKey key: String, cost: UInt = 0) {
+    public func getTotalCount() -> Int {
         mutex.lock()
-        //        var k = key
+        let count = cacheMap.totalCount
+        mutex.unlock()
+        return count
+    }
+    
+    public func getTotalCost() -> Int {
+        mutex.lock()
+        let cost = cacheMap.totalCost
+        mutex.unlock()
+        return cost
+    }
+    
+}
+
+
+// MARK: - Insert & update
+extension HQMemoryCache {
+    public func insertOrUpdate<T>(object obj: T, forKey key: String, cost: Int = 0) {
+        mutex.lock()
         let now = CACurrentMediaTime()
-        //        if let pointer = CFDictionaryGetValue(cacheMap.dict, &k) {
-        //        let node = Unmanaged<HQCacheLinkNode>.fromOpaque(pointer).takeUnretainedValue()
         if let node = cacheMap.dict[key] {
             cacheMap.totalCost -= node.cost
             cacheMap.totalCost += cost
@@ -222,15 +143,13 @@ extension HQMemoryCache {
             clearCacheCondition(cond: cacheMap.totalCost > costLimit)
         }
     }
-    
+}
+
+
+// MARK: - Delete
+extension HQMemoryCache {
     public func delete(objectForKey key: String) {
         mutex.lock()
-        //        var k = key
-        //        guard let pointer = CFDictionaryGetValue(cacheMap.dict, &k) else {
-        //            mutex.unlock()
-        //            return
-        //        }
-        //        let node = Unmanaged<HQCacheLinkNode>.fromOpaque(pointer).takeUnretainedValue()
         guard let node = cacheMap.dict[key] else {
             mutex.unlock()
             return
@@ -253,7 +172,7 @@ extension HQMemoryCache {
         mutex.unlock()
     }
     
-    public func deleteCache(exceedToCost cost: UInt) {
+    public func deleteCache(exceedToCost cost: Int) {
         if cost <= 0 {
             deleteAllCache()
             return
@@ -263,7 +182,7 @@ extension HQMemoryCache {
         clearCacheCondition(cond: cacheMap.totalCost > cost)
     }
     
-    public func deleteCache(exceedToCount count: UInt) {
+    public func deleteCache(exceedToCount count: Int) {
         if count <= 0 {
             deleteAllCache()
             return
@@ -290,24 +209,11 @@ extension HQMemoryCache {
         
         clearCacheCondition(cond: cacheMap.tail != nil && (now - cacheMap.tail!.time) > age )
     }
-    
-    public func getTotalCount() -> UInt {
-        mutex.lock()
-        let count = cacheMap.totalCount
-        mutex.unlock()
-        return count
-    }
-    
-    public func getTotalCost() -> UInt {
-        mutex.lock()
-        let cost = cacheMap.totalCost
-        mutex.unlock()
-        return cost
-    }
-    
+
 }
 
 
+// MARK: - Private clear cache helper
 private extension HQMemoryCache {
     
     func clearCacheCondition(cond: @autoclosure () -> Bool) {
@@ -343,7 +249,7 @@ private extension HQMemoryCache {
     }
     
     func clearCacheTiming() {
-        DispatchQueue.global(qos: .utility).asyncAfter(deadline: DispatchTime.now() + 1.0) {[weak self] in
+        DispatchQueue.global(qos: .utility).asyncAfter(deadline: DispatchTime.now() + autoTrimInterval) {[weak self] in
             guard let wself = self else { return }
             wself.clearInBackground()
             wself.clearCacheTiming() // cycle execute
@@ -351,20 +257,118 @@ private extension HQMemoryCache {
     }
     
     func clearInBackground() {
-        queue.async {
-            self.deleteCache(exceedToAge: self.ageLimit)
-            self.deleteCache(exceedToCost: self.costLimit)
-            self.deleteCache(exceedToCount: self.countLimit)
+        queue.async { [weak self] in
+            guard let wself = self else { return }
+            wself.deleteCache(exceedToAge: wself.ageLimit)
+            wself.deleteCache(exceedToCost: wself.costLimit)
+            wself.deleteCache(exceedToCount: wself.countLimit)
         }
     }
     
-    @objc private func didReceiveMemoryWarning() {
+    @objc func didReceiveMemoryWarning() {
         if let did = didReceiveMemoryWarningClosure { did(self) }
         if autoEmptyCacheOnMemoryWarning { deleteAllCache() }
     }
     
-    @objc private func AppDidEnterBackground() {
+    @objc func AppDidEnterBackground() {
         if let did = didEnterBackgroundClosure { did(self) }
         if autoEmptyCacheWhenEnteringBackground { deleteAllCache() }
+    }
+}
+
+
+// MARK: - Data Struct -- Link table
+fileprivate class HQCacheLinkNode {
+    weak var prev: HQCacheLinkNode?
+    weak var next: HQCacheLinkNode?
+    var key: String!
+    var value: Any!
+    var cost: Int = 0
+    var time: TimeInterval!
+}
+
+extension HQCacheLinkNode: Equatable {
+    static func ==(lhs: HQCacheLinkNode, rhs: HQCacheLinkNode) -> Bool {
+        return lhs.key == rhs.key
+    }
+}
+
+fileprivate struct HQCacheLinkMap {
+    var dict = Dictionary<String, HQCacheLinkNode>()
+    var totalCost: Int = 0
+    var totalCount: Int = 0
+    var head: HQCacheLinkNode?
+    var tail: HQCacheLinkNode?
+    
+    var releaseOnMainThread = false
+    var releaseAsynchronously = true
+    
+    mutating func insert(node: HQCacheLinkNode) {
+        dict[node.key] = node
+        totalCost += node.cost
+        totalCount += 1
+        if let h = head {
+            node.next = h
+            h.prev = node
+            head = node
+        }
+        else {
+            head = node
+            tail = node
+        }
+    }
+    
+    mutating func toHead(node: HQCacheLinkNode) {
+        guard let h = head, h != node else { return }
+        if tail! == node {
+            tail = node.prev
+            tail?.next = nil
+        }
+        else {
+            node.next?.prev = node.prev
+            node.prev?.next = node.next
+        }
+        
+        node.next = head
+        node.prev = nil
+        head?.prev = node
+        head = node
+    }
+    
+    mutating func remove(node: HQCacheLinkNode) {
+        dict.removeValue(forKey: node.key)
+        totalCost -= node.cost
+        totalCount -= 1
+        if let n = node.next { n.prev = node.prev }
+        if let p = node.prev { p.next = node.next }
+        if head! == node { head = node.next }
+        if tail! == node { tail = node.prev }
+    }
+    
+    mutating func removeTail() -> HQCacheLinkNode? {
+        guard let t = tail else { return nil }
+        remove(node: t)
+        return t
+    }
+    
+    mutating func removeAll() {
+        totalCost = 0
+        totalCount = 0
+        tail = nil
+        head = nil
+        
+        if !dict.isEmpty {
+            var holder = dict
+            dict = Dictionary()
+            
+            if releaseAsynchronously {
+                let queue = releaseOnMainThread ? DispatchQueue.main : DispatchQueue.global(qos: .utility)
+                queue.async { holder.removeAll() }
+            }
+            else if releaseOnMainThread && pthread_main_np() == 0 { // back to main thread release
+                DispatchQueue.main.async { holder.removeAll() }
+            }
+            // auto release
+        }
     }
 }
