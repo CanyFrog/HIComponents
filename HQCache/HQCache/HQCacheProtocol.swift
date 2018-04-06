@@ -8,20 +8,29 @@
 
 import Foundation
 
-public protocol HQCacheSerializable: Codable {
-    func serialize() -> Data?
-    static func unSerialize<T: Decodable>(_ encoded: Data) -> T?
-}
-
-extension HQCacheSerializable {
+extension Encodable {
     func serialize() -> Data? {
         return try? JSONEncoder().encode(self)
     }
-    
+}
+extension Decodable {
     static func unSerialize<T: Decodable>(_ encoded: Data) -> T? {
         return try? JSONDecoder().decode(T.self, from: encoded)
     }
 }
+//public protocol HQCacheSerializable: Codable {
+//    func serialize() -> Data?
+//    static func unSerialize<T: Decodable>(_ encoded: Data) -> T?
+//}
+//
+//extension HQCacheSerializable {
+//    func serialize() -> Data? {
+//        return try? JSONEncoder().encode(self)
+//    }
+//    static func unSerialize<T: Decodable>(_ encoded: Data) -> T? {
+//        return try? JSONDecoder().decode(T.self, from: encoded)
+//    }
+//}
 
 
 

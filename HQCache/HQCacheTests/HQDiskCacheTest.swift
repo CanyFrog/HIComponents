@@ -10,7 +10,7 @@ import XCTest
 @testable import HQCache
 
 
-struct DiskTestClass: HQCacheSerializable, Equatable {
+struct DiskTestClass: Codable, Equatable {
     var name: String = "test_name"
     var age: Int = 18
     var email: String = "test_class@email.com"
