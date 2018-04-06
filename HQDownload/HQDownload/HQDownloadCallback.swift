@@ -93,31 +93,3 @@ public class HQDownloadOutputStreamCallback: HQDownloadCallback {
         self.cancel()
     }
 }
-
-//extension HQDownloadSaveCallback: StreamDelegate, NSObjectProtocol {
-//    public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-//        print(eventCode)
-//    }
-//}
-
-
-/*
- App file structure:
- 
- /Sandbox
-     /Bundle Container
-     /iCloud Container
-     /Data container
-         /Documents  // stored user info data, itunes backup
-         /Library
-             /Preferences   // UserDefaults save app settings
-             /Caches        // cache directory
-         /Temp   // temp directory
- */
-public struct HQDirectoryUtil {
-    static let root: String = NSHomeDirectory()
-    static let document: String? = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
-    static let library: String? = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).last
-    static let caches: String? = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first
-    static let temp: String = NSTemporaryDirectory()
-}
