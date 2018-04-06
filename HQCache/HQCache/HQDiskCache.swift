@@ -88,12 +88,12 @@ public class HQDiskCache: HQCacheInBackProtocol {
 // MARK: - Query & Check
 extension HQDiskCache {
     
-    public func query<T: HQCacheSerializable>(objectForKey key: String) -> T? {
+    public func query<T: Codable>(objectForKey key: String) -> T? {
         guard !key.isEmpty, let data = queryDataFromSqlite(key) else { return nil }
         return T.unSerialize(data)
     }
     
-    public func query<T: HQCacheSerializable>(objectForKey key: String, inBackThreadCallback callback: @escaping (String, T?) -> Void) {
+    public func query<T: Codable>(objectForKey key: String, inBackThreadCallback callback: @escaping (String, T?) -> Void) {
         taskQueue.async { [weak self] in
             let value: T? = self?.query(objectForKey: key)
             callback(key, value)
@@ -190,7 +190,7 @@ extension HQDiskCache {
     }
     
     
-    public func insertOrUpdate<T: HQCacheSerializable>(object obj: T, forKey key: String) {
+    public func insertOrUpdate<T: Codable>(object obj: T, forKey key: String) {
         guard !key.isEmpty else { return }
 
         guard let value = obj.serialize(), value.count > 0 else { return }
@@ -212,7 +212,7 @@ extension HQDiskCache {
         }
     }
     
-    public func insertOrUpdate<T: HQCacheSerializable>(object obj: T, forKey key: String, inBackThreadCallback callback: @escaping () -> Void) {
+    public func insertOrUpdate<T: Codable>(object obj: T, forKey key: String, inBackThreadCallback callback: @escaping () -> Void) {
         taskQueue.async { [weak self] in
             self?.insertOrUpdate(object: obj, forKey: key)
             callback()
