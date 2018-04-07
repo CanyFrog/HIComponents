@@ -143,6 +143,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8A650AE0206869CD00C95462 /* Build configuration list for PBXNativeTarget "HQCache" */;
 			buildPhases = (
+				8ABF2B7F207857B4001EDDA5 /* Carthage auto update shell */,
 				8A650AC7206869CD00C95462 /* Sources */,
 				8A650AC8206869CD00C95462 /* Frameworks */,
 				8A650AC9206869CD00C95462 /* Headers */,
@@ -247,6 +248,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+		8ABF2B7F207857B4001EDDA5 /* Carthage auto update shell */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Carthage auto update shell";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "chmod +x ../update_self.sh & ../update_self.sh";
 		};
 /* End PBXShellScriptBuildPhase section */
 

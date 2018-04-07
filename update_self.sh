@@ -2,7 +2,11 @@
 
 CARTFILE=""
 
-save_origin_cartfile() {
+check_save_origin_cartfile() {
+    if [ ! -f "./Cartfile" ]
+    then
+        exit
+    fi
     CARTFILE=`cat ./Cartfile`
 }
 
@@ -20,7 +24,7 @@ update_origin_frameworks() {
 }
 
 main() {
-    save_origin_cartfile
+    check_save_origin_cartfile
     update_self_frameworks
     update_origin_frameworks
 }
