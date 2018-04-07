@@ -10,15 +10,12 @@
 		8A650B002069119200C95462 /* HQDownload.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A650AF62069119200C95462 /* HQDownload.framework */; };
 		8A650B052069119200C95462 /* HQDownloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B042069119200C95462 /* HQDownloadTests.swift */; };
 		8A650B072069119200C95462 /* HQDownload.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A650AF92069119200C95462 /* HQDownload.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8A650B19206922DD00C95462 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B18206922DD00C95462 /* AppDelegate.swift */; };
-		8A650B1B206922DD00C95462 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B1A206922DD00C95462 /* ViewController.swift */; };
-		8A650B1E206922DD00C95462 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A650B1C206922DD00C95462 /* Main.storyboard */; };
-		8A650B20206922DD00C95462 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A650B1F206922DD00C95462 /* Assets.xcassets */; };
-		8A650B23206922DD00C95462 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A650B21206922DD00C95462 /* LaunchScreen.storyboard */; };
 		8A650B4B206A79D000C95462 /* HQDownloadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4A206A79D000C95462 /* HQDownloadOperation.swift */; };
 		8A650B4F206BD61800C95462 /* HQDownloadScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4E206BD61800C95462 /* HQDownloadScheduler.swift */; };
 		8A650B51206BD64C00C95462 /* HQDownloadUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B50206BD64C00C95462 /* HQDownloadUtil.swift */; };
 		8A650B55206DB41800C95462 /* HQDownloadCallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B54206DB41800C95462 /* HQDownloadCallback.swift */; };
+		8ABF2B9920785F11001EDDA5 /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ABF2B9820785F11001EDDA5 /* HQCache.framework */; };
+		8ABF2B9B20785F1C001EDDA5 /* HQFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ABF2B9A20785F1C001EDDA5 /* HQFoundation.framework */; };
 		8AEBDCEF206F710600075F30 /* HQStreamDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEBDCEE206F710600075F30 /* HQStreamDownloader.swift */; };
 /* End PBXBuildFile section */
 
@@ -39,17 +36,12 @@
 		8A650AFF2069119200C95462 /* HQDownloadTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HQDownloadTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A650B042069119200C95462 /* HQDownloadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadTests.swift; sourceTree = "<group>"; };
 		8A650B062069119200C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8A650B16206922DD00C95462 /* HQDownloadDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HQDownloadDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		8A650B18206922DD00C95462 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8A650B1A206922DD00C95462 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		8A650B1D206922DD00C95462 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		8A650B1F206922DD00C95462 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		8A650B22206922DD00C95462 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		8A650B24206922DD00C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8A650B4A206A79D000C95462 /* HQDownloadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadOperation.swift; sourceTree = "<group>"; };
 		8A650B4E206BD61800C95462 /* HQDownloadScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadScheduler.swift; sourceTree = "<group>"; };
 		8A650B50206BD64C00C95462 /* HQDownloadUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadUtil.swift; sourceTree = "<group>"; };
 		8A650B54206DB41800C95462 /* HQDownloadCallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadCallback.swift; sourceTree = "<group>"; };
+		8ABF2B9820785F11001EDDA5 /* HQCache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQCache.framework; path = Carthage/Build/iOS/HQCache.framework; sourceTree = "<group>"; };
+		8ABF2B9A20785F1C001EDDA5 /* HQFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQFoundation.framework; path = Carthage/Build/iOS/HQFoundation.framework; sourceTree = "<group>"; };
 		8AEBDCEE206F710600075F30 /* HQStreamDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQStreamDownloader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -58,6 +50,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8ABF2B9B20785F1C001EDDA5 /* HQFoundation.framework in Frameworks */,
+				8ABF2B9920785F11001EDDA5 /* HQCache.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,13 +63,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8A650B13206922DD00C95462 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -84,8 +71,8 @@
 			children = (
 				8A650AF82069119200C95462 /* HQDownload */,
 				8A650B032069119200C95462 /* HQDownloadTests */,
-				8A650B17206922DD00C95462 /* HQDownloadDemo */,
 				8A650AF72069119200C95462 /* Products */,
+				8ABF2B9720785F11001EDDA5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -94,7 +81,6 @@
 			children = (
 				8A650AF62069119200C95462 /* HQDownload.framework */,
 				8A650AFF2069119200C95462 /* HQDownloadTests.xctest */,
-				8A650B16206922DD00C95462 /* HQDownloadDemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -122,17 +108,13 @@
 			path = HQDownloadTests;
 			sourceTree = "<group>";
 		};
-		8A650B17206922DD00C95462 /* HQDownloadDemo */ = {
+		8ABF2B9720785F11001EDDA5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8A650B18206922DD00C95462 /* AppDelegate.swift */,
-				8A650B1A206922DD00C95462 /* ViewController.swift */,
-				8A650B1C206922DD00C95462 /* Main.storyboard */,
-				8A650B1F206922DD00C95462 /* Assets.xcassets */,
-				8A650B21206922DD00C95462 /* LaunchScreen.storyboard */,
-				8A650B24206922DD00C95462 /* Info.plist */,
+				8ABF2B9A20785F1C001EDDA5 /* HQFoundation.framework */,
+				8ABF2B9820785F11001EDDA5 /* HQCache.framework */,
 			);
-			path = HQDownloadDemo;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -153,10 +135,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8A650B0A2069119200C95462 /* Build configuration list for PBXNativeTarget "HQDownload" */;
 			buildPhases = (
+				8ABF2B8120785BCA001EDDA5 /* ShellScript */,
 				8A650AF12069119200C95462 /* Sources */,
 				8A650AF22069119200C95462 /* Frameworks */,
 				8A650AF32069119200C95462 /* Headers */,
 				8A650AF42069119200C95462 /* Resources */,
+				8ABF2B8220785BE6001EDDA5 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -185,23 +169,6 @@
 			productReference = 8A650AFF2069119200C95462 /* HQDownloadTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		8A650B15206922DD00C95462 /* HQDownloadDemo */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 8A650B3B206922DD00C95462 /* Build configuration list for PBXNativeTarget "HQDownloadDemo" */;
-			buildPhases = (
-				8A650B12206922DD00C95462 /* Sources */,
-				8A650B13206922DD00C95462 /* Frameworks */,
-				8A650B14206922DD00C95462 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = HQDownloadDemo;
-			productName = HQDownloadDemo;
-			productReference = 8A650B16206922DD00C95462 /* HQDownloadDemo.app */;
-			productType = "com.apple.product-type.application";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -218,10 +185,6 @@
 						ProvisioningStyle = Automatic;
 					};
 					8A650AFE2069119200C95462 = {
-						CreatedOnToolsVersion = 9.2;
-						ProvisioningStyle = Automatic;
-					};
-					8A650B15206922DD00C95462 = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
 					};
@@ -242,7 +205,6 @@
 			targets = (
 				8A650AF52069119200C95462 /* HQDownload */,
 				8A650AFE2069119200C95462 /* HQDownloadTests */,
-				8A650B15206922DD00C95462 /* HQDownloadDemo */,
 			);
 		};
 /* End PBXProject section */
@@ -262,17 +224,38 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8A650B14206922DD00C95462 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		8ABF2B8120785BCA001EDDA5 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "chmod +x ../update_self.sh & ../update_self.sh";
+		};
+		8ABF2B8220785BE6001EDDA5 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A650B23206922DD00C95462 /* LaunchScreen.storyboard in Resources */,
-				8A650B20206922DD00C95462 /* Assets.xcassets in Resources */,
-				8A650B1E206922DD00C95462 /* Main.storyboard in Resources */,
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/HQFoundation.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/HQCache.framework",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
-/* End PBXResourcesBuildPhase section */
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8A650AF12069119200C95462 /* Sources */ = {
@@ -295,15 +278,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8A650B12206922DD00C95462 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				8A650B1B206922DD00C95462 /* ViewController.swift in Sources */,
-				8A650B19206922DD00C95462 /* AppDelegate.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -313,25 +287,6 @@
 			targetProxy = 8A650B012069119200C95462 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		8A650B1C206922DD00C95462 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8A650B1D206922DD00C95462 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		8A650B21206922DD00C95462 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8A650B22206922DD00C95462 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		8A650B082069119200C95462 /* Debug */ = {
@@ -458,6 +413,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = HQDownload/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -482,6 +442,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = HQDownload/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -524,38 +489,6 @@
 			};
 			name = Release;
 		};
-		8A650B3C206922DD00C95462 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4EXDER2SUV;
-				INFOPLIST_FILE = HQDownloadDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = HQ.HQDownloadDemo;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		8A650B3D206922DD00C95462 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4EXDER2SUV;
-				INFOPLIST_FILE = HQDownloadDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = HQ.HQDownloadDemo;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -582,15 +515,6 @@
 			buildConfigurations = (
 				8A650B0E2069119200C95462 /* Debug */,
 				8A650B0F2069119200C95462 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		8A650B3B206922DD00C95462 /* Build configuration list for PBXNativeTarget "HQDownloadDemo" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				8A650B3C206922DD00C95462 /* Debug */,
-				8A650B3D206922DD00C95462 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

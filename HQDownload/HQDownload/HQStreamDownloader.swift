@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import HQCache
 
 public struct HQStreamDownloader {
 
