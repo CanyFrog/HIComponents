@@ -143,7 +143,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8A650AE0206869CD00C95462 /* Build configuration list for PBXNativeTarget "HQCache" */;
 			buildPhases = (
-				8ABF2B7F207857B4001EDDA5 /*  */,
+				8ABF2B7F207857B4001EDDA5 /* Run script */,
 				8A650AC7206869CD00C95462 /* Sources */,
 				8A650AC8206869CD00C95462 /* Frameworks */,
 				8A650AC9206869CD00C95462 /* Headers */,
@@ -249,17 +249,17 @@
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
-		8ABF2B7F207857B4001EDDA5 /*  */ = {
+		8ABF2B7F207857B4001EDDA5 /* Run script */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "";
+			name = "Run script";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "chmod +x ../update_self.sh & ../update_self.sh";
 		};
