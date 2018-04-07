@@ -1,5 +1,5 @@
 language: objective-c
-osx_image: Xcode 9.3beta
+osx_image: Xcode9.3beta
 # branches:
 #   only:
 #     - test_travis
