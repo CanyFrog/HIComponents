@@ -6,7 +6,7 @@
 //  Copyright © 2018年 com.personal.HQ. All rights reserved.
 //
 
-import Foundation
+import HQFoundation
 
 public class HQDownloadScheduler: NSObject {
     
@@ -96,15 +96,16 @@ public extension HQDownloadScheduler {
     public func addCustomOperation(url: URL, operation: HQDownloadOperation) {
         // add to queue asynchronously execute, so this will not cause deadlock
         operation.completionBlock = { [weak self] in
-            let _ = self?.operationsLock.wait()
-            self?.operationsDict.removeValue(forKey: url)
-            self?.operationsLock.signal()
-        }
+            guard let wself = self else { return }
+            HQDispatchLock.semaphore(wself.operationsLock, closure: {
+                wself.operationsDict.removeValue(forKey: url)
+            })
+          }
         // add or replace operation
-        let _ = operationsLock.wait()
-        operationsDict[url] = operation
-        operationsLock.signal()
         
+        HQDispatchLock.semaphore(operationsLock) {
+            self.operationsDict[url] = operation
+        }
         // start operation
         downloadQueue.addOperation(operation)
     }
@@ -140,23 +141,21 @@ public extension HQDownloadScheduler {
     }
     
     public func setHeader(value: String?, field: String) {
-        if headersLock.wait(timeout: .distantFuture) == .success {
+        HQDispatchLock.semaphore(headersLock) {
             if let v = value {
                 headers[field] = v
             }
             else {
                 headers.removeValue(forKey: field)
             }
-            headersLock.signal()
         }
     }
     
     public func getHeader(field: String) -> String? {
-        let _ = headersLock.wait(timeout: .distantFuture)
-        defer {
-            headersLock.signal()
+        return HQDispatchLock.semaphore(headersLock) { () -> String? in
+            return headers[field]
         }
-        return headers[field]
+        
     }
     
     /**
@@ -168,18 +167,18 @@ public extension HQDownloadScheduler {
     
     public func cancelAllDownloaders() {
         downloadQueue.cancelAllOperations()
-        let _ = operationsLock.wait(timeout: .distantFuture)
-        operationsDict.removeAll()
-        operationsLock.signal()
+        HQDispatchLock.semaphore(operationsLock) {
+            operationsDict.removeAll()
+        }
     }
     
     func cancel(_ token: HQDownloadCallback) {
         guard let url = token.url else { return }
-        let _ = operationsLock.wait(timeout: .distantFuture)
-        if let operation = operationsDict[url], operation.cancel(token) {
-            operationsDict.removeValue(forKey: url)
+        HQDispatchLock.semaphore(operationsLock) {
+            if let operation = operationsDict[url], operation.cancel(token) {
+                operationsDict.removeValue(forKey: url)
+            }
         }
-        operationsLock.signal()
     }
 }
 
