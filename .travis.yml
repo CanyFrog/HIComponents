@@ -1,0 +1,36 @@
+language: objective-c
+osx_image: xcode9.3beta
+# branches:
+#   only:
+#     - test_travis
+if: tag IS present
+env:
+  global:
+  - LC_CTYPE=en_US.UTF-8
+  - LANG=en_US.UTF-8
+  - FRAMEWORK_NAME=${TRAVIS_TAG%%.*}
+  - FRAMEWORK_ZIP="$FRAMEWORK_NAME.framework.zip"
+# Install carthage
+before_install:
+  - brew update
+  - brew outdated carthage || brew upgrade carthage
+install:
+  - cd $FRAMEWORK_NAME
+  - ../update_self.sh & chmod +x ../update_self.sh
+script:
+  - pwd
+  - echo "Run test"
+
+before_deploy:
+  - carthage build --no-skip-current
+  - carthage archive $FRAMEWORK_NAME
+
+deploy:
+  provider: releases
+  api_key: $API_KEY
+  file: $FRAMEWORK_ZIP
+  skip_cleanup: true
+  on:
+    repo: CanyFrog/HIComponents
+    tags: true
+
