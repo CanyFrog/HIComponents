@@ -1,5 +1,5 @@
 language: objective-c
-osx_image: xcode9.2
+osx_image: Xcode 9.3beta
 # branches:
 #   only:
 #     - test_travis
@@ -15,9 +15,10 @@ before_install:
   - brew update
   - brew outdated carthage || brew upgrade carthage
 install:
-  - pwd & cd "$FRAMEWORK_NAME"
+  - cd "$FRAMEWORK_NAME"
   - ../update_self.sh & chmod +x ../update_self.sh
 script:
+  - pwd
   - echo "Run test"
 
 before_deploy:
@@ -26,7 +27,7 @@ before_deploy:
 
 deploy:
   provider: releases
-  api_key: e95f93d6ba660517b2b7bda656944792e36a3ea2
+  api_key: "$API_KEY"
   file: "$FRAMEWORK_ZIP"
   skip_cleanup: true
   on:
