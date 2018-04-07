@@ -15,7 +15,7 @@ before_install:
   - brew update
   - brew outdated carthage || brew upgrade carthage
 install:
-  - cd "$FRAMEWORK_NAME"
+  - cd $FRAMEWORK_NAME
   - ../update_self.sh & chmod +x ../update_self.sh
 script:
   - pwd
@@ -23,12 +23,12 @@ script:
 
 before_deploy:
   - carthage build --no-skip-current
-  - carthage archive "$FRAMEWORK_NAME"
+  - carthage archive $FRAMEWORK_NAME
 
 deploy:
   provider: releases
-  api_key: "$API_KEY"
-  file: "$FRAMEWORK_ZIP"
+  api_key: $API_KEY
+  file: $FRAMEWORK_ZIP
   skip_cleanup: true
   on:
     repo: CanyFrog/HIComponents
