@@ -6,9 +6,6 @@
 //  Copyright © 2018年 com.personal.HQ. All rights reserved.
 //
 
-import Foundation
-
-
 public typealias HQDownloaderProgressClosure = ((_ data: Data?, _ receivedSize: Int, _ expectedSize: Int, _ targetUrl: URL)->Void)
 public typealias HQDownloaderCompletedClosure = ((_ error: Error?)->Void)
 

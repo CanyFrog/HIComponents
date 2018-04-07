@@ -6,7 +6,7 @@
 //  Copyright © 2018年 com.personal.HQ. All rights reserved.
 //
 
-import Foundation
+import HQFoundation
 
 
 public final class HQDownloadOperation: Operation {
@@ -140,24 +140,24 @@ extension HQDownloadOperation {
         guard isReady || !isExecuting || !isFinished else {
             fatalError("Cannot add a callback to an already started operation because the previous data could not be received")
         }
-        let _ = callbacksLock.wait(timeout: .distantFuture)
-        callback.url = request.url
-        callback.operation = self
-        callbackLists.insert(callback)
-        callbacksLock.signal()
+        HQDispatchLock.semaphore(callbacksLock) {
+            callback.url = request.url
+            callback.operation = self
+            callbackLists.insert(callback)
+        }
     }
     
     public func addCallbacks(_ callbacks: [HQDownloadCallback]) {
         guard isReady || !isExecuting || !isFinished else {
             fatalError("Cannot add a callback to an already started operation because the previous data could not be received")
         }
-        let _ = callbacksLock.wait(timeout: .distantFuture)
-        let _ = callbacks.map { [weak self] (cb) -> Void in
-            cb.url = self?.request.url
-            cb.operation = self
-            self?.callbackLists.insert(cb)
+        HQDispatchLock.semaphore(callbacksLock) {
+            let _ = callbacks.map { [weak self] (cb) -> Void in
+                cb.url = self?.request.url
+                cb.operation = self
+                self?.callbackLists.insert(cb)
+            }
         }
-        callbacksLock.signal()
     }
     
     @discardableResult
@@ -173,14 +173,12 @@ extension HQDownloadOperation {
     
     @discardableResult
     public func cancel(_ callback: HQDownloadCallback) -> Bool {
-        var shouldCancel = false
-        let _ = callbacksLock.wait(timeout: .distantFuture)
-        callbackLists = callbackLists.filter{ $0 != callback }
-        shouldCancel = callbackLists.isEmpty
-        callbacksLock.signal()
         
-        if shouldCancel { cancel() }
-        return shouldCancel
+        return HQDispatchLock.semaphore(callbacksLock) { () -> Bool in
+            callbackLists = callbackLists.filter{ $0 != callback }
+            if callbackLists.isEmpty { cancel() }
+            return callbackLists.isEmpty
+        }
     }
 }
 
@@ -244,7 +242,7 @@ private extension HQDownloadOperation {
     }
     
     func reset() {
-        if callbacksLock.wait(timeout: .distantFuture) == .success {
+        HQDispatchLock.semaphore(callbacksLock) {
             callbackLists.removeAll()
             callbacksLock.signal()
         }

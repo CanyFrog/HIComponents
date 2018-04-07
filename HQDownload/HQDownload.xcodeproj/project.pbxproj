@@ -89,12 +89,12 @@
 			isa = PBXGroup;
 			children = (
 				8A650AF92069119200C95462 /* HQDownload.h */,
-				8A650AFA2069119200C95462 /* Info.plist */,
 				8A650B50206BD64C00C95462 /* HQDownloadUtil.swift */,
 				8A650B4E206BD61800C95462 /* HQDownloadScheduler.swift */,
 				8A650B4A206A79D000C95462 /* HQDownloadOperation.swift */,
 				8A650B54206DB41800C95462 /* HQDownloadCallback.swift */,
 				8AEBDCEE206F710600075F30 /* HQStreamDownloader.swift */,
+				8A650AFA2069119200C95462 /* Info.plist */,
 			);
 			path = HQDownload;
 			sourceTree = "<group>";
