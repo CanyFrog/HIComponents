@@ -95,7 +95,9 @@ public final class HQDownloadOperation: Operation {
         super.init()
         
         self.request = request
-        configRequest(obtainTargetPath(path))
+        let size = obtainTargetPath(path)
+        configRequest(size)
+        progress.completedUnitCount = size
         openStream()
         self.options = options
         self.injectSession = session
@@ -130,7 +132,7 @@ public extension HQDownloadOperation {
         addBackgroundTask()
         
         // add task
-        dataTask = session.dataTask(with: request!)
+        dataTask = session.dataTask(with: request)
         _executing = true
         
         objc_sync_exit(self)
@@ -152,11 +154,12 @@ extension HQDownloadOperation {
         }
     }
     
+    // FIXME: when callback is empty, continue download?
     public func remove(_ token: Any){
         guard let time = token as? CFAbsoluteTime, callbackLists.keys.contains(time) else { return }
         HQDispatchLock.semaphore(callbacksLock) {
             callbackLists.removeValue(forKey: time)
-            if callbackLists.isEmpty { cancel() }
+            if callbackLists.isEmpty { cancel() } // continue download ?
         }
     }
 }
@@ -287,7 +290,7 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         }
         
         if valid {
-            progress.completedUnitCount = 0
+            progress.completedUnitCount += 0
             progress.totalUnitCount = response.expectedContentLength
             invokeCallbackClosure()
         }
@@ -302,6 +305,7 @@ extension HQDownloadOperation: URLSessionDataDelegate {
     
     /// request receive data callback
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+        
         stream.write([UInt8](data), maxLength: data.count)
         
         progress.completedUnitCount += Int64(data.count)
