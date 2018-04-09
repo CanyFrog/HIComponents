@@ -50,7 +50,7 @@ public class HQDownloadScheduler: NSObject {
     
     init(sessionConfig: URLSessionConfiguration) {
         super.init()
-        downloadQueue.name = "com.scheduler.download.personal.HQ"
+        downloadQueue.name = "com.scheduler.download.personal.HQ" + UUID().uuidString
         downloadQueue.maxConcurrentOperationCount = 6
         changeSession(config: sessionConfig)
     }
@@ -67,10 +67,12 @@ public class HQDownloadScheduler: NSObject {
     private var downloadQueue = OperationQueue()
     private var operationsLock = DispatchSemaphore(value: 1)
     private var headersLock = DispatchSemaphore(value: 1)
+    private weak var lastedOperation: Operation?
     private var ownSession: URLSession!
+    
     // global headers
     private var headers = [String: String]()
-    private weak var lastedOperation: Operation?
+    
     
 }
 

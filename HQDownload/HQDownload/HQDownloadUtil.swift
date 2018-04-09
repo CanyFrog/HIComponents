@@ -8,6 +8,8 @@
 
 import Foundation
 
+public typealias HQDownloadCallback = (_ url: URL, _ progress: Progress, _ dataPath: String?, _ error: Error, _ finished: Bool) -> Void
+
 public struct HQDownloadOptions: OptionSet {
     public let rawValue: UInt
     
@@ -31,4 +33,9 @@ public struct HQDownloadOptions: OptionSet {
     public init(rawValue: HQDownloadOptions.RawValue) {
         self.rawValue = rawValue
     }
+}
+
+
+public class HQDownloadProgress: Progress {
+    
 }

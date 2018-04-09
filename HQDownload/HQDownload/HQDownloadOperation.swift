@@ -30,13 +30,14 @@ public final class HQDownloadOperation: Operation {
     
     public private(set) var options: HQDownloadOptions!
     
-    public private(set) var currentSize: Int = 0
+    public private(set) var progress = Progress()
     
-    /// The excepted size of data
-    public private(set) var expectedSize: Int = Int.max
+//    public private(set) var currentSize: Int = 0 // remove
+//    /// The excepted size of data
+//    public private(set) var expectedSize: Int = Int.max
     
     /// callback dictionary list
-    public private(set) var callbackLists = Set<HQDownloadCallback>()
+    public private(set) var callbackLists = [CFAbsoluteTime: HQDownloadCallback]()
     
     // MARK: - opertion property
     
@@ -108,6 +109,7 @@ public extension HQDownloadOperation {
     }
     
     public override func start() {
+
         objc_sync_enter(self)
         
         if isCancelled {
@@ -136,48 +138,63 @@ public extension HQDownloadOperation {
 // FIXME: When task start, add callback will not received data that before added callback time; so must be add before start
 
 extension HQDownloadOperation {
-    public func addCallback(_ callback: HQDownloadCallback) {
-        guard isReady || !isExecuting || !isFinished else {
-            fatalError("Cannot add a callback to an already started operation because the previous data could not be received")
-        }
-        HQDispatchLock.semaphore(callbacksLock) {
-            callback.url = request.url
-            callback.operation = self
-            callbackLists.insert(callback)
-        }
-    }
-    
-    public func addCallbacks(_ callbacks: [HQDownloadCallback]) {
-        guard isReady || !isExecuting || !isFinished else {
-            fatalError("Cannot add a callback to an already started operation because the previous data could not be received")
-        }
-        HQDispatchLock.semaphore(callbacksLock) {
-            let _ = callbacks.map { [weak self] (cb) -> Void in
-                cb.url = self?.request.url
-                cb.operation = self
-                self?.callbackLists.insert(cb)
-            }
-        }
-    }
-    
-    @discardableResult
-    public func addCallback(progress: HQDownloaderProgressClosure?, completed: HQDownloaderCompletedClosure?) -> HQDownloadCallback? {
-        guard isReady || !isExecuting || !isFinished else {
-            fatalError("Cannot add a callback to an already started operation because the previous data could not be received")
-        }
-        guard progress != nil || completed != nil else { return nil }
-        let callback = HQDownloadCallback(url: request.url, operation: self, progress: progress, completed: completed)
-        addCallback(callback)
-        return callback
-    }
-    
-    @discardableResult
-    public func cancel(_ callback: HQDownloadCallback) -> Bool {
+    public func addCallback(_ callback: @escaping HQDownloadCallback) -> Any {
+//        guard isReady || !isExecuting || !isFinished else {
+//            fatalError("Cannot add a callback to an already started operation because the previous data could not be received")
+//        }
+//        HQDispatchLock.semaphore(callbacksLock) {
+//            callback.url = request.url
+//            callback.operation = self
+//            callbackLists.insert(callback)
+//        }
         
-        return HQDispatchLock.semaphore(callbacksLock) { () -> Bool in
-            callbackLists = callbackLists.filter{ $0 != callback }
+        return HQDispatchLock.semaphore(callbacksLock) { () -> CFAbsoluteTime in
+            let time = CFAbsoluteTimeGetCurrent()
+            callbackLists[time] = callback
+            return time
+        }
+    }
+    
+//    public func addCallbacks(_ callbacks: [HQDownloadCallback]) {
+//        guard isReady || !isExecuting || !isFinished else {
+//            fatalError("Cannot add a callback to an already started operation because the previous data could not be received")
+//        }
+//        HQDispatchLock.semaphore(callbacksLock) {
+//            let _ = callbacks.map { [weak self] (cb) -> Void in
+//                cb.url = self?.request.url
+//                cb.operation = self
+////                self?.callbackLists.insert(cb)
+//            }
+//        }
+//    }
+    
+//    @discardableResult
+//    public func addCallback(progress: HQDownloaderProgressClosure?, completed: HQDownloaderCompletedClosure?) -> HQDownloadCallback? {
+//        guard isReady || !isExecuting || !isFinished else {
+//            fatalError("Cannot add a callback to an already started operation because the previous data could not be received")
+//        }
+//        guard progress != nil || completed != nil else { return nil }
+//        let callback = HQDownloadCallback(url: request.url, operation: self, progress: progress, completed: completed)
+//        addCallback(callback)
+//        return callback
+//    }
+    
+//    @discardableResult
+//    public func cancel(_ callback: HQDownloadCallback) -> Bool {
+//
+//        return HQDispatchLock.semaphore(callbacksLock) { () -> Bool in
+//            callbackLists = callbackLists.filter{ $0 != callback }
+//            if callbackLists.isEmpty { cancel() }
+//            return callbackLists.isEmpty
+//        }
+//    }
+    
+    
+    public func remove(_ token: Any){
+        guard let time = token as? CFAbsoluteTime, callbackLists.keys.contains(time) else { return }
+        HQDispatchLock.semaphore(callbacksLock) {
+            callbackLists.removeValue(forKey: time)
             if callbackLists.isEmpty { cancel() }
-            return callbackLists.isEmpty
         }
     }
 }
@@ -217,7 +234,6 @@ private extension HQDownloadOperation {
         }
         
         task.resume()
-        
         invokeProgressClosure(data: nil, receivedSize: 0, expectedSize: expectedSize, targetUrl: request.url!)
     }
 }
