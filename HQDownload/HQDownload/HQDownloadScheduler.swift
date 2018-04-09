@@ -81,18 +81,18 @@ public class HQDownloadScheduler: NSObject {
 
 public extension HQDownloadScheduler {
     
-    public func download(url: URL, options: HQDownloadOptions, progress: HQDownloaderProgressClosure?, completed: HQDownloaderCompletedClosure?) -> HQDownloadCallback? {
-        let callback = HQDownloadCallback(progress: progress, completed: completed)
-        download(url: url, options: options, callbacks: [callback])
-        return callback
-    }
-    
-    public func download(url: URL, options: HQDownloadOptions, callbacks: [HQDownloadCallback] = [HQDownloadCallback]()) {
-        let operation = createOperation(url: url, options: options)
-        // first add callback
-        operation.addCallbacks(callbacks)
-        addCustomOperation(url: url, operation: operation)
-    }
+//    public func download(url: URL, options: HQDownloadOptions, progress: HQDownloaderProgressClosure?, completed: HQDownloaderCompletedClosure?) -> HQDownloadCallback? {
+//        let callback = HQDownloadCallback(progress: progress, completed: completed)
+//        download(url: url, options: options, callbacks: [callback])
+//        return callback
+//    }
+//
+//    public func download(url: URL, options: HQDownloadOptions, callbacks: [HQDownloadCallback] = [HQDownloadCallback]()) {
+//        let operation = createOperation(url: url, options: options)
+//        // first add callback
+//        operation.addCallbacks(callbacks)
+//        addCustomOperation(url: url, operation: operation)
+//    }
     
     /// if url associate operation is exists, will remove all task and change it
     public func addCustomOperation(url: URL, operation: HQDownloadOperation) {
@@ -174,12 +174,9 @@ public extension HQDownloadScheduler {
         }
     }
     
-    func cancel(_ token: HQDownloadCallback) {
-        guard let url = token.url else { return }
+    func remove(_ url: URL) {
         HQDispatchLock.semaphore(operationsLock) {
-            if let operation = operationsDict[url], operation.cancel(token) {
-                operationsDict.removeValue(forKey: url)
-            }
+            operationsDict.removeValue(forKey: url)
         }
     }
 }
@@ -203,7 +200,7 @@ private extension HQDownloadScheduler {
             request.allHTTPHeaderFields = headers
         }
         
-        let operation = HQDownloadOperation(request: request, options: options, session: ownSession)
+        let operation = HQDownloadOperation(request: request, options: options, path: "f", session: ownSession)
         if let cred = urlCredential {
             operation.credential = cred
         }

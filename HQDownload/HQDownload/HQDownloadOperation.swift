@@ -10,7 +10,6 @@ import HQFoundation
 
 
 public final class HQDownloadOperation: Operation {
-    
     // MARK: - network relevant
     
     /// The credential used for authentication challenges in `-URLSession:task:didReceiveChallenge:completionHandler:`.
@@ -30,11 +29,13 @@ public final class HQDownloadOperation: Operation {
     
     public private(set) var options: HQDownloadOptions!
     
-    public private(set) var progress = Progress()
-    
-//    public private(set) var currentSize: Int = 0 // remove
-//    /// The excepted size of data
-//    public private(set) var expectedSize: Int = Int.max
+    public private(set) var progress: Progress = {
+        let progress = Progress()
+        progress.isPausable = true
+        progress.isCancellable = true
+        
+        return progress
+    }()
     
     /// callback dictionary list
     public private(set) var callbackLists = [CFAbsoluteTime: HQDownloadCallback]()
@@ -77,21 +78,28 @@ public final class HQDownloadOperation: Operation {
     
     private var session: URLSession { return injectSession ?? taskSession }
     private var callbacksLock = DispatchSemaphore(value: 1)
-    
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
     
-    /// Serial queue invokes blocks serially in FIFO order
-//    private lazy var handleQueue = DispatchQueue(label: "com.operation.download.personal.HQ")
     
+    private var targetPath: String!
+    private var stream: OutputStream!
     
-    public init(request: URLRequest, options: HQDownloadOptions, session: URLSession?) {
+    /// Init download operation
+    ///
+    /// - Parameters:
+    ///   - request: download request
+    ///   - path: Stored download data file or directory
+    ///           if is breadpoint continue download, set file path
+    ///           if is new download, set save directory
+    public init(request: URLRequest, options: HQDownloadOptions, path: String, session: URLSession? = nil) {
         super.init()
+        
         self.request = request
+        configRequest(obtainTargetPath(path))
+        openStream()
         self.options = options
-        injectSession = session
+        self.injectSession = session
     }
-    
-    
 }
 
 // MARK: - Override function
@@ -135,60 +143,14 @@ public extension HQDownloadOperation {
 }
 
 // MARK: - Public function
-// FIXME: When task start, add callback will not received data that before added callback time; so must be add before start
-
 extension HQDownloadOperation {
     public func addCallback(_ callback: @escaping HQDownloadCallback) -> Any {
-//        guard isReady || !isExecuting || !isFinished else {
-//            fatalError("Cannot add a callback to an already started operation because the previous data could not be received")
-//        }
-//        HQDispatchLock.semaphore(callbacksLock) {
-//            callback.url = request.url
-//            callback.operation = self
-//            callbackLists.insert(callback)
-//        }
-        
         return HQDispatchLock.semaphore(callbacksLock) { () -> CFAbsoluteTime in
             let time = CFAbsoluteTimeGetCurrent()
             callbackLists[time] = callback
             return time
         }
     }
-    
-//    public func addCallbacks(_ callbacks: [HQDownloadCallback]) {
-//        guard isReady || !isExecuting || !isFinished else {
-//            fatalError("Cannot add a callback to an already started operation because the previous data could not be received")
-//        }
-//        HQDispatchLock.semaphore(callbacksLock) {
-//            let _ = callbacks.map { [weak self] (cb) -> Void in
-//                cb.url = self?.request.url
-//                cb.operation = self
-////                self?.callbackLists.insert(cb)
-//            }
-//        }
-//    }
-    
-//    @discardableResult
-//    public func addCallback(progress: HQDownloaderProgressClosure?, completed: HQDownloaderCompletedClosure?) -> HQDownloadCallback? {
-//        guard isReady || !isExecuting || !isFinished else {
-//            fatalError("Cannot add a callback to an already started operation because the previous data could not be received")
-//        }
-//        guard progress != nil || completed != nil else { return nil }
-//        let callback = HQDownloadCallback(url: request.url, operation: self, progress: progress, completed: completed)
-//        addCallback(callback)
-//        return callback
-//    }
-    
-//    @discardableResult
-//    public func cancel(_ callback: HQDownloadCallback) -> Bool {
-//
-//        return HQDispatchLock.semaphore(callbacksLock) { () -> Bool in
-//            callbackLists = callbackLists.filter{ $0 != callback }
-//            if callbackLists.isEmpty { cancel() }
-//            return callbackLists.isEmpty
-//        }
-//    }
-    
     
     public func remove(_ token: Any){
         guard let time = token as? CFAbsoluteTime, callbackLists.keys.contains(time) else { return }
@@ -234,25 +196,49 @@ private extension HQDownloadOperation {
         }
         
         task.resume()
-        invokeProgressClosure(data: nil, receivedSize: 0, expectedSize: expectedSize, targetUrl: request.url!)
+        invokeCallbackClosure()
+    }
+    
+    
+    /// If file is existed, return file current size, othrewise return 0
+    func obtainTargetPath(_ path: String) -> Int64 {
+        var isDirectory: ObjCBool = false
+        if FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory), !isDirectory.boolValue {
+            targetPath = path
+            let attr = try? FileManager.default.attributesOfItem(atPath: path)
+            let size = (attr?[.size] as? Int64) ?? 0
+            return size
+        }
+        
+        let name = request.url!.lastPathComponent.utf8
+        targetPath = path.last == "/" ? "\(path)\(name)" : "\(path)/\(name)"
+        return 0
+    }
+    
+    func configRequest(_ size: Int64) {
+        request.addValue(String(format: "bytes=%llu-", size), forHTTPHeaderField: "Range")
+    }
+    
+    func openStream() {
+        stream = OutputStream(toFileAtPath: targetPath, append: true)
+        stream.schedule(in: RunLoop.current, forMode: .defaultRunLoopMode)
+        stream.open()
+    }
+    
+    func closeStream() {
+        stream.close()
+        stream.remove(from: RunLoop.current, forMode: .defaultRunLoopMode)
     }
 }
 
 
 // MARK: - State & Helper function
 private extension HQDownloadOperation {
-    func invokeCompletedClosure(error: Error?) {
-        let _ = callbackLists.map { (callback) -> Void in
-            if let completed = callback.completedClosure {
-                completed(error)
-            }
-        }
-    }
-    
-    func invokeProgressClosure(data: Data?, receivedSize: Int, expectedSize: Int, targetUrl: URL) {
-        let _ = callbackLists.map { (callback) -> Void in
-            if let progress = callback.progressClosure {
-                progress(data, receivedSize, expectedSize, targetUrl)
+    func invokeCallbackClosure(_ error: Error? = nil, _ finished: Bool = false) {
+        let _ = callbackLists.values.compactMap { (callback) -> Void in
+//            (_ url: URL, _ progress: Progress, _ dataPath: String?, _ error: Error, _ finished: Bool) -> Void
+            if let url = request.url {
+                callback(url, progress, targetPath, error, finished)
             }
         }
     }
@@ -264,6 +250,7 @@ private extension HQDownloadOperation {
         }
         dataTask = nil
         session.invalidateAndCancel()
+        closeStream()
     }
     
     func done() {
@@ -281,7 +268,6 @@ extension HQDownloadOperation: URLSessionDataDelegate {
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         
         var disposition = URLSession.ResponseDisposition.allow
-        expectedSize = max(Int(response.expectedContentLength), 0)
         self.response = response
         
         var statusCode = 200
@@ -301,7 +287,9 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         }
         
         if valid {
-            invokeProgressClosure(data: nil, receivedSize: 0, expectedSize: expectedSize, targetUrl: request.url!)
+            progress.completedUnitCount = 0
+            progress.totalUnitCount = response.expectedContentLength
+            invokeCallbackClosure()
         }
         else {
             // if not valid, cancel request. the session will call complete delegate function, so do not need invoke complete callback
@@ -314,10 +302,10 @@ extension HQDownloadOperation: URLSessionDataDelegate {
     
     /// request receive data callback
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        // FIXME: wait insert tool do something in handleQueue
+        stream.write([UInt8](data), maxLength: data.count)
         
-        currentSize += data.count
-        invokeProgressClosure(data: data, receivedSize: currentSize, expectedSize: expectedSize, targetUrl: request.url!)
+        progress.completedUnitCount += Int64(data.count)
+        invokeCallbackClosure()
     }
 
     
@@ -328,7 +316,7 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         objc_sync_exit(self)
         
         /// error is nil means task complete, otherwise is error interrupt request
-        invokeCompletedClosure(error: error)
+        invokeCallbackClosure(error, true)
         done()
     }
     
