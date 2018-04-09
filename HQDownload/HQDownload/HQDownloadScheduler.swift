@@ -12,6 +12,7 @@ public class HQDownloadScheduler: NSObject {
     
     public static let scheduler: HQDownloadScheduler = HQDownloadScheduler(sessionConfig: URLSessionConfiguration.default)
     
+    // MARK: - execution order
     public enum ExecutionOrder {
         case FIFO // first in first out
         case LIFO // last in first out
@@ -19,6 +20,7 @@ public class HQDownloadScheduler: NSObject {
     
     public var executionOrder: ExecutionOrder = .FIFO
     
+    // MARK: - downloaders
     public var maxConcurrentDownloaders: Int {
         set {
             downloadQueue.maxConcurrentOperationCount = maxConcurrentDownloaders
@@ -38,21 +40,47 @@ public class HQDownloadScheduler: NSObject {
         return ownSession?.configuration
     }
     
-    /// Only change create current operation headers,
-    public var headersFilter: ((_ url: URL, _ headers: [String: String]?)-> [String: String])?
-    
     // MARK: - authentication
     public var urlCredential: URLCredential?
     public var username: String?
     public var password: String?
     
-    public private(set) var operationsDict = [URL: HQDownloadOperation]()
+    // MARK: - private property
     
-    init(sessionConfig: URLSessionConfiguration) {
+    // global headers
+    private var headers = [String: String]()
+    
+    /// Only change create current operation headers,
+    public var headersFilter: ((_ url: URL, _ headers: [String: String]?)-> [String: String])?
+    private var headersLock = DispatchSemaphore(value: 1)
+    
+    private var downloadQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.name = "com.scheduler.download.personal.HQ" + UUID().uuidString
+        queue.maxConcurrentOperationCount = 6
+        return queue
+    }()
+    private weak var lastedOperation: Operation?
+    
+    private var ownSession: URLSession!
+    
+    public private(set) var operationsDict = [URL: HQDownloadOperation]()
+    private var operationsLock = DispatchSemaphore(value: 1)
+    
+//    private var cache:
+    public private(set) var path: String!
+
+    public private(set) var progress: Progress = {
+        let pro = Progress()
+        pro.isCancellable = true
+        pro.isPausable = true
+        return pro
+    }()
+    
+    init(sessionConfig: URLSessionConfiguration, name: String? = nil) {
         super.init()
-        downloadQueue.name = "com.scheduler.download.personal.HQ" + UUID().uuidString
-        downloadQueue.maxConcurrentOperationCount = 6
         changeSession(config: sessionConfig)
+        self.path = "\(NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)/\(name ?? "download")"
     }
     
     deinit {
@@ -60,20 +88,6 @@ public class HQDownloadScheduler: NSObject {
         ownSession?.invalidateAndCancel()
         ownSession = nil
     }
-    
-    
-    // MARK: - private property
-    
-    private var downloadQueue = OperationQueue()
-    private var operationsLock = DispatchSemaphore(value: 1)
-    private var headersLock = DispatchSemaphore(value: 1)
-    private weak var lastedOperation: Operation?
-    private var ownSession: URLSession!
-    
-    // global headers
-    private var headers = [String: String]()
-    
-    
 }
 
 
@@ -176,6 +190,8 @@ public extension HQDownloadScheduler {
     
     func remove(_ url: URL) {
         HQDispatchLock.semaphore(operationsLock) {
+            let operation = operationsDict[url]
+            operation?.cancel()
             operationsDict.removeValue(forKey: url)
         }
     }
