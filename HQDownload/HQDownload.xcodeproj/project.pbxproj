@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		60B6E0F3207C4FA300C4C594 /* HQDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F2207C4FA300C4C594 /* HQDownloader.swift */; };
+		60B6E0F5207C511200C4C594 /* HQDownloadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F4207C511200C4C594 /* HQDownloadRequest.swift */; };
+		60B6E0F7207C83CE00C4C594 /* HQDownloadRequestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */; };
+		60B6E0FC207C95B200C4C594 /* HQDownloadOperationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0FB207C95B200C4C594 /* HQDownloadOperationTest.swift */; };
 		8A650B002069119200C95462 /* HQDownload.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A650AF62069119200C95462 /* HQDownload.framework */; };
 		8A650B052069119200C95462 /* HQDownloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B042069119200C95462 /* HQDownloadTests.swift */; };
 		8A650B072069119200C95462 /* HQDownload.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A650AF92069119200C95462 /* HQDownload.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -28,6 +32,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		60B6E0F2207C4FA300C4C594 /* HQDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloader.swift; sourceTree = "<group>"; };
+		60B6E0F4207C511200C4C594 /* HQDownloadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadRequest.swift; sourceTree = "<group>"; };
+		60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadRequestTest.swift; sourceTree = "<group>"; };
+		60B6E0FB207C95B200C4C594 /* HQDownloadOperationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadOperationTest.swift; sourceTree = "<group>"; };
 		8A650AF62069119200C95462 /* HQDownload.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HQDownload.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A650AF92069119200C95462 /* HQDownload.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HQDownload.h; sourceTree = "<group>"; };
 		8A650AFA2069119200C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -86,8 +94,10 @@
 			children = (
 				8A650AF92069119200C95462 /* HQDownload.h */,
 				8A650B50206BD64C00C95462 /* HQDownloadUtil.swift */,
+				60B6E0F4207C511200C4C594 /* HQDownloadRequest.swift */,
 				8A650B4E206BD61800C95462 /* HQDownloadScheduler.swift */,
 				8A650B4A206A79D000C95462 /* HQDownloadOperation.swift */,
+				60B6E0F2207C4FA300C4C594 /* HQDownloader.swift */,
 				8A650AFA2069119200C95462 /* Info.plist */,
 			);
 			path = HQDownload;
@@ -97,6 +107,8 @@
 			isa = PBXGroup;
 			children = (
 				8A650B042069119200C95462 /* HQDownloadTests.swift */,
+				60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */,
+				60B6E0FB207C95B200C4C594 /* HQDownloadOperationTest.swift */,
 				8A650B062069119200C95462 /* Info.plist */,
 			);
 			path = HQDownloadTests;
@@ -256,7 +268,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60B6E0F5207C511200C4C594 /* HQDownloadRequest.swift in Sources */,
 				8A650B51206BD64C00C95462 /* HQDownloadUtil.swift in Sources */,
+				60B6E0F3207C4FA300C4C594 /* HQDownloader.swift in Sources */,
 				8A650B4B206A79D000C95462 /* HQDownloadOperation.swift in Sources */,
 				8A650B4F206BD61800C95462 /* HQDownloadScheduler.swift in Sources */,
 			);
@@ -266,7 +280,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60B6E0F7207C83CE00C4C594 /* HQDownloadRequestTest.swift in Sources */,
 				8A650B052069119200C95462 /* HQDownloadTests.swift in Sources */,
+				60B6E0FC207C95B200C4C594 /* HQDownloadOperationTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
