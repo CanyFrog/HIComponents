@@ -36,6 +36,4 @@ public struct HQDownloadOptions: OptionSet {
 }
 
 
-public class HQDownloadProgress: Progress {
-    
-}
+

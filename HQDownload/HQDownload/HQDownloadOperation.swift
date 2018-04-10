@@ -11,23 +11,20 @@ import HQFoundation
 
 public final class HQDownloadOperation: Operation {
     // MARK: - network relevant
-    
-    /// The credential used for authentication challenges in `-URLSession:task:didReceiveChallenge:completionHandler:`.
-    /// This will be overridden by any shared credentials that exist for the username or password of the request URL, if present.
-    public var credential: URLCredential?
-    
     public var sessionConfig: URLSessionConfiguration {
         return session.configuration
     }
     
     /// The request used by the operation's task
-    public private(set) var request: URLRequest!
+    public private(set) var requestWrapper: HQDownloadRequest!
     
     public private(set) var dataTask: URLSessionTask?
     
     public private(set) var response: URLResponse?
     
-    public private(set) var options: HQDownloadOptions!
+    public private(set) var backgroundTask: Bool = true
+    
+    public var priority: Float = URLSessionTask.defaultPriority
     
     public private(set) var progress: Progress = {
         let progress = Progress()
@@ -40,14 +37,11 @@ public final class HQDownloadOperation: Operation {
     /// callback dictionary list
     public private(set) var callbackLists = [CFAbsoluteTime: HQDownloadCallback]()
     
-    // MARK: - opertion property
+    // MARK: - Opertion property
     
     open override var isConcurrent: Bool { return true }
     
     open override var isAsynchronous: Bool { return true }
-    
-    
-    // MARK: - private
     
     private var _executing = false {
         willSet {
@@ -66,6 +60,8 @@ public final class HQDownloadOperation: Operation {
         }
     }
     
+    // MARK: - Private
+    
     /// This is weak because it is injected by whoever manages this session. If this gets nil-ed out, we won't be able to run the task associated with this operation
     private weak var injectSession: URLSession?
     
@@ -80,27 +76,20 @@ public final class HQDownloadOperation: Operation {
     private var callbacksLock = DispatchSemaphore(value: 1)
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
     
-    
-    private var targetPath: String!
+    private var destinationPath: String!
     private var stream: OutputStream!
     
-    /// Init download operation
-    ///
-    /// - Parameters:
-    ///   - request: download request
-    ///   - path: Stored download data file or directory
-    ///           if is breadpoint continue download, set file path
-    ///           if is new download, set save directory
-    public init(request: URLRequest, options: HQDownloadOptions, path: String, session: URLSession? = nil) {
+    public init(request: HQDownloadRequest, targetPath: String, session: URLSession? = nil) {
         super.init()
         
-        self.request = request
-        let size = obtainTargetPath(path)
-        configRequest(size)
-        progress.completedUnitCount = size
+        requestWrapper = request
+        if let range = requestWrapper.downloadRange {
+            progress.completedUnitCount = range.0 ?? 0
+            progress.totalUnitCount = range.1 ?? Int64.max
+        }
+        destinationPath = targetPath
         openStream()
-        self.options = options
-        self.injectSession = session
+        injectSession = session
     }
 }
 
@@ -128,19 +117,34 @@ public extension HQDownloadOperation {
             return
         }
         
-        // background task
-        addBackgroundTask()
+        // register background task
+        if backgroundTask {
+            backgroundTaskId = UIApplication.shared.beginBackgroundTask { [weak self] in
+                // task finished block
+                if let wSelf = self {
+                    wSelf.cancel()
+                    UIApplication.shared.endBackgroundTask(wSelf.backgroundTaskId!)
+                    wSelf.backgroundTaskId = UIBackgroundTaskInvalid
+                }
+            }
+        }
         
         // add task
-        dataTask = session.dataTask(with: request)
+        dataTask = session.dataTask(with: requestWrapper.request)
+        dataTask?.priority = priority
         _executing = true
         
         objc_sync_exit(self)
         
-        configTask()
+        // start task
+        dataTask?.resume()
+        invokeCallbackClosure()
         
         // if task finished, remove background task
-        removeBackgroundTask()
+        if let backgroundTaskId = backgroundTaskId, backgroundTaskId != UIBackgroundTaskInvalid {
+            UIApplication.shared.endBackgroundTask(backgroundTaskId)
+            self.backgroundTaskId = UIBackgroundTaskInvalid
+        }
     }
 }
 
@@ -154,83 +158,12 @@ extension HQDownloadOperation {
         }
     }
     
-    // FIXME: when callback is empty, continue download?
     public func remove(_ token: Any){
         guard let time = token as? CFAbsoluteTime, callbackLists.keys.contains(time) else { return }
         HQDispatchLock.semaphore(callbacksLock) {
             callbackLists.removeValue(forKey: time)
-            if callbackLists.isEmpty { cancel() } // continue download ?
+            if callbackLists.isEmpty { cancel() }
         }
-    }
-}
-
-
-// MARK: - Operation task step
-private extension HQDownloadOperation {
-    func addBackgroundTask() {
-        if !options.contains(.continueInBackground) { return }
-        backgroundTaskId = UIApplication.shared.beginBackgroundTask { [weak self] in
-            if let wSelf = self {
-                wSelf.cancel()
-                UIApplication.shared.endBackgroundTask(wSelf.backgroundTaskId!)
-                wSelf.backgroundTaskId = UIBackgroundTaskInvalid
-            }
-        }
-    }
-    
-    func removeBackgroundTask() {
-        // set end background task
-        if let backgroundTaskId = backgroundTaskId, backgroundTaskId != UIBackgroundTaskInvalid {
-            UIApplication.shared.endBackgroundTask(backgroundTaskId)
-            self.backgroundTaskId = UIBackgroundTaskInvalid
-        }
-    }
-    
-    func configTask() {
-        guard let task = dataTask else { fatalError("URLSessionTask not initialize success") }
-        
-        if task.responds(to: #selector(setter: URLSessionTask.priority)) {
-            if options.contains(.highPriority) {
-                task.priority = URLSessionTask.highPriority
-            }
-            else if options.contains(.lowPriority) {
-                task.priority = URLSessionTask.lowPriority
-            }
-        }
-        
-        task.resume()
-        invokeCallbackClosure()
-    }
-    
-    
-    /// If file is existed, return file current size, othrewise return 0
-    func obtainTargetPath(_ path: String) -> Int64 {
-        var isDirectory: ObjCBool = false
-        if FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory), !isDirectory.boolValue {
-            targetPath = path
-            let attr = try? FileManager.default.attributesOfItem(atPath: path)
-            let size = (attr?[.size] as? Int64) ?? 0
-            return size
-        }
-        
-        let name = request.url!.lastPathComponent.utf8
-        targetPath = path.last == "/" ? "\(path)\(name)" : "\(path)/\(name)"
-        return 0
-    }
-    
-    func configRequest(_ size: Int64) {
-        request.addValue(String(format: "bytes=%llu-", size), forHTTPHeaderField: "Range")
-    }
-    
-    func openStream() {
-        stream = OutputStream(toFileAtPath: targetPath, append: true)
-        stream.schedule(in: RunLoop.current, forMode: .defaultRunLoopMode)
-        stream.open()
-    }
-    
-    func closeStream() {
-        stream.close()
-        stream.remove(from: RunLoop.current, forMode: .defaultRunLoopMode)
     }
 }
 
@@ -238,10 +171,10 @@ private extension HQDownloadOperation {
 // MARK: - State & Helper function
 private extension HQDownloadOperation {
     func invokeCallbackClosure(_ error: Error? = nil, _ finished: Bool = false) {
-        let _ = callbackLists.values.compactMap { (callback) -> Void in
+        callbackLists.values.forEach { (callback) in
 //            (_ url: URL, _ progress: Progress, _ dataPath: String?, _ error: Error, _ finished: Bool) -> Void
-            if let url = request.url {
-                callback(url, progress, targetPath, error, finished)
+            if let url = requestWrapper.request.url {
+                callback(url, progress, destinationPath, error, finished)
             }
         }
     }
@@ -260,6 +193,17 @@ private extension HQDownloadOperation {
         _finished = true
         _executing = false
         reset()
+    }
+    
+    func openStream() {
+        stream = OutputStream(toFileAtPath: destinationPath, append: true)
+        stream.schedule(in: RunLoop.current, forMode: .defaultRunLoopMode)
+        stream.open()
+    }
+    
+    func closeStream() {
+        stream.close()
+        stream.remove(from: RunLoop.current, forMode: .defaultRunLoopMode)
     }
 }
 
@@ -285,12 +229,12 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         var urlCache: URLCache! = session.configuration.urlCache
         if urlCache == nil { urlCache = URLCache.shared }
         
-        if (statusCode == 304 && urlCache.cachedResponse(for: request)?.data == nil) {
+        if (statusCode == 304 && urlCache.cachedResponse(for: requestWrapper.request)?.data == nil) {
             valid = false
         }
         
         if valid {
-            progress.completedUnitCount += 0
+//            progress.completedUnitCount += 0
             progress.totalUnitCount = response.expectedContentLength
             invokeCallbackClosure()
         }
@@ -330,7 +274,7 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         var disposition = URLSession.AuthChallengeDisposition.performDefaultHandling
         var inlineCred: URLCredential? = nil
         if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust { // method is trust server
-            if options.contains(.allowInvalidSSLCert) {
+            if requestWrapper.allowInvalidSSLCert {
                 disposition = .useCredential
                 // when authenticationMethod is ServerTrust, must be not nil
                 inlineCred = URLCredential(trust: challenge.protectionSpace.serverTrust!)
@@ -338,7 +282,7 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         }
         else {
             if challenge.previousFailureCount == 0 { // previos never failure
-                if let cred = self.credential { // use custom credential
+                if let cred = requestWrapper.urlCredential { // use custom credential
                     inlineCred = cred
                     disposition = .useCredential
                 }
@@ -358,6 +302,6 @@ extension HQDownloadOperation: URLSessionDataDelegate {
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
         
         // remove response prevent use cache
-        completionHandler(options.contains(.useUrlCache) ? proposedResponse : nil)
+        completionHandler(requestWrapper.useUrlCache ? proposedResponse : nil)
     }
 }
