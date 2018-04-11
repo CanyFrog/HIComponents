@@ -33,7 +33,7 @@ internal struct HQSqliteItem {
 extension HQDiskCache {
     // MARK: - Connect to sqlite
     func dbConnect() -> Bool {
-        connect = try? HQSqliteConnection(dbPath)
+        connect = try? HQSqliteConnection(.uri(dbPath.path))
         connect?.busyTimeout = 0.1
         return connect != nil && !dbInitTable()
     }

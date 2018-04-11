@@ -10,7 +10,7 @@
 // MARK: - File manager helper
 internal extension HQDiskCache {
     func convertToUrl(_ name: String) -> URL {
-        return URL(fileURLWithPath: "\(dataPath)/\(name)")
+        return dataPath.appendingPathComponent(name)
     }
     
     func save(data: Data, withFilename name: String) throws {
@@ -26,18 +26,18 @@ internal extension HQDiskCache {
     }
     
     func moveAllFileToTrash() {
-        let tmpPath = "\(trashPath)/\(UUID().uuidString)"
-        try? FileManager.default.moveItem(atPath: dataPath, toPath: tmpPath) // move file to trash temp directory
-        try? FileManager.default.createDirectory(atPath: dataPath, withIntermediateDirectories: true, attributes: nil)
+        let tmpPath = trashPath.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try? FileManager.default.moveItem(at: dataPath, to: tmpPath) // move file to trash temp directory
+        try? FileManager.default.createDirectory(at: dataPath, withIntermediateDirectories: true, attributes: nil)
     }
     
     func emptyTrashInBackground() {
         let trash = trashPath
         backgroundTrashQueue.async {
             let fileManager = FileManager()
-            if let trashs = try? fileManager.contentsOfDirectory(atPath: trash) {
+            if let trashs = try? fileManager.contentsOfDirectory(at: trash, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions.init(rawValue: 0)) {
                 let _ = trashs.map{ p in
-                    try? fileManager.removeItem(atPath: "\(trash)/\(p)")
+                    try? fileManager.removeItem(at: p)
                 }
             }
         }
