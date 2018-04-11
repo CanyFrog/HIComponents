@@ -32,7 +32,7 @@ class HQDownloadOperationTest: HQDownloadTest {
         let pass = "passwork"
         
         let link = domain.appendingPathComponent("basic-auth/\(role)/\(pass)")
-        let request = HQDownloadRequest(link)
+        var request = HQDownloadRequest(link)
         request.userPassAuth = (role, pass)
         let operation = HQDownloadOperation(request: request, targetPath: randomTargetPath())
         operation.start()
@@ -106,7 +106,7 @@ class HQDownloadOperationTest: HQDownloadTest {
     func testOperationContinueDownload() {
         let filePath = randomTargetPath()
         let link = URL(string: "https://upload.wikimedia.org/wikipedia/commons/6/69/NASA-HS201427a-HubbleUltraDeepField2014-20140603.jpg")!
-        let request = HQDownloadRequest(link)
+        var request = HQDownloadRequest(link)
         let operation1 = HQDownloadOperation(request: request, targetPath: filePath)
         
         var currentSize: Int64 = 0
@@ -147,15 +147,6 @@ class HQDownloadOperationTest: HQDownloadTest {
 }
 
 extension HQDownloadOperationTest {
-    func randomTargetPath() -> String {
-        return testDirectory.appendingPathComponent("\(UUID().uuidString).json").path
-    }
-    
-    func async(_ timeout: TimeInterval = 5, _ execute: (@escaping ()->Void) -> Void) {
-        let exception = self.expectation(description: "Excetation async task executed")
-        execute({exception.fulfill()})
-        waitForExpectations(timeout: timeout, handler: nil)
-    }
     
     func clearHttpCredentialsAndCookie() {
         // Clear out credentials

@@ -6,4 +6,8 @@
 //  Copyright © 2018 com.personal.HQ. All rights reserved.
 //
 
+import HQCache
 
+public struct HQDownloader {
+    
+}

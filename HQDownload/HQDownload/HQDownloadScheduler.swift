@@ -20,12 +20,18 @@ public class HQDownloadScheduler: NSObject {
     
     public var executionOrder: ExecutionOrder = .FIFO
     
-    
     // MARK: - Download queue
+    private var downloadQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.name = "com.scheduler.download.personal.HQ" + UUID().uuidString
+        queue.maxConcurrentOperationCount = 6
+        return queue
+    }()
+    
     /// max concurrent downloaders, default is 6
     public var maxConcurrentDownloaders: Int {
         set {
-            downloadQueue.maxConcurrentOperationCount = maxConcurrentDownloaders
+            downloadQueue.maxConcurrentOperationCount = newValue
         }
         get {
             return downloadQueue.maxConcurrentOperationCount
@@ -36,12 +42,7 @@ public class HQDownloadScheduler: NSObject {
         return downloadQueue.operationCount
     }
     
-    private var downloadQueue: OperationQueue = {
-        let queue = OperationQueue()
-        queue.name = "com.scheduler.download.personal.HQ" + UUID().uuidString
-        queue.maxConcurrentOperationCount = 6
-        return queue
-    }()
+
     
     // MARK: - Session
     public var sessionConfig: URLSessionConfiguration? {
@@ -52,12 +53,13 @@ public class HQDownloadScheduler: NSObject {
     
     // MARK: - Operation
     private weak var lastedOperation: Operation?
-    public private(set) var operationsDict = [URL: HQDownloadOperation]()
+    private var operationsDict = [URL: HQDownloadOperation]()
     private var operationsLock = DispatchSemaphore(value: 1)
     
     // private var cache:
-    public private(set) var path: String!
+    public private(set) var path: URL = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
 
+    // TODO: Add operation progress
     public private(set) var progress: Progress = {
         let pro = Progress()
         pro.isCancellable = true
@@ -69,7 +71,7 @@ public class HQDownloadScheduler: NSObject {
         super.init()
         sessionConfig.timeoutIntervalForRequest = 15
         ownSession = URLSession(configuration: sessionConfig, delegate: self, delegateQueue: nil)
-        path = "\(NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)/\(name ?? "download")"
+        path.appendPathComponent(name ?? "download", isDirectory: true)
     }
     
     deinit {
@@ -84,34 +86,37 @@ public class HQDownloadScheduler: NSObject {
 // MARK: - Public functions
 
 public extension HQDownloadScheduler {
-    func download(_ url: URL) {
-        let operation = HQDownloadOperation(request: HQDownloadRequest(url), targetPath: "\(path)/\(url.lastPathComponent)", session: ownSession)
+    @discardableResult
+    public func download(_ url: URL, _ headers: [String: String]? = nil) -> HQDownloadOperation {
+        let operation = HQDownloadOperation(request: HQDownloadRequest(url, headers), targetPath: "\(path)/\(url.lastPathComponent)", session: ownSession)
         addOperation(operation, forUrl: url)
+        return operation
     }
     
-    func download(_ request: HQDownloadRequest) {
+    @discardableResult
+    public func download(_ request: HQDownloadRequest) -> HQDownloadOperation {
         let operation = HQDownloadOperation(request: request, targetPath: "\(path)/\(request.fileName)", session: ownSession)
         addOperation(operation, forUrl: request.request.url!)
+        return operation
     }
     
-    /// if url associate operation is exists, will remove all task and change it
     public func addOperation(_ operation: HQDownloadOperation, forUrl url: URL) {
-        // if exists, return
-        guard HQDispatchLock.semaphore(operationsLock, closure: { !operationsDict.keys.contains(url) }) else { return }
-        
-        // add to queue asynchronously execute, so this will not cause deadlock
-        operation.completionBlock = operationCompletionBlock(url)
-        
         // add or replace operation
         HQDispatchLock.semaphore(operationsLock) {
+            // if exists, return
+            guard !operationsDict.keys.contains(url) else { return }
+            
+            // add to queue asynchronously execute, so this will not cause deadlock
+            operation.completionBlock = operationCompletionBlock(url)
+            
             self.operationsDict[url] = operation
-        }
-        
-        // start operation
-        downloadQueue.addOperation(operation)
-        if executionOrder == .LIFO {
-            lastedOperation?.addDependency(operation)
-            lastedOperation = operation
+            
+            // start operation
+            downloadQueue.addOperation(operation)
+            if executionOrder == .LIFO {
+                lastedOperation?.addDependency(operation)
+                lastedOperation = operation
+            }
         }
     }
     
@@ -143,7 +148,7 @@ public extension HQDownloadScheduler {
         }
     }
     
-    func remove(_ url: URL) {
+    public func remove(_ url: URL) {
         HQDispatchLock.semaphore(operationsLock) {
             let operation = operationsDict[url]
             operation?.cancel()
