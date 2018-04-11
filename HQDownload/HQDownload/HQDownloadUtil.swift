@@ -8,7 +8,7 @@
 
 import Foundation
 
-public typealias HQDownloadCallback = (_ url: URL, _ progress: Progress, _ dataPath: String?, _ error: Error?, _ finished: Bool) -> Void
+public typealias HQDownloadCallback = (_ url: URL, _ progress: Progress, _ dataPath: URL, _ error: Error?, _ finished: Bool) -> Void
 
 public struct HQDownloadOptions: OptionSet {
     public let rawValue: UInt

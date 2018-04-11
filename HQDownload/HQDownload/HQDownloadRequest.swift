@@ -35,15 +35,17 @@ public class HQDownloadRequest {
     /// Download range
     public var downloadRange: (Int64?, Int64?)? {
         didSet {
-            setValue(nil, forHTTPHeaderField: "Range") // remove field
-            guard let range = downloadRange else { return }
-            
+            guard let range = downloadRange else {
+                setValue(nil, forHTTPHeaderField: "Range")
+                return
+            }
+            // Can add multi range
             let size = range.0 ?? 0
             if let total = range.1 {
-                addValue(String(format: "bytes=%llu-%llu", size, total), forHTTPHeaderField: "Range")
+                addValue("bytes=\(size)-\(total)", forHTTPHeaderField: "Range")
             }
             else {
-                addValue(String(format: "bytes=%llu-", size), forHTTPHeaderField: "Range")
+                addValue("bytes=\(size)-", forHTTPHeaderField: "Range")
             }
         }
     }

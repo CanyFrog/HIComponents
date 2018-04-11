@@ -22,8 +22,6 @@ public final class HQDownloadOperation: Operation {
     
     public private(set) var response: URLResponse?
     
-    public private(set) var backgroundTask: Bool = true
-    
     public var priority: Float = URLSessionTask.defaultPriority
     
     public private(set) var progress: Progress = {
@@ -57,6 +55,7 @@ public final class HQDownloadOperation: Operation {
         }
         didSet {
             didChangeValue(forKey: "isFinished")
+            completionBlock?()
         }
     }
     
@@ -74,12 +73,15 @@ public final class HQDownloadOperation: Operation {
     
     private var session: URLSession { return injectSession ?? taskSession }
     private var callbacksLock = DispatchSemaphore(value: 1)
+    
+    private var backgroundTask: Bool = true
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
     
-    private var destinationPath: String!
+    
+    private var destinationPath: URL!
     private var stream: OutputStream!
     
-    public init(request: HQDownloadRequest, targetPath: String, session: URLSession? = nil) {
+    public init(request: HQDownloadRequest, targetPath: String, session: URLSession? = nil, background: Bool = true) {
         super.init()
         
         requestWrapper = request
@@ -87,9 +89,10 @@ public final class HQDownloadOperation: Operation {
             progress.completedUnitCount = range.0 ?? 0
             progress.totalUnitCount = range.1 ?? Int64.max
         }
-        destinationPath = targetPath
+        destinationPath = URL(fileURLWithPath: targetPath)
         openStream()
         injectSession = session
+        backgroundTask = background
     }
 }
 
@@ -138,7 +141,7 @@ public extension HQDownloadOperation {
         
         // start task
         dataTask?.resume()
-        invokeCallbackClosure()
+//        invokeCallbackClosure()
         
         // if task finished, remove background task
         if let backgroundTaskId = backgroundTaskId, backgroundTaskId != UIBackgroundTaskInvalid {
@@ -162,7 +165,7 @@ extension HQDownloadOperation {
         guard let time = token as? CFAbsoluteTime, callbackLists.keys.contains(time) else { return }
         HQDispatchLock.semaphore(callbacksLock) {
             callbackLists.removeValue(forKey: time)
-            if callbackLists.isEmpty { cancel() }
+//            if callbackLists.isEmpty { cancel() }
         }
     }
 }
@@ -182,7 +185,6 @@ private extension HQDownloadOperation {
     func reset() {
         HQDispatchLock.semaphore(callbacksLock) {
             callbackLists.removeAll()
-            callbacksLock.signal()
         }
         dataTask = nil
         session.invalidateAndCancel()
@@ -196,7 +198,7 @@ private extension HQDownloadOperation {
     }
     
     func openStream() {
-        stream = OutputStream(toFileAtPath: destinationPath, append: true)
+        stream = OutputStream(url: destinationPath, append: true)
         stream.schedule(in: RunLoop.current, forMode: .defaultRunLoopMode)
         stream.open()
     }
@@ -213,6 +215,8 @@ extension HQDownloadOperation: URLSessionDataDelegate {
     
     /// datatask first receive response
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+        
+        progress.totalUnitCount = response.expectedContentLength + progress.completedUnitCount  // if continue download, need add current download size
         
         var disposition = URLSession.ResponseDisposition.allow
         self.response = response
@@ -234,8 +238,6 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         }
         
         if valid {
-//            progress.completedUnitCount += 0
-            progress.totalUnitCount = response.expectedContentLength
             invokeCallbackClosure()
         }
         else {
@@ -250,10 +252,15 @@ extension HQDownloadOperation: URLSessionDataDelegate {
     /// request receive data callback
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         
-        stream.write([UInt8](data), maxLength: data.count)
-        
-        progress.completedUnitCount += Int64(data.count)
-        invokeCallbackClosure()
+        if stream.hasSpaceAvailable {
+            stream.write([UInt8](data), maxLength: data.count)
+            progress.completedUnitCount += Int64(data.count)
+            invokeCallbackClosure()
+        }
+        else {
+            invokeCallbackClosure(NSError(domain: "Download operation not has available space", code: -999, userInfo: nil), true)
+            done()
+        }
     }
 
     
