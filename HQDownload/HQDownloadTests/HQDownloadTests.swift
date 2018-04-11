@@ -14,7 +14,7 @@ class HQDownloadTest: XCTestCase {
     let timeout: TimeInterval  = 15.0
     var testDirectory: URL {
         var url = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-        url.appendPathComponent("download_test")
+        url.appendPathComponent("download_test", isDirectory: true)
         return url
     }
     
