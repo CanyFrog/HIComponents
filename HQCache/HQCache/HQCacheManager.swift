@@ -14,19 +14,17 @@ public final class HQCacheManager {
     public private(set) var memoryCache: HQMemoryCache!
     public private(set) var diskCache: HQDiskCache!
     
-    public init(path: String) {
+    public init(_ path: URL) {
         diskCache = HQDiskCache(path)
         if diskCache == nil { fatalError("Path is invalid") }
-        let last = String(diskCache.cachePath.split(separator: "/").last!)
+        let last = diskCache.cachePath.lastPathComponent
         name = last
         memoryCache = HQMemoryCache()
         memoryCache.name = name
         
     }
-    public convenience init(name: String = "cacheManager") {
-        let p = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
-        let path = p.last == "/" ? "\(p)\(name)" : "\(p)/\(name)"
-        self.init(path: path)
+    public convenience init(_ name: String = "cacheManager") {
+        self.init(URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!).appendingPathComponent(name))
     }
 }
 
