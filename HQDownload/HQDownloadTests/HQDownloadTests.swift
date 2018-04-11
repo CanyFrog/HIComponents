@@ -27,4 +27,15 @@ class HQDownloadTest: XCTestCase {
         super.tearDown()
         try? FileManager.default.removeItem(at: testDirectory)
     }
+    
+    func randomTargetPath() -> String {
+        return testDirectory.appendingPathComponent("\(UUID().uuidString).json").path
+    }
+    
+    func async(_ timeout: TimeInterval = 5, _ execute: (@escaping ()->Void) -> Void) {
+        let exception = self.expectation(description: "Excetation async task executed")
+        execute({exception.fulfill()})
+        waitForExpectations(timeout: timeout, handler: nil)
+    }
+
 }

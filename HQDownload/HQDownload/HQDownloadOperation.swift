@@ -6,8 +6,11 @@
 //  Copyright © 2018年 com.personal.HQ. All rights reserved.
 //
 
+// TODO: Auto retry
+
 import HQFoundation
 
+public typealias HQDownloadCallback = (_ url: URL, _ progress: Progress, _ dataPath: URL, _ error: Error?, _ finished: Bool) -> Void
 
 public final class HQDownloadOperation: Operation {
     // MARK: - network relevant
@@ -33,7 +36,7 @@ public final class HQDownloadOperation: Operation {
     }()
     
     /// callback dictionary list
-    public private(set) var callbackLists = [CFAbsoluteTime: HQDownloadCallback]()
+    private var callbackLists = [CFAbsoluteTime: HQDownloadCallback]()
     
     // MARK: - Opertion property
     
@@ -153,6 +156,7 @@ public extension HQDownloadOperation {
 
 // MARK: - Public function
 extension HQDownloadOperation {
+    @discardableResult
     public func addCallback(_ callback: @escaping HQDownloadCallback) -> Any {
         return HQDispatchLock.semaphore(callbacksLock) { () -> CFAbsoluteTime in
             let time = CFAbsoluteTimeGetCurrent()

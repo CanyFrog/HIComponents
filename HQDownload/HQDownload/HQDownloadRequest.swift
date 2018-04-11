@@ -6,13 +6,13 @@
 //  Copyright © 2018 com.personal.HQ. All rights reserved.
 //
 
-public class HQDownloadRequest {
+public struct HQDownloadRequest {
 
     // MARK: - Request
     public private(set) var request: URLRequest!
     
     public var fileName: String {
-        return request.url?.lastPathComponent ?? ""
+        return request.url?.lastPathComponent ?? "\(CFAbsoluteTimeGetCurrent())"
     }
     
     /// Request time out
@@ -71,11 +71,11 @@ public class HQDownloadRequest {
         return request.value(forHTTPHeaderField: field)
     }
     
-    public func setValue(_ value: String?, forHTTPHeaderField field: String) {
+    public mutating func setValue(_ value: String?, forHTTPHeaderField field: String) {
         request.setValue(value, forHTTPHeaderField: field)
     }
     
-    public func addValue(_ value: String, forHTTPHeaderField field: String) {
+    public mutating func addValue(_ value: String, forHTTPHeaderField field: String) {
         request.addValue(value, forHTTPHeaderField: field)
     }
 }
