@@ -65,7 +65,7 @@ public class HQDiskCache: HQCacheInBackProtocol {
     internal var stmtDict = [String: HQSqliteStatement]()
     
     
-    init?(_ path: URL) {
+    public init?(_ path: URL) {
         cachePath = path
         do {
             try FileManager.default.createDirectory(at: cachePath, withIntermediateDirectories: true, attributes: nil)
