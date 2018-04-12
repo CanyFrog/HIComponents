@@ -9,9 +9,6 @@
 import HQFoundation
 
 public class HQDownloadScheduler: NSObject {
-    
-    public static let scheduler: HQDownloadScheduler = HQDownloadScheduler(URLSessionConfiguration.default)
-    
     // MARK: - Execution order
     public enum ExecutionOrder {
         case FIFO // first in first out
@@ -67,11 +64,11 @@ public class HQDownloadScheduler: NSObject {
         return pro
     }()
     
-    init(_ sessionConfig: URLSessionConfiguration = .default, _ name: String? = nil) {
+    init(_ path: URL, _ sessionConfig: URLSessionConfiguration = .default) {
         super.init()
         sessionConfig.timeoutIntervalForRequest = 15
         ownSession = URLSession(configuration: sessionConfig, delegate: self, delegateQueue: nil)
-        path.appendPathComponent(name ?? "schedulerDownload", isDirectory: true)
+        self.path = path
     }
     
     deinit {
@@ -121,11 +118,8 @@ public extension HQDownloadScheduler {
     }
     
     /// Invalidates the managed session, optionally canceling pending operations.
-    /// - Note If you use custom downloader instead of the shared downloader, you need call this method when you do not use it to avoid memory leak
-    /// - Note Calling this method on the shared downloader has no effect.
     /// - Parameter cancelPendingOperations: cancelPendingOperations Whether or not to cancel pending operations.
     public func invalidateAndCancelSession(cancelPendingOperations: Bool = true) {
-        if self == HQDownloadScheduler.scheduler { return }
         if cancelPendingOperations {
             ownSession?.invalidateAndCancel()
         }

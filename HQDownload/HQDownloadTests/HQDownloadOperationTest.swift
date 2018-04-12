@@ -68,10 +68,10 @@ class HQDownloadOperationTest: HQDownloadTest {
             let _ = operation.addCallback { (url, _, path, err, finished) in
                 if finished {
                     XCTAssertEqual(url, link)
-                    XCTAssertEqual(path.path, filePath)
+                    XCTAssertEqual(path.path, filePath.path)
                     XCTAssertNil(err)
                     XCTAssertNotNil(operation.response)
-                    XCTAssertTrue(FileManager.default.fileExists(atPath: filePath))
+                    XCTAssertTrue(FileManager.default.fileExists(atPath: filePath.path))
                     done()
                 }
             }
@@ -94,7 +94,7 @@ class HQDownloadOperationTest: HQDownloadTest {
                 prevProgress = progress.fractionCompleted
                 if finished {
                     XCTAssertEqual(1.0, prevProgress)
-                    let attr = try! FileManager.default.attributesOfItem(atPath: filePath)
+                    let attr = try! FileManager.default.attributesOfItem(atPath: filePath.path)
                     XCTAssertEqual(operation.response?.expectedContentLength, attr[FileAttributeKey.size] as? Int64)
                     done()
                 }
@@ -135,7 +135,7 @@ class HQDownloadOperationTest: HQDownloadTest {
                 if finished {
                     XCTAssertNil(error)
                     XCTAssertEqual(1.0, progress.fractionCompleted)
-                    let attr = try? FileManager.default.attributesOfItem(atPath: filePath)
+                    let attr = try? FileManager.default.attributesOfItem(atPath: filePath.path)
                     XCTAssertEqual(progress.totalUnitCount, totalSize)
                     XCTAssertEqual(totalSize, attr?[FileAttributeKey.size] as? Int64)
                     done()

@@ -28,8 +28,8 @@ class HQDownloadTest: XCTestCase {
         try? FileManager.default.removeItem(at: testDirectory)
     }
     
-    func randomTargetPath() -> String {
-        return testDirectory.appendingPathComponent("\(UUID().uuidString).json").path
+    func randomTargetPath() -> URL {
+        return testDirectory.appendingPathComponent("\(UUID().uuidString).json")
     }
     
     func async(_ timeout: TimeInterval = 5, _ execute: (@escaping ()->Void) -> Void) {
