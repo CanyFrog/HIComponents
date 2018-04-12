@@ -27,7 +27,6 @@ class HQDownloadRequestTest: HQDownloadTest {
         let url = domain.appendingPathComponent(fileName)
         let req = HQDownloadRequest(url)
         XCTAssertEqual(fileName, req.fileName)
-        XCTAssertNotNil(request.fileName)
     }
     
     func testRequestTimeout() {

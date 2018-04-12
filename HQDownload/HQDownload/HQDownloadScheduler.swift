@@ -71,7 +71,7 @@ public class HQDownloadScheduler: NSObject {
         super.init()
         sessionConfig.timeoutIntervalForRequest = 15
         ownSession = URLSession(configuration: sessionConfig, delegate: self, delegateQueue: nil)
-        path.appendPathComponent(name ?? "download", isDirectory: true)
+        path.appendPathComponent(name ?? "schedulerDownload", isDirectory: true)
     }
     
     deinit {
@@ -88,14 +88,14 @@ public class HQDownloadScheduler: NSObject {
 public extension HQDownloadScheduler {
     @discardableResult
     public func download(_ url: URL, _ headers: [String: String]? = nil) -> HQDownloadOperation {
-        let operation = HQDownloadOperation(request: HQDownloadRequest(url, headers), targetPath: "\(path)/\(url.lastPathComponent)", session: ownSession)
+        let operation = HQDownloadOperation(request: HQDownloadRequest(url, headers), targetPath: path.appendingPathComponent(url.lastPathComponent), session: ownSession)
         addOperation(operation, forUrl: url)
         return operation
     }
     
     @discardableResult
     public func download(_ request: HQDownloadRequest) -> HQDownloadOperation {
-        let operation = HQDownloadOperation(request: request, targetPath: "\(path)/\(request.fileName)", session: ownSession)
+        let operation = HQDownloadOperation(request: request, targetPath: path.appendingPathComponent(request.fileName), session: ownSession)
         addOperation(operation, forUrl: request.request.url!)
         return operation
     }

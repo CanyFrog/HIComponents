@@ -12,7 +12,7 @@ public struct HQDownloadRequest {
     public private(set) var request: URLRequest!
     
     public var fileName: String {
-        return request.url?.lastPathComponent ?? "\(CFAbsoluteTimeGetCurrent())"
+        return request.url?.lastPathComponent ?? ""
     }
     
     /// Request time out

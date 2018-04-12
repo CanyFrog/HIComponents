@@ -8,6 +8,13 @@
 
 import HQCache
 
-public struct HQDownloader {
+public class HQDownloader {
+    private var scheduler: HQDownloadScheduler!
+    private var cache: HQDiskCache!
     
+    /// name is download directory name, file save to Cache directory
+    init(_ name: String = "downloader") {
+        scheduler = HQDownloadScheduler(.default, name)
+//        cache = HQDiskCache()
+    }
 }
