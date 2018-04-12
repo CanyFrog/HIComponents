@@ -49,12 +49,12 @@ public class HQDiskCache: HQCacheInBackProtocol {
     
     
     // MARK: - Cache path
-    public private(set) var cachePath: String!
-    internal var dbPath: String { return "\(cachePath!)/diskcache.sqlite" }
-    internal var dbWalPath: String { return "\(cachePath!)/diskcache.sqlite-wal" }
-    internal var dbShmPath: String { return "\(cachePath!)/diskcache.sqlite-shm" }
-    internal var dataPath: String { return "\(cachePath!)/data" }
-    internal var trashPath: String { return "\(cachePath!)/trash" }
+    public private(set) var cachePath: URL!
+    internal var dbPath: URL { return cachePath.appendingPathComponent("diskcache.sqlite") }
+    internal var dbWalPath: URL { return cachePath.appendingPathComponent("diskcache.sqlite-wal") }
+    internal var dbShmPath: URL { return cachePath.appendingPathComponent("diskcache.sqlite-shm") }
+    internal var dataPath: URL { return cachePath.appendingPathComponent("data", isDirectory: true) }
+    internal var trashPath: URL { return cachePath.appendingPathComponent("trash", isDirectory: true) }
     
     internal var backgroundTrashQueue = DispatchQueue(label: "com.trash.disk.cache.personal.HQ", qos: .utility, attributes: .concurrent)
     internal var taskLock = DispatchSemaphore(value: 1)
@@ -65,15 +65,12 @@ public class HQDiskCache: HQCacheInBackProtocol {
     internal var stmtDict = [String: HQSqliteStatement]()
     
     
-    init?(_ path: String) {
-        if path.isEmpty || path.count > PATH_MAX - 128 { fatalError("Error: Path is invalid") }
+    init?(_ path: URL) {
         cachePath = path
-        if cachePath!.last == "/" { cachePath.removeLast(1) }
-
         do {
-            try FileManager.default.createDirectory(atPath: cachePath, withIntermediateDirectories: true, attributes: nil)
-            try FileManager.default.createDirectory(atPath: dataPath, withIntermediateDirectories: true, attributes: nil)
-            try FileManager.default.createDirectory(atPath: trashPath, withIntermediateDirectories: true, attributes: nil)
+            try FileManager.default.createDirectory(at: cachePath, withIntermediateDirectories: true, attributes: nil)
+            try FileManager.default.createDirectory(at: dataPath, withIntermediateDirectories: true, attributes: nil)
+            try FileManager.default.createDirectory(at: trashPath, withIntermediateDirectories: true, attributes: nil)
             if !dbConnect() { return nil }
             emptyTrashInBackground()
             clearCacheTiming()
@@ -168,21 +165,21 @@ extension HQDiskCache {
 // MARK: - Insert
 extension HQDiskCache {
     
-    public func insertOrUpdate(originFile path: String, size: Int = 0, forKey key: String) {
+    public func insertOrUpdate(originFile path: URL, size: Int = 0, forKey key: String) {
         let fileM = FileManager.default
-        guard fileM.fileExists(atPath: path) && !key.isEmpty else { return }
-        let name = path.components(separatedBy: "/").last
-        let newPath = "\(dataPath)/\(name!)"
+        guard fileM.fileExists(atPath: path.path) && !key.isEmpty else { return }
+
+        let newPath = dataPath.appendingPathComponent(path.lastPathComponent)
         do {
-            try fileM.moveItem(atPath: path, toPath: newPath)
+            try fileM.moveItem(at: path, to: newPath)
             HQDispatchLock.semaphore(taskLock) {
-                self.dbInsert(key: key, filename: newPath, size: size, data: nil)
+                self.dbInsert(key: key, filename: newPath.path, size: size, data: nil)
             }
         } catch {
         }
     }
 
-    public func insertOrUpdate(originFile path: String, size: Int = 0, forKey key: String, inBackThreadCallback callback: @escaping () -> Void) {
+    public func insertOrUpdate(originFile path: URL, size: Int = 0, forKey key: String, inBackThreadCallback callback: @escaping () -> Void) {
         taskQueue.async { [weak self] in
             self?.insertOrUpdate(originFile: path, size: size, forKey: key)
             callback()
@@ -198,9 +195,9 @@ extension HQDiskCache {
         if value.count >= saveToDiskCritical {
             do {
                 try save(data: value, withFilename: String(key.hashValue))
-                let path = "\(dataPath)/\(key.hashValue)"
+                let path = dataPath.appendingPathComponent("\(key.hashValue)")
                 HQDispatchLock.semaphore(taskLock) {
-                    self.dbInsert(key: key, filename: path, size: value.count, data: nil)
+                    self.dbInsert(key: key, filename: path.path, size: value.count, data: nil)
                 }
             }
             catch {}
@@ -243,9 +240,9 @@ extension HQDiskCache {
             self.stmtDict.removeAll()
             // FIXME: BUG IN CLIENT OF libsqlite3.dylib: database integrity compromised by API violation: vnode unlinked while in use:
             self.connect = nil // close sqlite
-            try? FileManager.default.removeItem(atPath: dbPath)
-            try? FileManager.default.removeItem(atPath: dbWalPath)
-            try? FileManager.default.removeItem(atPath: dbShmPath)
+            try? FileManager.default.removeItem(at: dbPath)
+            try? FileManager.default.removeItem(at: dbWalPath)
+            try? FileManager.default.removeItem(at: dbShmPath)
             self.moveAllFileToTrash()
             self.emptyTrashInBackground()
             let _ = self.dbConnect() // reconnect
