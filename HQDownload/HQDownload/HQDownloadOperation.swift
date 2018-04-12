@@ -84,7 +84,7 @@ public final class HQDownloadOperation: Operation {
     private var destinationPath: URL!
     private var stream: OutputStream!
     
-    public init(request: HQDownloadRequest, targetPath: String, session: URLSession? = nil, background: Bool = true) {
+    public init(request: HQDownloadRequest, targetPath: URL, session: URLSession? = nil, background: Bool = true) {
         super.init()
         
         requestWrapper = request
@@ -92,7 +92,7 @@ public final class HQDownloadOperation: Operation {
             progress.completedUnitCount = range.0 ?? 0
             progress.totalUnitCount = range.1 ?? Int64.max
         }
-        destinationPath = URL(fileURLWithPath: targetPath)
+        destinationPath = targetPath
         openStream()
         injectSession = session
         backgroundTask = background
