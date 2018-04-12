@@ -14,7 +14,7 @@ class HQDownloadSchedulerTest: HQDownloadTest {
     
     override func setUp() {
         super.setUp()
-        scheduler = HQDownloadScheduler(.default, "test_scheduler")
+        scheduler = HQDownloadScheduler(testDirectory)
     }
     
     override func tearDown() {

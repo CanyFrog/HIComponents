@@ -13,8 +13,12 @@ public class HQDownloader {
     private var cache: HQDiskCache!
     
     /// name is download directory name, file save to Cache directory
-    init(_ name: String = "downloader") {
-        scheduler = HQDownloadScheduler(.default, name)
-//        cache = HQDiskCache()
+    public init(_ path: URL = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!).appendingPathComponent("downloader", isDirectory: true)) {
+        scheduler = HQDownloadScheduler(path)
+        cache = HQDiskCache(path)
+    }
+    
+    public func download(_ url: URL) -> String {
+
     }
 }
