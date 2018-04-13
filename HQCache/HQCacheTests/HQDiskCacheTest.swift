@@ -116,9 +116,11 @@ class HQDiskCacheTest: XCTestCase {
     }
 
     func testDiskInsertQuerySmallThanCriticalObjInBackground() {
+        let obj = DiskTestClass.smallCls()
+        disk.insertOrUpdate(object: obj, forKey: "test_insert_small_background")
         async { (done) in
-            self.disk.insertOrUpdate(object: DiskTestClass.smallCls(), forKey: "test_insert_small_background", inBackThreadCallback: {
-                XCTAssertTrue(self.disk.exist(forKey: "test_insert_small_background"))
+            self.disk.query(objectForKey: "test_insert_small_background", inBackThreadCallback: { (key, value: DiskTestClass?) in
+                XCTAssertEqual(obj, value)
                 done()
             })
         }
@@ -135,8 +137,10 @@ class HQDiskCacheTest: XCTestCase {
     }
 
     func testDiskInsertQueryBigThanCriticalObjInBackground() {
+        let obj = DiskTestClass.bigCls()
+        disk.insertOrUpdate(object: obj, forKey: "test_insert_big_background")
         async { (done) in
-            self.disk.insertOrUpdate(object: DiskTestClass.bigCls(), forKey: "test_insert_big_background", inBackThreadCallback: {
+            self.disk.query(objectForKey: "test_insert_big_background", inBackThreadCallback: { (key, value: DiskTestClass?) in
                 let file = try? FileManager.default.contentsOfDirectory(atPath: self.disk.dataPath.path)
                 XCTAssertFalse((file?.isEmpty)!)
                 XCTAssertTrue(self.disk.exist(forKey: "test_insert_big_background"))
@@ -155,13 +159,13 @@ class HQDiskCacheTest: XCTestCase {
     }
 
     func testDiskInsertQueryFileInBackground() {
+        let video = "insert_file_background.avi"
+        disk.insertOrUpdate(originFile: DiskTestClass.createFile(video), forKey: "insert_file_test_background")
         async { (done) in
-            let video = "insert_file_background.avi"
-            self.disk.insertOrUpdate(originFile: DiskTestClass.createFile(video), forKey: "insert_file_test_background", inBackThreadCallback: {
-                let targetFile = self.disk.query(filePathForKey: "insert_file_test_background")
-                XCTAssertNotNil(targetFile)
-                XCTAssertTrue(FileManager.default.fileExists(atPath: targetFile!))
-                XCTAssertEqual(video, targetFile?.components(separatedBy: "/").last)
+            self.disk.query(filePathForKey: "insert_file_test_background", inBackThreadCallback: { (key, value) in
+                XCTAssertNotNil(value!)
+                XCTAssertTrue(FileManager.default.fileExists(atPath: value!))
+                XCTAssertEqual(video, value?.components(separatedBy: "/").last)
                 done()
             })
         }
