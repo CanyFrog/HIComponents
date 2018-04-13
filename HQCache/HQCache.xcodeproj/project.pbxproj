@@ -94,8 +94,8 @@
 			isa = PBXGroup;
 			children = (
 				8A650ACF206869CD00C95462 /* HQCache.h */,
-				8AD5F0C82075B59B001C9C6F /* HQCacheProtocol.swift */,
 				8AD5F0C62075AE18001C9C6F /* HQCacheManager.swift */,
+				8AD5F0C82075B59B001C9C6F /* HQCacheProtocol.swift */,
 				8A650AE820686A4300C95462 /* HQMemoryCache.swift */,
 				6043654420688D74001605FC /* HQDiskCache.swift */,
 				604A7D9820748F730060A869 /* HQDiskCache+File.swift */,

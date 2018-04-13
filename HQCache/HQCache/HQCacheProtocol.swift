@@ -18,21 +18,6 @@ extension Decodable {
         return try? JSONDecoder().decode(T.self, from: encoded)
     }
 }
-//public protocol HQCacheSerializable: Codable {
-//    func serialize() -> Data?
-//    static func unSerialize<T: Decodable>(_ encoded: Data) -> T?
-//}
-//
-//extension HQCacheSerializable {
-//    func serialize() -> Data? {
-//        return try? JSONEncoder().encode(self)
-//    }
-//    static func unSerialize<T: Decodable>(_ encoded: Data) -> T? {
-//        return try? JSONDecoder().decode(T.self, from: encoded)
-//    }
-//}
-
-
 
 /// Cache background queue protocol
 protocol HQCacheInBackProtocol: HQCacheProtocol {
@@ -59,11 +44,17 @@ protocol HQCacheInBackProtocol: HQCacheProtocol {
 
 /// Cache protocol
 protocol HQCacheProtocol {
-    var name: String {get set}
     
+    /// Cache count limit, default Int.max
     var countLimit: Int {get set}
+    
+    /// Cache item size limit, default Int.max
     var costLimit: Int {get set}
+    
+    /// Cache item storted time limit, default Double.max
     var ageLimit: TimeInterval {get set}
+    
+    /// Cache manager auto trim invalid item time
     var autoTrimInterval: TimeInterval {get set}
     
     // query

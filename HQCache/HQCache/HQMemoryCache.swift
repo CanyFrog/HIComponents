@@ -11,8 +11,6 @@ import HQFoundation
 public final class HQMemoryCache: HQCacheProtocol {
     
     // MARK: - Public property
-    public var name: String = "MemoryCache"
-    
     public var countLimit: Int = Int.max
     
     public var costLimit: Int = Int.max
