@@ -32,4 +32,22 @@ class HQDownloadTest: XCTestCase {
         execute({exception.fulfill()})
         waitForExpectations(timeout: timeout, handler: nil)
     }
+    
+    func clearHttpCredentialsCookieCache() {
+        // Clear out credentials
+        let credentialStorage = URLCredentialStorage.shared
+        
+        for (protectionSpace, credentials) in credentialStorage.allCredentials {
+            for (_, credential) in credentials {
+                credentialStorage.remove(credential, for: protectionSpace)
+            }
+        }
+        
+        // Clear out cookies
+        let cookieStorage = HTTPCookieStorage.shared
+        cookieStorage.cookies?.forEach { cookieStorage.deleteCookie($0) }
+        
+        // Clear cache
+        URLCache.shared.removeAllCachedResponses()
+    }
 }

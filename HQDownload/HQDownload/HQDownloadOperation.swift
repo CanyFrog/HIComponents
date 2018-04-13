@@ -23,7 +23,11 @@ public final class HQDownloadOperation: Operation {
     
     public private(set) var response: URLResponse?
     
-    public var priority: Float = URLSessionTask.defaultPriority
+    public var priority: Float = URLSessionTask.defaultPriority {
+        didSet {
+            dataTask?.priority = priority
+        }
+    }
     
     public private(set) var progress: HQdownloadProgress = {
         let progress = HQdownloadProgress()
