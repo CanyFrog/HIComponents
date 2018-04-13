@@ -11,6 +11,8 @@
 		604A7D92207361C80060A869 /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604A7D91207361C80060A869 /* HQSqlite.framework */; };
 		604A7D97207371D90060A869 /* HQDiskCache+Sqlite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604A7D96207371D90060A869 /* HQDiskCache+Sqlite.swift */; };
 		604A7D9920748F730060A869 /* HQDiskCache+File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604A7D9820748F730060A869 /* HQDiskCache+File.swift */; };
+		60DC2EF9208086400088A579 /* HQFoundation.framework in Resources */ = {isa = PBXBuildFile; fileRef = 8AD5F0CC2075B94E001C9C6F /* HQFoundation.framework */; };
+		60DC2EFA208086400088A579 /* HQSqlite.framework in Resources */ = {isa = PBXBuildFile; fileRef = 604A7D91207361C80060A869 /* HQSqlite.framework */; };
 		8A650AD6206869CD00C95462 /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A650ACC206869CD00C95462 /* HQCache.framework */; };
 		8A650ADD206869CD00C95462 /* HQCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A650ACF206869CD00C95462 /* HQCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8A650AE920686A4300C95462 /* HQMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650AE820686A4300C95462 /* HQMemoryCache.swift */; };
@@ -42,7 +44,6 @@
 		8A650AD5206869CD00C95462 /* HQCacheTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HQCacheTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A650ADC206869CD00C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8A650AE820686A4300C95462 /* HQMemoryCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQMemoryCache.swift; sourceTree = "<group>"; };
-		8A77B70520725D1B00E5CA66 /* HQSqlite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQSqlite.framework; path = Frameworks/HQSqlite.framework; sourceTree = "<group>"; };
 		8AD5F0C62075AE18001C9C6F /* HQCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQCacheManager.swift; sourceTree = "<group>"; };
 		8AD5F0C82075B59B001C9C6F /* HQCacheProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HQCacheProtocol.swift; sourceTree = "<group>"; };
 		8AD5F0CC2075B94E001C9C6F /* HQFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQFoundation.framework; path = Carthage/Build/iOS/HQFoundation.framework; sourceTree = "<group>"; };
@@ -120,7 +121,6 @@
 			children = (
 				8AD5F0CC2075B94E001C9C6F /* HQFoundation.framework */,
 				604A7D91207361C80060A869 /* HQSqlite.framework */,
-				8A77B70520725D1B00E5CA66 /* HQSqlite.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -143,7 +143,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8A650AE0206869CD00C95462 /* Build configuration list for PBXNativeTarget "HQCache" */;
 			buildPhases = (
-				60DC2EF6208078890088A579 /* ShellScript */,
 				8A650AC7206869CD00C95462 /* Sources */,
 				8A650AC8206869CD00C95462 /* Frameworks */,
 				8A650AC9206869CD00C95462 /* Headers */,
@@ -221,6 +220,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60DC2EF9208086400088A579 /* HQFoundation.framework in Resources */,
+				60DC2EFA208086400088A579 /* HQSqlite.framework in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,19 +250,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
-		60DC2EF6208078890088A579 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "../update_self.sh & chmod +x ../update_self.sh";
 		};
 /* End PBXShellScriptBuildPhase section */
 
