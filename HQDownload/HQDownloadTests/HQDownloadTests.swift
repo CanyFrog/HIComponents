@@ -12,11 +12,7 @@ import XCTest
 class HQDownloadTest: XCTestCase {
     let domain: URL = URL(string: "https://httpbin.org")!
     let timeout: TimeInterval  = 15.0
-    var testDirectory: URL {
-        var url = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-        url.appendPathComponent("download_test", isDirectory: true)
-        return url
-    }
+    let testDirectory: URL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true).appendingPathComponent("download_test", isDirectory: true)
     
     override func setUp() {
         super.setUp()
