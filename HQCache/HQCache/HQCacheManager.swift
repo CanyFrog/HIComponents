@@ -10,17 +10,13 @@ import Foundation
 
 
 public final class HQCacheManager {
-    public private(set) var name: String!
     public private(set) var memoryCache: HQMemoryCache!
     public private(set) var diskCache: HQDiskCache!
     
     public init(_ path: URL) {
         diskCache = HQDiskCache(path)
         if diskCache == nil { fatalError("Path is invalid") }
-        let last = diskCache.cachePath.lastPathComponent
-        name = last
         memoryCache = HQMemoryCache()
-        memoryCache.name = name
         
     }
     public convenience init(_ name: String = "cacheManager") {
