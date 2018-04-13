@@ -41,7 +41,7 @@ public struct HQDownloadRequest {
         return request.url?.lastPathComponent ?? ""
     }
     
-    public private(set) var filePath: URL!
+    public private(set) var fileUrl: URL!
     
     /// Request time out
     public var downloadTimeout: TimeInterval = 15 {
@@ -75,12 +75,12 @@ public struct HQDownloadRequest {
     public init(_ url: URL, _ toFile: URL, _ headers: [String: String]? = nil) {
         request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: downloadTimeout)
         request.httpShouldUsePipelining = true
-        filePath = toFile
+        fileUrl = toFile
         headers?.forEach { (k, v) in addValue(v, forHTTPHeaderField: k) }
     }
     
     public init?(_ progress: HQdownloadProgress) {
-        guard let url = progress.sourceUrl, let path = progress.fileURL else { return nil }
+        guard let url = progress.sourceURL, let path = progress.fileURL else { return nil }
         self.init(url, path)
         downloadRange = (progress.completedUnitCount, progress.totalUnitCount)
     }

@@ -24,12 +24,12 @@ public class HQdownloadProgress: Progress, Codable {
         }
     }
     
-    public var sourceUrl: URL? {
+    public var sourceURL: URL? {
         get {
-            return userInfo[.init("sourceUrl")] as? URL
+            return userInfo[.init("sourceURL")] as? URL
         }
         set {
-            setUserInfoObject(sourceUrl, forKey: .init("sourceUrl"))
+            setUserInfoObject(sourceURL, forKey: .init("sourceURL"))
         }
     }
     

@@ -92,6 +92,8 @@ public final class HQDownloadOperation: Operation {
             progress.completedUnitCount = range.0 ?? 0
             progress.totalUnitCount = range.1 ?? Int64.max
         }
+        progress.sourceURL = request.request.url
+        progress.fileURL = request.fileUrl
         openStream()
     }
 }
@@ -151,18 +153,22 @@ public extension HQDownloadOperation {
 }
 
 public extension HQDownloadOperation {
-    public func start(_ callback: startClosure?) {
+    @discardableResult
+    public func start(_ callback: startClosure?) -> HQDownloadOperation {
         HQDispatchLock.semaphore(startHandlerLock) {
             startHandlers.compact()
             startHandlers.addObject(callback as AnyObject)
         }
+        return self
     }
     
-    public func finished(_ callback: finishedClosure?) {
+    @discardableResult
+    public func finished(_ callback: finishedClosure?) -> HQDownloadOperation {
         HQDispatchLock.semaphore(finishedHandlerLock) {
             finishedHandlers.compact()
             finishedHandlers.addObject(callback as AnyObject)
         }
+        return self
     }
 }
 
@@ -182,7 +188,7 @@ private extension HQDownloadOperation {
     }
     
     func openStream() {
-        stream = OutputStream(url: ownRequest.filePath, append: true)
+        stream = OutputStream(url: ownRequest.fileUrl, append: true)
         stream.schedule(in: RunLoop.current, forMode: .defaultRunLoopMode)
         stream.open()
     }
@@ -233,7 +239,7 @@ extension HQDownloadOperation: URLSessionDataDelegate {
             
             startHandlers.allObjects.forEach { (obj) in
                 if let start = obj as? startClosure {
-                    start(ownRequest.request.url!, ownRequest.filePath, progress.totalUnitCount)
+                    start(ownRequest.request.url!, ownRequest.fileUrl, progress.totalUnitCount)
                 }
             }
         }
