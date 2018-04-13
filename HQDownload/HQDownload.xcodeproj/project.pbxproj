@@ -12,6 +12,7 @@
 		60B6E0F7207C83CE00C4C594 /* HQDownloadRequestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */; };
 		60B6E0FC207C95B200C4C594 /* HQDownloadOperationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0FB207C95B200C4C594 /* HQDownloadOperationTest.swift */; };
 		60F0AF86207DCD3F00C5F6EE /* HQDownloadSchedulerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F0AF85207DCD3F00C5F6EE /* HQDownloadSchedulerTest.swift */; };
+		8A1CCC7F207F942400C0C6E1 /* HQDownloadProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1CCC7E207F942400C0C6E1 /* HQDownloadProgress.swift */; };
 		8A650B002069119200C95462 /* HQDownload.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A650AF62069119200C95462 /* HQDownload.framework */; };
 		8A650B052069119200C95462 /* HQDownloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B042069119200C95462 /* HQDownloadTests.swift */; };
 		8A650B072069119200C95462 /* HQDownload.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A650AF92069119200C95462 /* HQDownload.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -37,6 +38,7 @@
 		60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadRequestTest.swift; sourceTree = "<group>"; };
 		60B6E0FB207C95B200C4C594 /* HQDownloadOperationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadOperationTest.swift; sourceTree = "<group>"; };
 		60F0AF85207DCD3F00C5F6EE /* HQDownloadSchedulerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadSchedulerTest.swift; sourceTree = "<group>"; };
+		8A1CCC7E207F942400C0C6E1 /* HQDownloadProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadProgress.swift; sourceTree = "<group>"; };
 		8A650AF62069119200C95462 /* HQDownload.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HQDownload.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A650AF92069119200C95462 /* HQDownload.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HQDownload.h; sourceTree = "<group>"; };
 		8A650AFA2069119200C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 			children = (
 				8A650AF92069119200C95462 /* HQDownload.h */,
 				60B6E0F4207C511200C4C594 /* HQDownloadRequest.swift */,
+				8A1CCC7E207F942400C0C6E1 /* HQDownloadProgress.swift */,
 				8A650B4A206A79D000C95462 /* HQDownloadOperation.swift */,
 				8A650B4E206BD61800C95462 /* HQDownloadScheduler.swift */,
 				60B6E0F2207C4FA300C4C594 /* HQDownloader.swift */,
@@ -269,6 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				60B6E0F5207C511200C4C594 /* HQDownloadRequest.swift in Sources */,
+				8A1CCC7F207F942400C0C6E1 /* HQDownloadProgress.swift in Sources */,
 				60B6E0F3207C4FA300C4C594 /* HQDownloader.swift in Sources */,
 				8A650B4B206A79D000C95462 /* HQDownloadOperation.swift in Sources */,
 				8A650B4F206BD61800C95462 /* HQDownloadScheduler.swift in Sources */,
@@ -348,7 +352,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -404,7 +408,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -432,7 +436,7 @@
 				);
 				INFOPLIST_FILE = HQDownload/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = HQ.HQDownload;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -461,7 +465,7 @@
 				);
 				INFOPLIST_FILE = HQDownload/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = HQ.HQDownload;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";

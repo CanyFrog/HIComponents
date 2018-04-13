@@ -10,8 +10,6 @@
 
 import HQFoundation
 
-public typealias HQDownloadCallback = (_ url: URL, _ progress: Progress, _ dataPath: URL, _ error: Error?, _ finished: Bool) -> Void
-
 public final class HQDownloadOperation: Operation {
     // MARK: - network relevant
     public var sessionConfig: URLSessionConfiguration {
@@ -19,7 +17,7 @@ public final class HQDownloadOperation: Operation {
     }
     
     /// The request used by the operation's task
-    public private(set) var requestWrapper: HQDownloadRequest!
+    public private(set) var ownRequest: HQDownloadRequest!
     
     public private(set) var dataTask: URLSessionTask?
     
@@ -27,16 +25,13 @@ public final class HQDownloadOperation: Operation {
     
     public var priority: Float = URLSessionTask.defaultPriority
     
-    public private(set) var progress: Progress = {
-        let progress = Progress()
+    public private(set) var progress: HQdownloadProgress = {
+        let progress = HQdownloadProgress()
         progress.isPausable = true
         progress.isCancellable = true
         
         return progress
     }()
-    
-    /// callback dictionary list
-    private var callbackLists = [CFAbsoluteTime: HQDownloadCallback]()
     
     // MARK: - Opertion property
     
@@ -75,27 +70,29 @@ public final class HQDownloadOperation: Operation {
     }()
     
     private var session: URLSession { return injectSession ?? taskSession }
-    private var callbacksLock = DispatchSemaphore(value: 1)
     
-    private var backgroundTask: Bool = true
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
     
-    
-    private var destinationPath: URL!
     private var stream: OutputStream!
     
-    public init(request: HQDownloadRequest, targetPath: URL, session: URLSession? = nil, background: Bool = true) {
+    // MARK: - Call backs
+    public typealias startClosure = (_ source: URL, _ target: URL, _ exceptSize: Int64) -> Void
+    private var startHandlerLock = DispatchSemaphore(value: 1)
+    private var startHandlers = NSPointerArray.weakObjects()
+    
+    public typealias finishedClosure = (_ error: Error?)->Void
+    private var finishedHandlerLock = DispatchSemaphore(value: 1)
+    private var finishedHandlers = NSPointerArray.weakObjects()
+    
+    public init(_ request: HQDownloadRequest, _ session: URLSession? = nil) {
         super.init()
-        
-        requestWrapper = request
-        if let range = requestWrapper.downloadRange {
+        injectSession = session
+        ownRequest = request
+        if let range = ownRequest.downloadRange {
             progress.completedUnitCount = range.0 ?? 0
             progress.totalUnitCount = range.1 ?? Int64.max
         }
-        destinationPath = targetPath
         openStream()
-        injectSession = session
-        backgroundTask = background
     }
 }
 
@@ -124,7 +121,7 @@ public extension HQDownloadOperation {
         }
         
         // register background task
-        if backgroundTask {
+        if ownRequest.background {
             backgroundTaskId = UIApplication.shared.beginBackgroundTask { [weak self] in
                 // task finished block
                 if let wSelf = self {
@@ -136,7 +133,7 @@ public extension HQDownloadOperation {
         }
         
         // add task
-        dataTask = session.dataTask(with: requestWrapper.request)
+        dataTask = session.dataTask(with: ownRequest.request)
         dataTask?.priority = priority
         _executing = true
         
@@ -144,7 +141,6 @@ public extension HQDownloadOperation {
         
         // start task
         dataTask?.resume()
-//        invokeCallbackClosure()
         
         // if task finished, remove background task
         if let backgroundTaskId = backgroundTaskId, backgroundTaskId != UIBackgroundTaskInvalid {
@@ -154,45 +150,29 @@ public extension HQDownloadOperation {
     }
 }
 
-// MARK: - Public function
-extension HQDownloadOperation {
-    @discardableResult
-    public func addCallback(_ callback: @escaping HQDownloadCallback) -> Any {
-        return HQDispatchLock.semaphore(callbacksLock) { () -> CFAbsoluteTime in
-            let time = CFAbsoluteTimeGetCurrent()
-            callbackLists[time] = callback
-            return time
+public extension HQDownloadOperation {
+    public func start(_ callback: startClosure?) {
+        HQDispatchLock.semaphore(startHandlerLock) {
+            startHandlers.compact()
+            startHandlers.addObject(callback as AnyObject)
         }
     }
     
-    public func remove(_ token: Any){
-        guard let time = token as? CFAbsoluteTime, callbackLists.keys.contains(time) else { return }
-        HQDispatchLock.semaphore(callbacksLock) {
-            callbackLists.removeValue(forKey: time)
-//            if callbackLists.isEmpty { cancel() }
+    public func finished(_ callback: finishedClosure?) {
+        HQDispatchLock.semaphore(finishedHandlerLock) {
+            finishedHandlers.compact()
+            finishedHandlers.addObject(callback as AnyObject)
         }
     }
 }
 
-
 // MARK: - State & Helper function
 private extension HQDownloadOperation {
-    func invokeCallbackClosure(_ error: Error? = nil, _ finished: Bool = false) {
-        callbackLists.values.forEach { (callback) in
-//            (_ url: URL, _ progress: Progress, _ dataPath: String?, _ error: Error, _ finished: Bool) -> Void
-            if let url = requestWrapper.request.url {
-                callback(url, progress, destinationPath, error, finished)
-            }
-        }
-    }
-    
     func reset() {
-        HQDispatchLock.semaphore(callbacksLock) {
-            callbackLists.removeAll()
-        }
-        dataTask = nil
+        progress.cancel()
         session.invalidateAndCancel()
         closeStream()
+        dataTask = nil
     }
     
     func done() {
@@ -202,25 +182,22 @@ private extension HQDownloadOperation {
     }
     
     func openStream() {
-        stream = OutputStream(url: destinationPath, append: true)
+        stream = OutputStream(url: ownRequest.filePath, append: true)
         stream.schedule(in: RunLoop.current, forMode: .defaultRunLoopMode)
         stream.open()
     }
     
     func closeStream() {
-        stream.close()
         stream.remove(from: RunLoop.current, forMode: .defaultRunLoopMode)
+        stream.close()
     }
 }
 
 
 // MARK: - HQDownloadOperationProtocol
 extension HQDownloadOperation: URLSessionDataDelegate {
-    
     /// datatask first receive response
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
-        
-        progress.totalUnitCount = response.expectedContentLength + progress.completedUnitCount  // if continue download, need add current download size
         
         var disposition = URLSession.ResponseDisposition.allow
         self.response = response
@@ -237,18 +214,30 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         var urlCache: URLCache! = session.configuration.urlCache
         if urlCache == nil { urlCache = URLCache.shared }
         
-        if (statusCode == 304 && urlCache.cachedResponse(for: requestWrapper.request)?.data == nil) {
+        if (statusCode == 304 && urlCache.cachedResponse(for: ownRequest.request)?.data == nil) {
             valid = false
         }
         
-        if valid {
-            invokeCallbackClosure()
-        }
-        else {
+        if !valid {
             // if not valid, cancel request. the session will call complete delegate function, so do not need invoke complete callback
             disposition = .cancel
         }
-        
+        else {
+            if progress.completedUnitCount > 0 {
+                progress.resume()
+            }
+            else {
+                progress.start()
+            }
+            progress.totalUnitCount = response.expectedContentLength + progress.completedUnitCount  // if continue download, need add current download size
+            
+            startHandlers.allObjects.forEach { (obj) in
+                if let start = obj as? startClosure {
+                    start(ownRequest.request.url!, ownRequest.filePath, progress.totalUnitCount)
+                }
+            }
+        }
+
         completionHandler(disposition)
     }
     
@@ -259,11 +248,14 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         if stream.hasSpaceAvailable {
             stream.write([UInt8](data), maxLength: data.count)
             progress.completedUnitCount += Int64(data.count)
-            invokeCallbackClosure()
         }
         else {
-            invokeCallbackClosure(NSError(domain: "Download operation not has available space", code: -999, userInfo: nil), true)
             done()
+            finishedHandlers.allObjects.forEach { (obj) in
+                if let finish = obj as? finishedClosure {
+                    finish(nil)
+                }
+            }
         }
     }
 
@@ -275,8 +267,19 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         objc_sync_exit(self)
         
         /// error is nil means task complete, otherwise is error interrupt request
-        invokeCallbackClosure(error, true)
-        done()
+        if ownRequest.retryCount > 0 {
+            start() // restart
+            ownRequest.retryCount -= 1
+            progress.pause()
+        }
+        else {
+            done()
+            finishedHandlers.allObjects.forEach { (obj) in
+                if let finish = obj as? finishedClosure {
+                    finish(error)
+                }
+            }
+        }
     }
     
     
@@ -285,7 +288,7 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         var disposition = URLSession.AuthChallengeDisposition.performDefaultHandling
         var inlineCred: URLCredential? = nil
         if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust { // method is trust server
-            if requestWrapper.allowInvalidSSLCert {
+            if ownRequest.allowInvalidSSLCert {
                 disposition = .useCredential
                 // when authenticationMethod is ServerTrust, must be not nil
                 inlineCred = URLCredential(trust: challenge.protectionSpace.serverTrust!)
@@ -293,7 +296,7 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         }
         else {
             if challenge.previousFailureCount == 0 { // previos never failure
-                if let cred = requestWrapper.urlCredential { // use custom credential
+                if let cred = ownRequest.urlCredential { // use custom credential
                     inlineCred = cred
                     disposition = .useCredential
                 }
@@ -313,6 +316,6 @@ extension HQDownloadOperation: URLSessionDataDelegate {
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
         
         // remove response prevent use cache
-        completionHandler(requestWrapper.useUrlCache ? proposedResponse : nil)
+        completionHandler(ownRequest.useUrlCache ? proposedResponse : nil)
     }
 }
