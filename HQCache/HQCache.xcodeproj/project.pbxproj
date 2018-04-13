@@ -143,11 +143,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8A650AE0206869CD00C95462 /* Build configuration list for PBXNativeTarget "HQCache" */;
 			buildPhases = (
+				60DC2EF6208078890088A579 /* ShellScript */,
 				8A650AC7206869CD00C95462 /* Sources */,
 				8A650AC8206869CD00C95462 /* Frameworks */,
 				8A650AC9206869CD00C95462 /* Headers */,
 				8A650ACA206869CD00C95462 /* Resources */,
-				604A7D93207361CE0060A869 /* ShellScript */,
+				604A7D93207361CE0060A869 /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -233,7 +234,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		604A7D93207361CE0060A869 /* ShellScript */ = {
+		604A7D93207361CE0060A869 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -242,11 +243,25 @@
 				"$(SRCROOT)/Carthage/Build/iOS/HQSqlite.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/HQFoundation.framework",
 			);
+			name = "Run Script";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+		60DC2EF6208078890088A579 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../update_self.sh & chmod +x ../update_self.sh";
 		};
 /* End PBXShellScriptBuildPhase section */
 
