@@ -8,17 +8,7 @@
 
 public struct HQDownloadRequest {
 
-    // MARK: - Request
-    public private(set) var request: URLRequest!
-    
-    public var fileName: String {
-        return request.url?.lastPathComponent ?? ""
-    }
-    
-    /// Request time out
-    public var downloadTimeout: TimeInterval = 15 {
-        didSet { request.timeoutInterval = downloadTimeout }
-    }
+    // MARK: - Request settings
     
     /// Allow invalid ssl cert
     public var allowInvalidSSLCert: Bool = true
@@ -31,6 +21,38 @@ public struct HQDownloadRequest {
     public var handleCookies: Bool = true {
         didSet { request.httpShouldHandleCookies = handleCookies }
     }
+    
+    
+    // MARK: - Authentication
+    
+    public var urlCredential: URLCredential?
+    public var userPassAuth: (String, String)? {
+        didSet {
+            if let auth = userPassAuth {
+                urlCredential = URLCredential(user: auth.0, password: auth.1, persistence: .forSession)
+            }
+        }
+    }
+    
+    
+    public private(set) var request: URLRequest!
+    
+    public var fileName: String {
+        return request.url?.lastPathComponent ?? ""
+    }
+    
+    public private(set) var filePath: URL!
+    
+    /// Request time out
+    public var downloadTimeout: TimeInterval = 15 {
+        didSet { request.timeoutInterval = downloadTimeout }
+    }
+    
+    /// Auto retry count
+    public var retryCount: Int = 3
+    
+    /// Whether or not background continue
+    public var background: Bool = true
     
     /// Download range
     public var downloadRange: (Int64?, Int64?)? {
@@ -50,22 +72,19 @@ public struct HQDownloadRequest {
         }
     }
     
-    // MARK: - Authentication
-    public var urlCredential: URLCredential?
-    public var userPassAuth: (String, String)? {
-        didSet {
-            if let auth = userPassAuth {
-                urlCredential = URLCredential(user: auth.0, password: auth.1, persistence: .forSession)
-            }
-        }
-    }
-
-    public init(_ url: URL, _ headers: [String: String]? = nil) {
+    public init(_ url: URL, _ toFile: URL, _ headers: [String: String]? = nil) {
         request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: downloadTimeout)
         request.httpShouldUsePipelining = true
+        filePath = toFile
         headers?.forEach { (k, v) in addValue(v, forHTTPHeaderField: k) }
     }
     
+    public init?(_ progress: HQdownloadProgress) {
+        guard let url = progress.sourceUrl, let path = progress.fileURL else { return nil }
+        self.init(url, path)
+        downloadRange = (progress.completedUnitCount, progress.totalUnitCount)
+    }
+
     /// Request's function
     public func value(forHTTPHeaderField field: String) -> String? {
         return request.value(forHTTPHeaderField: field)

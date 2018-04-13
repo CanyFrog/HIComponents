@@ -39,7 +39,6 @@ public class HQDownloadScheduler: NSObject {
         return downloadQueue.operationCount
     }
     
-
     
     // MARK: - Session
     public var sessionConfig: URLSessionConfiguration? {
@@ -50,25 +49,22 @@ public class HQDownloadScheduler: NSObject {
     
     // MARK: - Operation
     private weak var lastedOperation: Operation?
-    private var operationsDict = [URL: HQDownloadOperation]()
-    private var operationsLock = DispatchSemaphore(value: 1)
     
     // private var cache:
-    public private(set) var path: URL = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
-
-    // TODO: Add operation progress
-    public private(set) var progress: Progress = {
-        let pro = Progress()
+    public private(set) var directory: URL!
+    
+    public private(set) var progress: HQdownloadProgress = {
+        let pro = HQdownloadProgress()
         pro.isCancellable = true
         pro.isPausable = true
         return pro
     }()
     
-    init(_ path: URL, _ sessionConfig: URLSessionConfiguration = .default) {
+    init(_ directory: URL, _ sessionConfig: URLSessionConfiguration = .default) {
         super.init()
         sessionConfig.timeoutIntervalForRequest = 15
         ownSession = URLSession(configuration: sessionConfig, delegate: self, delegateQueue: nil)
-        self.path = path
+        self.directory = directory
     }
     
     deinit {
@@ -85,41 +81,24 @@ public class HQDownloadScheduler: NSObject {
 public extension HQDownloadScheduler {
     @discardableResult
     public func download(_ url: URL, _ headers: [String: String]? = nil) -> HQDownloadOperation {
-        let operation = HQDownloadOperation(request: HQDownloadRequest(url, headers), targetPath: path.appendingPathComponent(url.lastPathComponent), session: ownSession)
-        addOperation(operation, forUrl: url)
-        return operation
+        if let existedOp = operation(url: url) { return existedOp }
+        let newOp = HQDownloadOperation(HQDownloadRequest(url, directory.appendingPathComponent(url.lastPathComponent), headers), ownSession)
+        setOperation(newOp)
+        return newOp
     }
     
     @discardableResult
     public func download(_ request: HQDownloadRequest) -> HQDownloadOperation {
-        let operation = HQDownloadOperation(request: request, targetPath: path.appendingPathComponent(request.fileName), session: ownSession)
-        addOperation(operation, forUrl: request.request.url!)
-        return operation
-    }
-    
-    public func addOperation(_ operation: HQDownloadOperation, forUrl url: URL) {
-        // add or replace operation
-        HQDispatchLock.semaphore(operationsLock) {
-            // if exists, return
-            guard !operationsDict.keys.contains(url) else { return }
-            
-            // add to queue asynchronously execute, so this will not cause deadlock
-            operation.completionBlock = operationCompletionBlock(url)
-            
-            self.operationsDict[url] = operation
-            
-            // start operation
-            downloadQueue.addOperation(operation)
-            if executionOrder == .LIFO {
-                lastedOperation?.addDependency(operation)
-                lastedOperation = operation
-            }
-        }
+        if let existedOp = operation(url: request.request.url!) { return existedOp }
+        let newOp = HQDownloadOperation(request, ownSession)
+        setOperation(newOp)
+        return newOp
     }
     
     /// Invalidates the managed session, optionally canceling pending operations.
     /// - Parameter cancelPendingOperations: cancelPendingOperations Whether or not to cancel pending operations.
     public func invalidateAndCancelSession(cancelPendingOperations: Bool = true) {
+        progress.cancel()
         if cancelPendingOperations {
             ownSession?.invalidateAndCancel()
         }
@@ -133,35 +112,39 @@ public extension HQDownloadScheduler {
      */
     public func suspended(_ isSuspended: Bool = true) {
         downloadQueue.isSuspended = isSuspended
+        if isSuspended {
+            progress.pause()
+        }
+        else {
+            progress.resume()
+        }
     }
     
     public func cancelAllDownloaders() {
         downloadQueue.cancelAllOperations()
-        HQDispatchLock.semaphore(operationsLock) {
-            operationsDict.removeAll()
-        }
-    }
-    
-    public func remove(_ url: URL) {
-        HQDispatchLock.semaphore(operationsLock) {
-            let operation = operationsDict[url]
-            operation?.cancel()
-            operationsDict.removeValue(forKey: url)
-        }
+        progress.cancel()
     }
 }
 
-
 // MARK: - Private functions
 private extension HQDownloadScheduler {
-    
-    func operationCompletionBlock(_ url: URL) -> ()->Void {
-        return { [weak self] in
-            guard let wself = self else { return }
-            HQDispatchLock.semaphore(wself.operationsLock, closure: {
-                wself.operationsDict.removeValue(forKey: url)
-            })
+    func setOperation(_ operation: HQDownloadOperation) {
+        operation.start { [weak self] (_, _, size) in
+            self?.progress.addChild(operation.progress, withPendingUnitCount: size)
         }
+        
+        downloadQueue.addOperation(operation)
+        if executionOrder == .LIFO {
+            lastedOperation?.addDependency(operation)
+            lastedOperation = operation
+        }
+    }
+    
+    func operation(url: URL) -> HQDownloadOperation? {
+        return downloadQueue.operations.filter { (operation) -> Bool in
+            guard let oper = operation as? HQDownloadOperation else { return false }
+            return oper.ownRequest.request.url == url
+        }.first as? HQDownloadOperation
     }
     
     func operation(task: URLSessionTask) -> HQDownloadOperation? {
@@ -179,7 +162,6 @@ private extension HQDownloadScheduler {
 extension HQDownloadScheduler: URLSessionDataDelegate {
     /// datatask first receive response
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
-        
         if let operation = operation(task: dataTask) {
             operation.urlSession(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
         }
@@ -191,7 +173,6 @@ extension HQDownloadScheduler: URLSessionDataDelegate {
     
     /// request receive data callback
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-
         if let operation = operation(task: dataTask) {
             operation.urlSession(session, dataTask: dataTask, didReceive: data)
         }
@@ -200,7 +181,6 @@ extension HQDownloadScheduler: URLSessionDataDelegate {
     
     /// task completed
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        
         if let operation = operation(task: task) {
             operation.urlSession(session, task: task, didCompleteWithError: error)
         }
@@ -219,7 +199,6 @@ extension HQDownloadScheduler: URLSessionDataDelegate {
     
     /// Handle session cache
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
-        
         if let operation = operation(task: dataTask) {
             operation.urlSession(session, dataTask: dataTask, willCacheResponse: proposedResponse, completionHandler: completionHandler)
         }

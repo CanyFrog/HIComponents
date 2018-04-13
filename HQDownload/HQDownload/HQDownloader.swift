@@ -18,7 +18,16 @@ public class HQDownloader {
         cache = HQDiskCache(path)
     }
     
-    public func download(_ url: URL) -> String {
 
+    public func download(_ source: URL, _ start: ((URL)->Void)?) {
+        if cache.exist(forKey: source.absoluteString) {
+            var progress: HQdownloadProgress?
+            cache.query(objectForKey: source.absoluteString) { (_, obj) in
+                progress = obj
+                if progress?.fractionCompleted >= 1 {
+                    start(progress?.fileURL)
+                }
+            }
+        }
     }
 }
