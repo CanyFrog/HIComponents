@@ -11,7 +11,6 @@ import XCTest
 
 class HQDownloadTest: XCTestCase {
     let domain: URL = URL(string: "https://httpbin.org")!
-    let timeout: TimeInterval  = 15.0
     let testDirectory: URL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true).appendingPathComponent("download_test", isDirectory: true)
     
     override func setUp() {
@@ -28,10 +27,9 @@ class HQDownloadTest: XCTestCase {
         return testDirectory.appendingPathComponent("\(UUID().uuidString).json")
     }
     
-    func async(_ timeout: TimeInterval = 5, _ execute: (@escaping ()->Void) -> Void) {
+    func async(_ timeout: TimeInterval = 15, _ execute: (@escaping ()->Void) -> Void) {
         let exception = self.expectation(description: "Excetation async task executed")
         execute({exception.fulfill()})
         waitForExpectations(timeout: timeout, handler: nil)
     }
-
 }

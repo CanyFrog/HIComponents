@@ -23,9 +23,9 @@ public class HQDownloader {
         cache = HQDiskCache(directory)
     }
     
-    public func download(_ source: URL, _ start: HQDownloadOperation.startClosure? = nil, _ finished: HQDownloadOperation.finishedClosure? = nil) {
+    public func download(_ source: URL, _ start: HQDownloadOperation.BeginClosure? = nil, _ finished: HQDownloadOperation.FinishedClosure? = nil) {
         guard cache.exist(forKey: source.absoluteString), let obj: HQdownloadProgress = cache.query(objectForKey: source.absoluteString) else {
-            scheduler.download(source).start(start).finished(finished)
+            scheduler.download(source).begin(start).finished(finished)
             return
         }
         
@@ -37,11 +37,11 @@ public class HQDownloader {
         
         
         if let request = HQDownloadRequest(obj) {
-            scheduler.download(request).start(start).finished(finished)
+            scheduler.download(request).begin(start).finished(finished)
             return
         }
         
-        scheduler.download(source).start(start).finished(finished)
+        scheduler.download(source).begin(start).finished(finished)
     }
     
     public func download(_ source: URL) -> HQdownloadProgress {

@@ -20,7 +20,7 @@ public class HQdownloadProgress: Progress, Codable {
             return userInfo[.init("fileURL")] as? URL
         }
         set {
-            setUserInfoObject(fileURL, forKey: .init("fileURL"))
+            setUserInfoObject(newValue, forKey: .init("fileURL"))
         }
     }
     
@@ -29,7 +29,7 @@ public class HQdownloadProgress: Progress, Codable {
             return userInfo[.init("sourceURL")] as? URL
         }
         set {
-            setUserInfoObject(sourceURL, forKey: .init("sourceURL"))
+            setUserInfoObject(newValue, forKey: .init("sourceURL"))
         }
     }
     
