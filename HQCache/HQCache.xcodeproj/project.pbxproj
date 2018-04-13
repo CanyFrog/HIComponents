@@ -11,8 +11,6 @@
 		604A7D92207361C80060A869 /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604A7D91207361C80060A869 /* HQSqlite.framework */; };
 		604A7D97207371D90060A869 /* HQDiskCache+Sqlite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604A7D96207371D90060A869 /* HQDiskCache+Sqlite.swift */; };
 		604A7D9920748F730060A869 /* HQDiskCache+File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604A7D9820748F730060A869 /* HQDiskCache+File.swift */; };
-		60DC2EF9208086400088A579 /* HQFoundation.framework in Resources */ = {isa = PBXBuildFile; fileRef = 8AD5F0CC2075B94E001C9C6F /* HQFoundation.framework */; };
-		60DC2EFA208086400088A579 /* HQSqlite.framework in Resources */ = {isa = PBXBuildFile; fileRef = 604A7D91207361C80060A869 /* HQSqlite.framework */; };
 		8A650AD6206869CD00C95462 /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A650ACC206869CD00C95462 /* HQCache.framework */; };
 		8A650ADD206869CD00C95462 /* HQCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A650ACF206869CD00C95462 /* HQCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8A650AE920686A4300C95462 /* HQMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650AE820686A4300C95462 /* HQMemoryCache.swift */; };
@@ -220,8 +218,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60DC2EF9208086400088A579 /* HQFoundation.framework in Resources */,
-				60DC2EFA208086400088A579 /* HQSqlite.framework in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,7 +413,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Frameworks",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = HQCache/Info.plist;
@@ -446,7 +441,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Frameworks",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = HQCache/Info.plist;
