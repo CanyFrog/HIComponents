@@ -76,13 +76,13 @@ public final class HQDownloadOperation: Operation {
     private var stream: OutputStream!
     
     // MARK: - Call backs
-    public typealias startClosure = (_ source: URL, _ target: URL, _ exceptSize: Int64) -> Void
-    private var startHandlerLock = DispatchSemaphore(value: 1)
-    private var startHandlers = NSPointerArray.weakObjects()
+    public typealias BeginClosure = (_ source: URL, _ target: URL, _ exceptSize: Int64) -> Void
+    private var beginHandlerLock = DispatchSemaphore(value: 1)
+    private var beginHandlers = [BeginClosure?]()
     
-    public typealias finishedClosure = (_ error: Error?)->Void
+    public typealias FinishedClosure = (_ error: Error?)->Void
     private var finishedHandlerLock = DispatchSemaphore(value: 1)
-    private var finishedHandlers = NSPointerArray.weakObjects()
+    private var finishedHandlers = [FinishedClosure?]()
     
     public init(_ request: HQDownloadRequest, _ session: URLSession? = nil) {
         super.init()
@@ -143,7 +143,7 @@ public extension HQDownloadOperation {
         
         // start task
         dataTask?.resume()
-        
+
         // if task finished, remove background task
         if let backgroundTaskId = backgroundTaskId, backgroundTaskId != UIBackgroundTaskInvalid {
             UIApplication.shared.endBackgroundTask(backgroundTaskId)
@@ -154,19 +154,21 @@ public extension HQDownloadOperation {
 
 public extension HQDownloadOperation {
     @discardableResult
-    public func start(_ callback: startClosure?) -> HQDownloadOperation {
-        HQDispatchLock.semaphore(startHandlerLock) {
-            startHandlers.compact()
-            startHandlers.addObject(callback as AnyObject)
+    public func begin(_ callback: BeginClosure?) -> HQDownloadOperation {
+        if let callback = callback {
+            HQDispatchLock.semaphore(beginHandlerLock) {
+                beginHandlers.append(callback)
+            }
         }
         return self
     }
     
     @discardableResult
-    public func finished(_ callback: finishedClosure?) -> HQDownloadOperation {
-        HQDispatchLock.semaphore(finishedHandlerLock) {
-            finishedHandlers.compact()
-            finishedHandlers.addObject(callback as AnyObject)
+    public func finished(_ callback: FinishedClosure?) -> HQDownloadOperation {
+        if let callback = callback {
+            HQDispatchLock.semaphore(finishedHandlerLock) {
+                finishedHandlers.append(callback)
+            }
         }
         return self
     }
@@ -237,9 +239,9 @@ extension HQDownloadOperation: URLSessionDataDelegate {
             }
             progress.totalUnitCount = response.expectedContentLength + progress.completedUnitCount  // if continue download, need add current download size
             
-            startHandlers.allObjects.forEach { (obj) in
-                if let start = obj as? startClosure {
-                    start(ownRequest.request.url!, ownRequest.fileUrl, progress.totalUnitCount)
+            beginHandlers.forEach { (obj) in
+                if let begin = obj {
+                    begin(ownRequest.request.url!, ownRequest.fileUrl, progress.totalUnitCount)
                 }
             }
         }
@@ -257,8 +259,8 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         }
         else {
             done()
-            finishedHandlers.allObjects.forEach { (obj) in
-                if let finish = obj as? finishedClosure {
+            finishedHandlers.forEach { (obj) in
+                if let finish = obj {
                     finish(nil)
                 }
             }
@@ -273,15 +275,15 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         objc_sync_exit(self)
         
         /// error is nil means task complete, otherwise is error interrupt request
-        if ownRequest.retryCount > 0 {
+        if error != nil && ownRequest.retryCount > 0 {
             start() // restart
             ownRequest.retryCount -= 1
             progress.pause()
         }
         else {
             done()
-            finishedHandlers.allObjects.forEach { (obj) in
-                if let finish = obj as? finishedClosure {
+            finishedHandlers.forEach { (obj) in
+                if let finish = obj {
                     finish(error)
                 }
             }

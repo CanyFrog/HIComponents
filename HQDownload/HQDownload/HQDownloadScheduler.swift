@@ -129,7 +129,7 @@ public extension HQDownloadScheduler {
 // MARK: - Private functions
 private extension HQDownloadScheduler {
     func setOperation(_ operation: HQDownloadOperation) {
-        operation.start { [weak self] (_, _, size) in
+        operation.begin { [weak self] (_, _, size) in
             self?.progress.addChild(operation.progress, withPendingUnitCount: size)
         }
         
