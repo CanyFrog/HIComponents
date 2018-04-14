@@ -21,6 +21,7 @@
 		8A650B072069119200C95462 /* HQDownload.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A650AF92069119200C95462 /* HQDownload.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8A650B4B206A79D000C95462 /* HQDownloadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4A206A79D000C95462 /* HQDownloadOperation.swift */; };
 		8A650B4F206BD61800C95462 /* HQDownloadScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4E206BD61800C95462 /* HQDownloadScheduler.swift */; };
+		8AA183CF2081896400FA51B5 /* HQDownloadProgressTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA183CE2081896400FA51B5 /* HQDownloadProgressTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		8A650B062069119200C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8A650B4A206A79D000C95462 /* HQDownloadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadOperation.swift; sourceTree = "<group>"; };
 		8A650B4E206BD61800C95462 /* HQDownloadScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadScheduler.swift; sourceTree = "<group>"; };
+		8AA183CE2081896400FA51B5 /* HQDownloadProgressTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadProgressTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				8A650B042069119200C95462 /* HQDownloadTests.swift */,
+				8AA183CE2081896400FA51B5 /* HQDownloadProgressTest.swift */,
 				60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */,
 				60B6E0FB207C95B200C4C594 /* HQDownloadOperationTest.swift */,
 				60F0AF85207DCD3F00C5F6EE /* HQDownloadSchedulerTest.swift */,
@@ -277,6 +280,7 @@
 				60F0AF86207DCD3F00C5F6EE /* HQDownloadSchedulerTest.swift in Sources */,
 				60B6E0F7207C83CE00C4C594 /* HQDownloadRequestTest.swift in Sources */,
 				8A650B052069119200C95462 /* HQDownloadTests.swift in Sources */,
+				8AA183CF2081896400FA51B5 /* HQDownloadProgressTest.swift in Sources */,
 				60B6E0FC207C95B200C4C594 /* HQDownloadOperationTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

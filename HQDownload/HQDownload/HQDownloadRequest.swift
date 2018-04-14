@@ -56,33 +56,23 @@ public struct HQDownloadRequest {
     
     /// Download range
     public var downloadRange: (Int64?, Int64?)? {
-        didSet {
-            guard let range = downloadRange else {
-                setValue(nil, forHTTPHeaderField: "Range")
-                return
-            }
-            // Can add multi range
-            let size = range.0 ?? 0
-            if let total = range.1 {
-                addValue("bytes=\(size)-\(total)", forHTTPHeaderField: "Range")
-            }
-            else {
-                addValue("bytes=\(size)-", forHTTPHeaderField: "Range")
-            }
-        }
+        didSet { setRange() }
     }
     
     public init(_ url: URL, _ toFile: URL, _ headers: [String: String]? = nil) {
         request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: downloadTimeout)
         request.httpShouldUsePipelining = true
+        useUrlCache = false
         fileUrl = toFile
         headers?.forEach { (k, v) in addValue(v, forHTTPHeaderField: k) }
     }
     
-    public init?(_ progress: HQdownloadProgress) {
+    public init?(_ progress: HQDownloadProgress) {
         guard let url = progress.sourceURL, let path = progress.fileURL else { return nil }
         self.init(url, path)
+        // Init set porperty can not trigger didSet function
         downloadRange = (progress.completedUnitCount, progress.totalUnitCount)
+        setRange()
     }
 
     /// Request's function
@@ -96,5 +86,20 @@ public struct HQDownloadRequest {
     
     public mutating func addValue(_ value: String, forHTTPHeaderField field: String) {
         request.addValue(value, forHTTPHeaderField: field)
+    }
+    
+    private mutating func setRange() {
+        guard let range = downloadRange else {
+            setValue(nil, forHTTPHeaderField: "Range")
+            return
+        }
+        // Can add multi range
+        let size = range.0 ?? 0
+        if let total = range.1 {
+            addValue("bytes=\(size)-\(total)", forHTTPHeaderField: "Range")
+        }
+        else {
+            addValue("bytes=\(size)-", forHTTPHeaderField: "Range")
+        }
     }
 }

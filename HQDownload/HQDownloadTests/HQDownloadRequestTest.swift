@@ -40,7 +40,7 @@ class HQDownloadRequestTest: HQDownloadTest {
     }
     
     func testRequestInitWithProgressNoCompletedSource() {
-        let progress = HQdownloadProgress()
+        let progress = HQDownloadProgress()
         XCTAssertNil(HQDownloadRequest(progress))
         
         progress.sourceURL = domain

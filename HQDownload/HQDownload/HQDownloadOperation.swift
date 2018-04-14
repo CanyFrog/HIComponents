@@ -29,8 +29,8 @@ public final class HQDownloadOperation: Operation {
         }
     }
     
-    public private(set) var progress: HQdownloadProgress = {
-        let progress = HQdownloadProgress()
+    public private(set) var progress: HQDownloadProgress = {
+        let progress = HQDownloadProgress()
         progress.isPausable = true
         progress.isCancellable = true
         
