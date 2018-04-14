@@ -43,6 +43,8 @@ public final class HQDownloadOperation: Operation {
     
     open override var isAsynchronous: Bool { return true }
     
+    public override var isExecuting: Bool { return _executing }
+    
     private var _executing = false {
         willSet {
             willChangeValue(forKey: "isExecuting")
@@ -51,6 +53,9 @@ public final class HQDownloadOperation: Operation {
             didChangeValue(forKey: "isExecuting")
         }
     }
+    
+    public override var isFinished: Bool { return _finished }
+
     private var _finished = false {
         willSet {
             willChangeValue(forKey: "isFinished")
@@ -330,4 +335,9 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         // remove response prevent use cache
         completionHandler(ownRequest.useUrlCache ? proposedResponse : nil)
     }
+    
+    /// If session is invalid, call this function
+//    public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
+//        cancel()
+//    }
 }

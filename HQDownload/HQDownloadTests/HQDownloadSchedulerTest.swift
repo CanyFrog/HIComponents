@@ -1,75 +1,88 @@
-////
-////  HQDownloadSchedulerTest.swift
-////  HQDownloadTests
-////
-////  Created by Magee Huang on 4/11/18.
-////  Copyright © 2018 com.personal.HQ. All rights reserved.
-////
 //
-//import XCTest
-//@testable import HQDownload
+//  HQDownloadSchedulerTest.swift
+//  HQDownloadTests
 //
-//class HQDownloadSchedulerTest: HQDownloadTest {
-//    var scheduler: HQDownloadScheduler!
-//    
-//    override func setUp() {
-//        super.setUp()
-//        scheduler = HQDownloadScheduler(testDirectory)
-//    }
-//    
-//    override func tearDown() {
-//        super.tearDown()
+//  Created by Magee Huang on 4/11/18.
+//  Copyright © 2018 com.personal.HQ. All rights reserved.
+//
+
+import XCTest
+@testable import HQDownload
+
+class HQDownloadSchedulerTest: HQDownloadTest {
+    var scheduler: HQDownloadScheduler!
+    
+    override func setUp() {
+        super.setUp()
+        scheduler = HQDownloadScheduler(testDirectory)
+    }
+    
+    override func tearDown() {
+        super.tearDown()
 //        scheduler.invalidateAndCancelSession()
-//        scheduler = nil
+        scheduler.cancelAllDownloaders()
+        scheduler = nil
+    }
+    
+    func testSchedulerProperties() {
+        XCTAssertNotNil(scheduler.sessionConfig)
+        XCTAssertEqual(scheduler.directory, testDirectory)
+        XCTAssertEqual(0, scheduler.currentDownloaders)
+    }
+    
+    func testShedulerAddDownloaderByLink() {
+        scheduler.download(domain.appendingPathComponent("stream/123"))
+        scheduler.download(domain.appendingPathComponent("stream/123"))
+        scheduler.download(domain.appendingPathComponent("stream/124"))
+        scheduler.download(domain.appendingPathComponent("stream/125"))
+        XCTAssertEqual(3, scheduler.currentDownloaders)
+    }
+    
+    func testShedulerAddDownloaderByRequest() {
+        scheduler.download(HQDownloadRequest(domain.appendingPathComponent("stream/123"), testDirectory.appendingPathComponent("123")))
+        scheduler.download(HQDownloadRequest(domain.appendingPathComponent("stream/123"), testDirectory.appendingPathComponent("456")))
+        scheduler.download(HQDownloadRequest(domain.appendingPathComponent("stream/124"), testDirectory.appendingPathComponent("4313")))
+        scheduler.download(HQDownloadRequest(domain.appendingPathComponent("stream/125"), testDirectory.appendingPathComponent("afda")))
+        XCTAssertEqual(3, scheduler.currentDownloaders)
+    }
+    
+    
+    func testSchedulerStart() {
+        let op1 = scheduler.download(domain.appendingPathComponent("stream/\(123 * 1024)"))
+        XCTAssertTrue(op1.isReady)
+        async { (done) in
+            op1.begin { (_, _, _) in
+                XCTAssertTrue(op1.isExecuting)
+                done()
+            }
+        }
+    }
+    
+    func testSchedulerSuspended() {
+        let op1 = scheduler.download(domain.appendingPathComponent("stream/\(123 * 1024)"))
+        XCTAssertTrue(op1.isReady)
+        
+        scheduler.suspended()
+    
+        let op2 = scheduler.download(domain.appendingPathComponent("stream/\(124 * 1024)"))
+        XCTAssertFalse(op2.isExecuting) // never be executing
+    }
+    
+    func testSchedulerCancel() {
+        scheduler.download(domain.appendingPathComponent("stream/\(123 * 1024)"))
+        scheduler.download(domain.appendingPathComponent("stream/\(124 * 1024)"))
+        
+        scheduler.cancelAllDownloaders()
+        XCTAssertEqual(0, scheduler.currentDownloaders)
+    }
+    
+//    func testSchedulerInvalidateAndCancelSession() {
+//        scheduler.invalidateAndCancelSession()
+//        let op1 = scheduler.download(domain.appendingPathComponent("stream/\(123 * 1024)"))
+//
+//        let op2 = scheduler.download(domain.appendingPathComponent("stream/\(124 * 1024)"))
+//
+//        XCTAssertTrue(op1.isCancelled)
+//        XCTAssertTrue(op2.isFinished)
 //    }
-//    
-//    func testShedulerAddDownloaderByLink() {
-//        scheduler.download(domain.appendingPathComponent("stream/123"))
-//        scheduler.download(domain.appendingPathComponent("stream/123"))
-//        scheduler.download(domain.appendingPathComponent("stream/124"))
-//        scheduler.download(domain.appendingPathComponent("stream/125"))
-//        XCTAssertEqual(3, scheduler.currentDownloaders)
-//    }
-//    
-//    func testShedulerAddDownloaderByRequest() {
-//        
-//        scheduler.download(HQDownloadRequest(domain.appendingPathComponent("stream/123")))
-//        scheduler.download(HQDownloadRequest(domain.appendingPathComponent("stream/123")))
-//        scheduler.download(HQDownloadRequest(domain.appendingPathComponent("stream/124")))
-//        scheduler.download(HQDownloadRequest(domain.appendingPathComponent("stream/125")))
-//        XCTAssertEqual(3, scheduler.currentDownloaders)
-//    }
-//    
-//    func testShedulerAsyncAddDownloader() {
-//        let group = DispatchGroup()
-//        
-//        group.enter()
-//        DispatchQueue(label: "test1").async {
-//            self.scheduler.download(self.domain.appendingPathComponent("stream/125"))
-//            self.scheduler.download(self.domain.appendingPathComponent("stream/123"))
-//            self.scheduler.download(self.domain.appendingPathComponent("stream/123"))
-//            group.leave()
-//        }
-//        
-//        group.enter()
-//        DispatchQueue(label: "test2").async {
-//            self.scheduler.download(HQDownloadRequest(self.domain.appendingPathComponent("stream/124")))
-//            self.scheduler.download(HQDownloadRequest(self.domain.appendingPathComponent("stream/124")))
-//            self.scheduler.download(HQDownloadRequest(self.domain.appendingPathComponent("stream/125")))
-//            group.leave()
-//        }
-//        
-//        group.wait()
-//        XCTAssertEqual(3, scheduler.currentDownloaders)
-//    }
-//    
-//    func testSchedulerDownloaderCallback() {
-//        async { (done) in
-//            scheduler.download(domain.appendingPathComponent("stream/100")).addCallback { (url, progress, path, err, finished) in
-//                if finished {
-//                    done()
-//                }
-//            }
-//        }
-//    }
-//}
+}
