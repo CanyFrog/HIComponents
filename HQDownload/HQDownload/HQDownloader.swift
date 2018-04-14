@@ -12,6 +12,7 @@ public class HQDownloader {
     static let downloader = HQDownloader()
     
     public private(set) var directoryUrl: URL!
+    public private(set) var tasks = [String]()
     
     private var scheduler: HQDownloadScheduler!
     private var cache: HQDiskCache!
@@ -34,7 +35,6 @@ public class HQDownloader {
             finished?(nil)
             return
         }
-        
         
         if let request = HQDownloadRequest(obj) {
             scheduler.download(request).begin(start).finished(finished)

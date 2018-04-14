@@ -70,8 +70,10 @@ class HQdownloadProgress: HQDownloadTest {
         }
     }
     
-    func testProgressAddChild() {
+//    func testProgressAddChild() {
 //        let unitCount: Int64 = 50
+//        defaultProgress?.completedUnitCount = 2 * unitCount
+//
 //        let progress1 = HQDownloadProgress()
 //        progress1.totalUnitCount = unitCount
 //        let progress2 = HQDownloadProgress()
@@ -79,10 +81,7 @@ class HQdownloadProgress: HQDownloadTest {
 //
 //        defaultProgress?.addChild(progress1, withPendingUnitCount: unitCount)
 //        defaultProgress?.addChild(progress2, withPendingUnitCount: unitCount)
-//        
-//        XCTAssertEqual(0, defaultProgress?.fractionCompleted)
-//        XCTAssertEqual(2*unitCount, defaultProgress?.totalUnitCount)
-//        
+//
 //        async { (done) in
 //            progress1.finishedHandler = {
 //                XCTAssertEqual(0.5, self.defaultProgress?.fractionCompleted)
@@ -93,7 +92,7 @@ class HQdownloadProgress: HQDownloadTest {
 //                progress1.completedUnitCount = i
 //            }
 //        }
-    }
+//    }
     
     func testProgressCodable() {
         defaultProgress?.sourceURL = domain

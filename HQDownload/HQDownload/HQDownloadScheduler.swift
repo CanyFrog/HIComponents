@@ -53,6 +53,7 @@ public class HQDownloadScheduler: NSObject {
     // private var cache:
     public private(set) var directory: URL!
     
+    // TODO: progress tree
     public private(set) var progress: HQDownloadProgress = {
         let pro = HQDownloadProgress()
         pro.isCancellable = true
@@ -95,20 +96,20 @@ public extension HQDownloadScheduler {
         return newOp
     }
     
-    /// Invalidates the managed session, optionally canceling pending operations.
-    /// - Parameter cancelPendingOperations: cancelPendingOperations Whether or not to cancel pending operations.
-    public func invalidateAndCancelSession(cancelPendingOperations: Bool = true) {
-        progress.cancel()
-        if cancelPendingOperations {
-            ownSession?.invalidateAndCancel()
-        }
-        else {
-            ownSession?.finishTasksAndInvalidate()
-        }
-    }
+    /// Once a session is invalidated, new tasks cannot be created in the session, but existing tasks continue until completion.
+    /// use to change session
+//    public func invalidateAndCancelSession(_ cancelPendingOperations: Bool = true) {
+//        progress.cancel()
+//        if cancelPendingOperations {
+//            ownSession?.invalidateAndCancel()
+//        }
+//        else {
+//            ownSession?.finishTasksAndInvalidate()
+//        }
+//    }
     
     /**
-     * Sets the download queue suspension state
+     * When the value of this property is NO, the queue actively starts operations that are in the queue and ready to execute. Setting this property to YES prevents the queue from starting any queued operations, but already executing operations continue to execute
      */
     public func suspended(_ isSuspended: Bool = true) {
         downloadQueue.isSuspended = isSuspended
@@ -205,5 +206,9 @@ extension HQDownloadScheduler: URLSessionDataDelegate {
         else {
             completionHandler(proposedResponse)
         }
+    }
+    
+    /// If session is invalid, call this function
+    public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
     }
 }

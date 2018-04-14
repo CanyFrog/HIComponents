@@ -17,8 +17,13 @@ class HQDownloadOperationTest: HQDownloadTest {
     func testOperationInitProperities() {
         let operation = defaultOperation
         
-        operation.start()
+        XCTAssertTrue(operation.isReady)
+        XCTAssertFalse(operation.isExecuting)
+        XCTAssertFalse(operation.isFinished)
+        XCTAssertFalse(operation.isCancelled)
         
+        operation.start()
+        XCTAssertTrue(operation.isExecuting)
         XCTAssertNotNil(operation.ownRequest)
         XCTAssertNotNil(operation.sessionConfig)
         XCTAssertNotNil(operation.dataTask)
@@ -30,6 +35,7 @@ class HQDownloadOperationTest: HQDownloadTest {
         
         async { (done) in
             operation.begin { [unowned operation] (source, file, size) in
+                XCTAssertTrue(operation.isExecuting)
                 XCTAssertEqual(source, operation.ownRequest.request.url)
                 XCTAssertEqual(file, operation.ownRequest.fileUrl)
                 XCTAssertGreaterThan(size, 0)
@@ -44,6 +50,7 @@ class HQDownloadOperationTest: HQDownloadTest {
         
         async { (done) in
             operation.finished({ (err) in
+                XCTAssertTrue(operation.isFinished)
                 done()
             }).start()
         }
@@ -68,6 +75,7 @@ class HQDownloadOperationTest: HQDownloadTest {
         operation.cancel()
         async { (done) in
             operation.progress.cancellationHandler = {
+                XCTAssertTrue(operation.isCancelled)
                 XCTAssertNotNil(operation.progress.sourceURL)
                 XCTAssertNotNil(operation.progress.fileURL)
                 XCTAssertLessThan(operation.progress.fractionCompleted, 1)
