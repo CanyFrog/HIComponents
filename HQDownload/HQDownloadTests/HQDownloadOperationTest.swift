@@ -10,172 +10,136 @@ import XCTest
 @testable import HQDownload
 
 class HQDownloadOperationTest: HQDownloadTest {
-    var defaultOperation: HQDownloadOperation!
-    
-    override func setUp() {
-        super.setUp()
-        defaultOperation = HQDownloadOperation(HQDownloadRequest(domain, testDirectory))
-    }
-    
-    override func tearDown() {
-        super.tearDown()
-        defaultOperation = nil
+    var defaultOperation: HQDownloadOperation {
+        return HQDownloadOperation(HQDownloadRequest(domain, testDirectory))
     }
     
     func testOperationInitProperities() {
-
-        defaultOperation.start()
+        let operation = defaultOperation
         
-        XCTAssertNotNil(defaultOperation.ownRequest)
-        XCTAssertNotNil(defaultOperation.sessionConfig)
-        XCTAssertNotNil(defaultOperation.dataTask)
-        XCTAssertNotNil(defaultOperation.progress)
+        operation.start()
+        
+        XCTAssertNotNil(operation.ownRequest)
+        XCTAssertNotNil(operation.sessionConfig)
+        XCTAssertNotNil(operation.dataTask)
+        XCTAssertNotNil(operation.progress)
     }
     
     func testOperationBeginCallback() {
+        let operation = defaultOperation
+        
         async { (done) in
-            defaultOperation.begin { [unowned self] (source, file, size) in
-                XCTAssertEqual(source, self.defaultOperation.ownRequest.request.url)
-                XCTAssertEqual(file, self.defaultOperation.ownRequest.fileUrl)
+            operation.begin { [unowned operation] (source, file, size) in
+                XCTAssertEqual(source, operation.ownRequest.request.url)
+                XCTAssertEqual(file, operation.ownRequest.fileUrl)
                 XCTAssertGreaterThan(size, 0)
-                XCTAssertNotNil(self.defaultOperation.response)
+                XCTAssertNotNil(operation.response)
                 done()
             }.start()
         }
     }
     
-//    func testOperationProperties() {
-//        // Given
-//        let request = HQDownloadRequest(domain)
-//        let operation = HQDownloadOperation(request: request, targetPath: randomTargetPath())
-//
-//        // Then
-//        operation.start()
-//
-//        // When
-//        XCTAssertNotNil(operation.sessionConfig)
-//        XCTAssertNotNil(operation.dataTask)
-//        XCTAssertNotNil(operation.progress)
-//        XCTAssertNil(operation.response)
-//    }
-//
-//    func testOperationBasicAuthentication() {
-//        clearHttpCredentialsAndCookie()
-//        let role = "admin"
-//        let pass = "passwork"
-//
-//        let link = domain.appendingPathComponent("basic-auth/\(role)/\(pass)")
-//        var request = HQDownloadRequest(link)
-//        request.userPassAuth = (role, pass)
-//        let operation = HQDownloadOperation(request: request, targetPath: randomTargetPath())
-//        operation.start()
-//
-//        async { (done) in
-//            let _ = operation.addCallback({ (_, _, path, error, finished) in
-//                if finished {
-//                    XCTAssertNil(error)
-//                    do {
-//                        let response = try Data(contentsOf: path)
-//                        let dict = try JSONSerialization.jsonObject(with: response, options: JSONSerialization.ReadingOptions.init(rawValue: 0)) as? [String: Any]
-//
-//                        XCTAssertTrue(dict!["authenticated"] as! Bool)
-//                        XCTAssertEqual(role, dict!["user"] as? String)
-//                    }
-//                    catch {
-//                        XCTFail("Auth failure")
-//                    }
-//                    done()
-//                }
-//            })
-//        }
-//
-//    }
-//
-//    func testOperationDownloadCallback() {
-//        let filePath = randomTargetPath()
-//        let link = domain.appendingPathComponent("stream/100")
-//        let request = HQDownloadRequest(link)
-//        let operation = HQDownloadOperation(request: request, targetPath: filePath)
-//
-//        async { (done) in
-//            let _ = operation.addCallback { (url, _, path, err, finished) in
-//                if finished {
-//                    XCTAssertEqual(url, link)
-//                    XCTAssertEqual(path.path, filePath.path)
-//                    XCTAssertNil(err)
-//                    XCTAssertNotNil(operation.response)
-//                    XCTAssertTrue(FileManager.default.fileExists(atPath: filePath.path))
-//                    done()
-//                }
-//            }
-//            operation.start()
-//        }
-//    }
-//
-//    func testOperationDownloadProgress() {
-//        let randomBytes = 4 * 1024 * 1024
-//        let filePath = randomTargetPath()
-//        let link = domain.appendingPathComponent("bytes/\(randomBytes)")
-//        let request = HQDownloadRequest(link)
-//        let operation = HQDownloadOperation(request: request, targetPath: filePath)
-//
-//
-//        var prevProgress: Double = 0
-//        async(15) { (done) in
-//            let _ = operation.addCallback({ (url, progress, path, err, finished) in
-//                XCTAssertLessThanOrEqual(prevProgress, progress.fractionCompleted)
-//                prevProgress = progress.fractionCompleted
-//                if finished {
-//                    XCTAssertEqual(1.0, prevProgress)
-//                    let attr = try! FileManager.default.attributesOfItem(atPath: filePath.path)
-//                    XCTAssertEqual(operation.response?.expectedContentLength, attr[FileAttributeKey.size] as? Int64)
-//                    done()
-//                }
-//            })
-//            operation.start()
-//        }
-//    }
-//
-//    func testOperationContinueDownload() {
-//        let filePath = randomTargetPath()
-//        let link = URL(string: "https://upload.wikimedia.org/wikipedia/commons/6/69/NASA-HS201427a-HubbleUltraDeepField2014-20140603.jpg")!
-//        var request = HQDownloadRequest(link)
-//        let operation1 = HQDownloadOperation(request: request, targetPath: filePath)
-//
-//        var currentSize: Int64 = 0
-//        var totalSize: Int64 = 0
-//
-//        let exception1Done = self.expectation(description: "Operation 1 done")
-//        let _ = operation1.addCallback({ (_, progress, _, _, _) in
-//            if progress.fractionCompleted > 0.2 {
-//                currentSize = progress.completedUnitCount
-//                totalSize = progress.totalUnitCount
-//                operation1.cancel()
-//
-//                XCTAssertTrue(operation1.isCancelled)
-//                exception1Done.fulfill()
-//            }
-//        })
-//        operation1.start()
-//        waitForExpectations(timeout: 10, handler: nil)
-//
-//        // start operation 2
-//        request.downloadRange = (currentSize, nil)
-//        let operation2 = HQDownloadOperation(request: request, targetPath: filePath)
-//        async(20) { (done) in
-//            let _ = operation2.addCallback({ (_, progress, _, error, finished) in
-//                XCTAssertLessThanOrEqual(currentSize, progress.completedUnitCount)
-//                if finished {
-//                    XCTAssertNil(error)
-//                    XCTAssertEqual(1.0, progress.fractionCompleted)
-//                    let attr = try? FileManager.default.attributesOfItem(atPath: filePath.path)
-//                    XCTAssertEqual(progress.totalUnitCount, totalSize)
-//                    XCTAssertEqual(totalSize, attr?[FileAttributeKey.size] as? Int64)
-//                    done()
-//                }
-//            })
-//            operation2.start()
-//        }
-//    }
+    func testOperationFinishedCallback() {
+        let operation = defaultOperation
+        
+        async { (done) in
+            operation.finished({ (err) in
+                done()
+            }).start()
+        }
+    }
+    
+    func testOperationProgressStart() {
+        let operation = HQDownloadOperation(HQDownloadRequest(domain.appendingPathComponent("stream/101"), randomTargetPath()))
+        operation.start()
+        async { (done) in
+            operation.progress.startHandler = { [unowned operation] in
+                XCTAssertNotNil(operation.progress.sourceURL)
+                XCTAssertNotNil(operation.progress.fileURL)
+                XCTAssertLessThan(operation.progress.fractionCompleted, 1)
+                done()
+            }
+        }
+    }
+    
+    func testOperationProgressCancel() {
+        let operation = HQDownloadOperation(HQDownloadRequest(domain.appendingPathComponent("stream/102"), randomTargetPath()))
+        operation.start()
+        operation.cancel()
+        async { (done) in
+            operation.progress.cancellationHandler = {
+                XCTAssertNotNil(operation.progress.sourceURL)
+                XCTAssertNotNil(operation.progress.fileURL)
+                XCTAssertLessThan(operation.progress.fractionCompleted, 1)
+                XCTAssertTrue(FileManager.default.fileExists(atPath: operation.progress.fileURL!.path))
+                done()
+            }
+        }
+    }
+    
+    func testOpertaionProgressFinished() {
+        let operation = HQDownloadOperation(HQDownloadRequest(domain.appendingPathComponent("bytes/\(4*1024)"), randomTargetPath()))
+        operation.start()
+        async { (done) in
+            operation.progress.finishedHandler = {
+                XCTAssertNotNil(operation.progress.sourceURL)
+                XCTAssertNotNil(operation.progress.fileURL)
+                XCTAssertEqual(1, operation.progress.fractionCompleted)
+                let attr = try! FileManager.default.attributesOfItem(atPath: operation.progress.fileURL!.path)
+                XCTAssertEqual(operation.progress.totalUnitCount, attr[FileAttributeKey.size] as? Int64)
+                done()
+            }
+        }
+    }
+    
+    func testOperationProgressCallback() {
+        let operation = HQDownloadOperation(HQDownloadRequest(domain.appendingPathComponent("bytes/\(5*1024)"), randomTargetPath()))
+        operation.start()
+        async { (done) in
+            var size: Int64 = 0
+            operation.progress.progressHandler = { (completed) in
+                XCTAssertNotNil(operation.progress.sourceURL)
+                XCTAssertNotNil(operation.progress.fileURL)
+                XCTAssertLessThanOrEqual(size, completed)
+                size = completed
+                if operation.progress.fractionCompleted == 1.0 {
+                    done()
+                }
+            }
+        }
+    }
+
+    
+    func testOpertionContinueDownload() {
+        let link = URL(string: "https://upload.wikimedia.org/wikipedia/commons/6/69/NASA-HS201427a-HubbleUltraDeepField2014-20140603.jpg")!
+        let operation = HQDownloadOperation(HQDownloadRequest(link, randomTargetPath()))
+        operation.start()
+        async { (done) in
+            operation.progress.progressHandler = { (_) in
+                if operation.progress.fractionCompleted > 0.3 {
+                    operation.cancel()
+                    done()
+                }
+            }
+        }
+    
+        async { (done) in
+            let operation2 = HQDownloadOperation(HQDownloadRequest(operation.progress)!)
+            operation2.finished({ (_) in
+                XCTAssertEqual(operation2.progress.totalUnitCount, operation.progress.totalUnitCount)
+                let attr = try! FileManager.default.attributesOfItem(atPath: operation.progress.fileURL!.path)
+                XCTAssertEqual(operation.progress.totalUnitCount, attr[FileAttributeKey.size] as? Int64)
+                done()
+            }).start()
+        }
+    }
+    
+    func testOperationBackgroundDownload() {
+        
+    }
+    
+    func testOperationAutoRetry() {
+        
+    }
 }
 

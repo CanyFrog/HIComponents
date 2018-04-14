@@ -53,8 +53,8 @@ public class HQDownloadScheduler: NSObject {
     // private var cache:
     public private(set) var directory: URL!
     
-    public private(set) var progress: HQdownloadProgress = {
-        let pro = HQdownloadProgress()
+    public private(set) var progress: HQDownloadProgress = {
+        let pro = HQDownloadProgress()
         pro.isCancellable = true
         pro.isPausable = true
         return pro

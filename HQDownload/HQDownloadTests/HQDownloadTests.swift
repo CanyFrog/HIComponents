@@ -28,8 +28,11 @@ class HQDownloadTest: XCTestCase {
     }
     
     func async(_ timeout: TimeInterval = 15, _ execute: (@escaping ()->Void) -> Void) {
-        let exception = self.expectation(description: "Excetation async task executed")
-        execute({exception.fulfill()})
+        var exception: XCTestExpectation? = self.expectation(description: "Excetation async task executed")
+        execute({
+            exception?.fulfill()
+            exception = nil
+        })
         waitForExpectations(timeout: timeout, handler: nil)
     }
     

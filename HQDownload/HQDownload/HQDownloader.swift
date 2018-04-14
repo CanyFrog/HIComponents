@@ -24,7 +24,7 @@ public class HQDownloader {
     }
     
     public func download(_ source: URL, _ start: HQDownloadOperation.BeginClosure? = nil, _ finished: HQDownloadOperation.FinishedClosure? = nil) {
-        guard cache.exist(forKey: source.absoluteString), let obj: HQdownloadProgress = cache.query(objectForKey: source.absoluteString) else {
+        guard cache.exist(forKey: source.absoluteString), let obj: HQDownloadProgress = cache.query(objectForKey: source.absoluteString) else {
             scheduler.download(source).begin(start).finished(finished)
             return
         }
@@ -44,8 +44,8 @@ public class HQDownloader {
         scheduler.download(source).begin(start).finished(finished)
     }
     
-    public func download(_ source: URL) -> HQdownloadProgress {
-        guard cache.exist(forKey: source.absoluteString), let obj: HQdownloadProgress = cache.query(objectForKey: source.absoluteString) else { return scheduler.download(source).progress }
+    public func download(_ source: URL) -> HQDownloadProgress {
+        guard cache.exist(forKey: source.absoluteString), let obj: HQDownloadProgress = cache.query(objectForKey: source.absoluteString) else { return scheduler.download(source).progress }
         
         if obj.fractionCompleted >= 1.0 {
             return obj
