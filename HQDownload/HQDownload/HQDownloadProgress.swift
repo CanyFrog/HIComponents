@@ -6,32 +6,28 @@
 //  Copyright © 2018年 com.personal.HQ. All rights reserved.
 //
 
-public final class HQDownloadProgress: Progress {
-    public override var completedUnitCount: Int64 {
-        didSet {
-            progressHandler?(completedUnitCount)
-            if totalUnitCount > 0 && completedUnitCount >= totalUnitCount {
-                finishedHandler?()
-            }
-        }
+public final class HQDownloadProgress {
+    public var completedUnitCount: Int64 = -1
+    public var totalUnitCount: Int64 = -1
+    public private(set) var fractionCompleted: Double = 0.0
+    
+    public weak var fileLocation: HQDownloadRequest.FileLocation!
+    public var fileUrl: URL? {
+//        get {
+//            return userInfo[.init("fileURL")] as? URL
+//        }
+//        set {
+//            setUserInfoObject(newValue, forKey: .init("fileURL"))
+//        }
     }
     
-    public override var fileURL: URL? {
-        get {
-            return userInfo[.init("fileURL")] as? URL
-        }
-        set {
-            setUserInfoObject(newValue, forKey: .init("fileURL"))
-        }
-    }
-    
-    public var sourceURL: URL? {
-        get {
-            return userInfo[.init("sourceURL")] as? URL
-        }
-        set {
-            setUserInfoObject(newValue, forKey: .init("sourceURL"))
-        }
+    public var sourceUrl: URL? {
+//        get {
+//            return userInfo[.init("sourceURL")] as? URL
+//        }
+//        set {
+//            setUserInfoObject(newValue, forKey: .init("sourceURL"))
+//        }
     }
     
     public var startHandler: (() -> Void)?
