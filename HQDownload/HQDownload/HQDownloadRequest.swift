@@ -71,13 +71,17 @@ public struct HQDownloadRequest {
         return self
     }
     
-    ///
-    public init(_ url: URL, _ file: URL?, _ prefetch: Bool = false) {
+    public enum Method: String {
+        case head = "HEAD"
+        case get = "GET"
+        case post = "POST"
+    }
+    
+    
+    public init(_ url: URL, _ file: URL?, _ method: Method = .get) {
         request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: requestTimeout)
         request.httpShouldUsePipelining = true
-        if prefetch {
-            request.httpMethod = "HEAD"
-        }
+        request.httpMethod = method.rawValue
         fileUrl = file
     }
     
@@ -94,7 +98,7 @@ public struct HQDownloadRequest {
         return request.value(forHTTPHeaderField: field)
     }
     
-    
+    @discardableResult
     public mutating func headers(_ headers: [String: String?]) -> HQDownloadRequest {
         headers.forEach { self.request.setValue($1, forHTTPHeaderField: $0) }
         return self

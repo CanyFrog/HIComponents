@@ -54,12 +54,7 @@ public class HQDownloadScheduler: NSObject {
     public private(set) var directory: URL!
     
     // TODO: progress tree
-    public private(set) var progress: HQDownloadProgress = {
-        let pro = HQDownloadProgress()
-        pro.isCancellable = true
-        pro.isPausable = true
-        return pro
-    }()
+    public private(set) lazy var progress = HQDownloadProgress()
     
     init(_ directory: URL, _ sessionConfig: URLSessionConfiguration = .default) {
         super.init()
@@ -71,7 +66,7 @@ public class HQDownloadScheduler: NSObject {
     deinit {
         downloadQueue.cancelAllOperations()
         ownSession?.invalidateAndCancel()
-        progress.cancel()
+        progress.finish()
         ownSession = nil
     }
 }
@@ -83,7 +78,9 @@ public extension HQDownloadScheduler {
     @discardableResult
     public func download(_ url: URL, _ headers: [String: String]? = nil) -> HQDownloadOperation {
         if let existedOp = operation(url: url) { return existedOp }
-        let newOp = HQDownloadOperation(HQDownloadRequest(url, directory.appendingPathComponent(url.lastPathComponent), headers), ownSession)
+        var request = HQDownloadRequest(url, directory.appendingPathComponent(url.lastPathComponent))
+        if let h = headers { request.headers(h) }
+        let newOp = HQDownloadOperation(request, ownSession)
         setOperation(newOp)
         return newOp
     }
@@ -113,27 +110,18 @@ public extension HQDownloadScheduler {
      */
     public func suspended(_ isSuspended: Bool = true) {
         downloadQueue.isSuspended = isSuspended
-        if isSuspended {
-            progress.pause()
-        }
-        else {
-            progress.resume()
-        }
     }
     
     public func cancelAllDownloaders() {
         downloadQueue.cancelAllOperations()
-        progress.cancel()
+
     }
 }
 
 // MARK: - Private functions
 private extension HQDownloadScheduler {
     func setOperation(_ operation: HQDownloadOperation) {
-        operation.begin { [weak self] (_, _, size) in
-            self?.progress.addChild(operation.progress, withPendingUnitCount: size)
-        }
-        
+        progress.addChild(operation.progress)
         downloadQueue.addOperation(operation)
         if executionOrder == .LIFO {
             lastedOperation?.addDependency(operation)
