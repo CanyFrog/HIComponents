@@ -6,43 +6,118 @@
 //  Copyright © 2018年 com.personal.HQ. All rights reserved.
 //
 
-public final class HQDownloadProgress {
-    public var completedUnitCount: Int64 = -1
-    public var totalUnitCount: Int64 = -1
-    public private(set) var fractionCompleted: Double = 0.0
-    
-    public weak var fileLocation: HQDownloadRequest.FileLocation!
-    public var fileUrl: URL? {
-//        get {
-//            return userInfo[.init("fileURL")] as? URL
-//        }
-//        set {
-//            setUserInfoObject(newValue, forKey: .init("fileURL"))
-//        }
-    }
-    
-    public var sourceUrl: URL? {
-//        get {
-//            return userInfo[.init("sourceURL")] as? URL
-//        }
-//        set {
-//            setUserInfoObject(newValue, forKey: .init("sourceURL"))
-//        }
-    }
-    
-    public var startHandler: (() -> Void)?
-    
-    /// if response no exception size(-1), never execute
-    public var finishedHandler: (() -> Void)?
-    
-    public var progressHandler: ((Int64) -> Void)?
-    
-    public func start() {
-        startHandler?()
-    }
+import HQFoundation
 
-    public convenience init() {
-        self.init(parent: nil, userInfo: nil)
+public final class HQDownloadProgress {
+    public enum HQDownloadError {
+        case notEnoughSpace
+        case taskError(Error)
+    }
+    public var taskError: HQDownloadError?
+    
+    // If is big file download, set this value
+    public var taskRange: (Int64?, Int64?)?
+    
+    /// Progress
+    public var completedUnitCount: Int64 = -1 
+    public var totalUnitCount: Int64 = -1
+    public var fractionCompleted: Double {
+        return Double(completedUnitCount) / Double(totalUnitCount)
+    }
+    
+    // Source link
+    public var fileUrl: URL?
+    public var sourceUrl: URL?
+    
+    // MARK: - Callbacks
+    public typealias StartedClosure = (Int64) -> Void
+    private var startedHandlers = [StartedClosure]()
+    private var startedLock = DispatchSemaphore(value: 1)
+    
+    public typealias FinishedClosure = (URL?, HQDownloadError?) -> Void
+    private var finishedHandlers = [FinishedClosure]()
+    private var finishedLock = DispatchSemaphore(value: 1)
+    
+    public typealias ProgressClosure = (Int64, Double) -> Void
+    private var progressHandler = [ProgressClosure]()
+    private var progressLock = DispatchSemaphore(value: 1)
+    
+    // MARK: - Child
+    private var childs = [HQDownloadProgress]()
+    private var childLock = DispatchSemaphore(value: 1)
+    
+    public init() {}
+    
+    public convenience init(source: URL?, file: URL?, range: (Int64?, Int64?)? = nil) {
+        self.init()
+        sourceUrl = source
+        fileUrl = file
+        taskRange = range
+    }
+    
+}
+
+
+// MARK: - Call backs
+extension HQDownloadProgress {
+    @discardableResult
+    public func started(_ callback: @escaping StartedClosure) -> HQDownloadProgress {
+        HQDispatchLock.semaphore(startedLock) { startedHandlers.append(callback) }
+        return self
+    }
+    public func start(_ total: Int64) {
+        totalUnitCount = total
+        HQDispatchLock.semaphore(startedLock) {
+            startedHandlers.forEach {(call) in
+                call(total)
+            }
+        }
+    }
+    
+    @discardableResult
+    public func finished(_ callback: @escaping FinishedClosure) -> HQDownloadProgress {
+        HQDispatchLock.semaphore(finishedLock) { finishedHandlers.append(callback) }
+        return self
+    }
+    public func finish(_ error: HQDownloadError? = nil) {
+        taskError = error
+        HQDispatchLock.semaphore(finishedLock) {
+            let url = fileUrl
+            finishedHandlers.forEach { (call) in
+                call(url, error)
+            }
+        }
+    }
+    
+    @discardableResult
+    public func progress(_ callback: @escaping ProgressClosure) -> HQDownloadProgress {
+        HQDispatchLock.semaphore(progressLock) { progressHandler.append(callback) }
+        return self
+    }
+    public func progress(_ received: Int64) {
+        completedUnitCount += received
+        HQDispatchLock.semaphore(progressLock) {
+            let completed = completedUnitCount
+            let fraction = fractionCompleted
+            progressHandler.forEach { (call) in
+                call(completed, fraction)
+            }
+        }
+    }
+}
+
+extension HQDownloadProgress {
+    public func addChild(_ progress: HQDownloadProgress) {
+        HQDispatchLock.semaphore(childLock) {
+            childs.append(progress)
+        }
+        progress.started { [weak self] (total) in
+            self?.totalUnitCount += total
+        }
+        
+        progress.progress { [weak self] (count, _) in
+            self?.completedUnitCount += count
+        }
     }
 }
 
@@ -52,23 +127,36 @@ extension HQDownloadProgress: Codable {
         case fileUrl
         case completedUnitCount
         case totalUnitCount
-//        case userInfo  ???
+        case rangeStart
+        case rangeEnd
+        case childs
     }
-    
+
     public convenience init(from decoder: Decoder) throws {
-        self.init(parent: nil, userInfo: nil)
+        self.init()
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        fileURL = try values.decode(URL.self, forKey: CodingKeys.fileUrl)
-        sourceURL = try values.decode(URL.self, forKey: CodingKeys.sourceUrl)
-        completedUnitCount = try values.decode(Int64.self, forKey: CodingKeys.completedUnitCount)
-        totalUnitCount = try values.decode(Int64.self, forKey: CodingKeys.totalUnitCount)
+        fileUrl = try values.decode(URL.self, forKey: .fileUrl)
+        sourceUrl = try values.decode(URL.self, forKey: .sourceUrl)
+        completedUnitCount = try values.decode(Int64.self, forKey: .completedUnitCount)
+        totalUnitCount = try values.decode(Int64.self, forKey: .totalUnitCount)
+        childs = try values.decode(Array.self, forKey: .childs)
+        let rangeStart = try? values.decode(Int64.self, forKey: .rangeStart)
+        let rangeEnd = try? values.decode(Int64.self, forKey: .rangeEnd)
+        if rangeStart != nil || rangeEnd != nil {
+            taskRange = (rangeStart, rangeEnd)
+        }
     }
 
     public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
-        try values.encode(fileURL, forKey: .fileUrl)
-        try values.encode(sourceURL, forKey: .sourceUrl)
+        try values.encode(fileUrl, forKey: .fileUrl)
+        try values.encode(sourceUrl, forKey: .sourceUrl)
         try values.encode(completedUnitCount, forKey: .completedUnitCount)
         try values.encode(totalUnitCount, forKey: .totalUnitCount)
+        try values.encode(childs, forKey: .childs)
+        if let r = taskRange {
+            try values.encode(r.0, forKey: .rangeStart)
+            try values.encode(r.1, forKey: .rangeEnd)
+        }
     }
 }

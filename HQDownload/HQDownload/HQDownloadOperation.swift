@@ -29,14 +29,8 @@ public final class HQDownloadOperation: Operation {
         }
     }
     
-    public private(set) var progress: HQDownloadProgress = {
-        let progress = HQDownloadProgress()
-        progress.isPausable = true
-        progress.isCancellable = true
-        
-        return progress
-    }()
     
+    public private(set) var progress: HQDownloadProgress!
     // MARK: - Opertion property
     
     open override var isConcurrent: Bool { return true }
@@ -83,26 +77,12 @@ public final class HQDownloadOperation: Operation {
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
     
     private var stream: OutputStream!
-    
-    // MARK: - Call backs
-    public typealias BeginClosure = (_ source: URL, _ target: URL, _ exceptSize: Int64) -> Void
-    private var beginHandlerLock = DispatchSemaphore(value: 1)
-    private var beginHandlers = [BeginClosure?]()
-    
-    public typealias FinishedClosure = (_ error: Error?)->Void
-    private var finishedHandlerLock = DispatchSemaphore(value: 1)
-    private var finishedHandlers = [FinishedClosure?]()
-    
+
     public init(_ request: HQDownloadRequest, _ session: URLSession? = nil) {
         super.init()
         injectSession = session
         ownRequest = request
-        if let range = ownRequest.downloadRange {
-            progress.completedUnitCount = range.0 ?? 0
-            progress.totalUnitCount = range.1 ?? Int64.max
-        }
-        progress.sourceURL = request.request.url
-        progress.fileURL = request.fileUrl
+        progress = HQDownloadProgress(source: request.request.url, file: request.fileUrl, range: request.requestRange)
         openStream()
     }
 }
@@ -161,32 +141,11 @@ public extension HQDownloadOperation {
     }
 }
 
-public extension HQDownloadOperation {
-    @discardableResult
-    public func begin(_ callback: BeginClosure?) -> HQDownloadOperation {
-        if let callback = callback {
-            HQDispatchLock.semaphore(beginHandlerLock) {
-                beginHandlers.append(callback)
-            }
-        }
-        return self
-    }
-    
-    @discardableResult
-    public func finished(_ callback: FinishedClosure?) -> HQDownloadOperation {
-        if let callback = callback {
-            HQDispatchLock.semaphore(finishedHandlerLock) {
-                finishedHandlers.append(callback)
-            }
-        }
-        return self
-    }
-}
 
 // MARK: - State & Helper function
 private extension HQDownloadOperation {
     func reset() {
-        progress.cancel()
+        progress.finish()
         session.invalidateAndCancel()
         closeStream()
         dataTask = nil
@@ -199,7 +158,8 @@ private extension HQDownloadOperation {
     }
     
     func openStream() {
-        stream = OutputStream(url: ownRequest.fileUrl, append: true)
+        guard let url = ownRequest.fileUrl else { return }
+        stream = OutputStream(url: url, append: true)
         stream.schedule(in: RunLoop.current, forMode: .defaultRunLoopMode)
         stream.open()
     }
@@ -240,19 +200,7 @@ extension HQDownloadOperation: URLSessionDataDelegate {
             disposition = .cancel
         }
         else {
-            if progress.completedUnitCount > 0 {
-                progress.resume()
-            }
-            else {
-                progress.start()
-            }
-            progress.totalUnitCount = response.expectedContentLength + progress.completedUnitCount  // if continue download, need add current download size
-            
-            beginHandlers.forEach { (obj) in
-                if let begin = obj {
-                    begin(ownRequest.request.url!, ownRequest.fileUrl, progress.totalUnitCount)
-                }
-            }
+            progress.start(response.expectedContentLength)
         }
 
         completionHandler(disposition)
@@ -264,15 +212,11 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         
         if stream.hasSpaceAvailable {
             stream.write([UInt8](data), maxLength: data.count)
-            progress.completedUnitCount += Int64(data.count)
+            progress.progress(Int64(data.count))
         }
         else {
             done()
-            finishedHandlers.forEach { (obj) in
-                if let finish = obj {
-                    finish(nil)
-                }
-            }
+            progress.finish(.notEnoughSpace)
         }
     }
 
@@ -284,18 +228,18 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         objc_sync_exit(self)
         
         /// error is nil means task complete, otherwise is error interrupt request
-        if error != nil && ownRequest.retryCount > 0 {
-            start() // restart
-            ownRequest.retryCount -= 1
-            progress.pause()
+        if error != nil {
+            if ownRequest.retryCount > 0 {
+                start() // restart
+                ownRequest.retryCount -= 1
+            }
+            else {
+                progress.finish(.taskError(error!))
+            }
         }
         else {
             done()
-            finishedHandlers.forEach { (obj) in
-                if let finish = obj {
-                    finish(error)
-                }
-            }
+            progress.finish()
         }
     }
     
