@@ -27,6 +27,7 @@
 		8AC9161B20896BC700A9CEA1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8AC9161920896BC700A9CEA1 /* Main.storyboard */; };
 		8AC9161D20896BC800A9CEA1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AC9161C20896BC800A9CEA1 /* Assets.xcassets */; };
 		8AC9162020896BC800A9CEA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8AC9161E20896BC800A9CEA1 /* LaunchScreen.storyboard */; };
+		8AC91627208A20DF00A9CEA1 /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC91626208A20DF00A9CEA1 /* DetailController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,7 @@
 		8AC9161C20896BC800A9CEA1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8AC9161F20896BC800A9CEA1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8AC9162120896BC800A9CEA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8AC91626208A20DF00A9CEA1 /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,8 +124,8 @@
 			children = (
 				8A650AF92069119200C95462 /* HQDownload.h */,
 				60B6E0F4207C511200C4C594 /* HQDownloadRequest.swift */,
-				8A1CCC7E207F942400C0C6E1 /* HQDownloadProgress.swift */,
 				8A650B4A206A79D000C95462 /* HQDownloadOperation.swift */,
+				8A1CCC7E207F942400C0C6E1 /* HQDownloadProgress.swift */,
 				8A650B4E206BD61800C95462 /* HQDownloadScheduler.swift */,
 				60B6E0F2207C4FA300C4C594 /* HQDownloader.swift */,
 				8A650AFA2069119200C95462 /* Info.plist */,
@@ -135,8 +137,8 @@
 			isa = PBXGroup;
 			children = (
 				8A650B042069119200C95462 /* HQDownloadTests.swift */,
-				8AA183CE2081896400FA51B5 /* HQDownloadProgressTest.swift */,
 				60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */,
+				8AA183CE2081896400FA51B5 /* HQDownloadProgressTest.swift */,
 				60B6E0FB207C95B200C4C594 /* HQDownloadOperationTest.swift */,
 				60F0AF85207DCD3F00C5F6EE /* HQDownloadSchedulerTest.swift */,
 				8A650B062069119200C95462 /* Info.plist */,
@@ -159,6 +161,7 @@
 			children = (
 				8AC9161520896BC700A9CEA1 /* AppDelegate.swift */,
 				8AC9161720896BC700A9CEA1 /* ViewController.swift */,
+				8AC91626208A20DF00A9CEA1 /* DetailController.swift */,
 				8AC9161920896BC700A9CEA1 /* Main.storyboard */,
 				8AC9161C20896BC800A9CEA1 /* Assets.xcassets */,
 				8AC9161E20896BC800A9CEA1 /* LaunchScreen.storyboard */,
@@ -356,6 +359,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8AC9161820896BC700A9CEA1 /* ViewController.swift in Sources */,
+				8AC91627208A20DF00A9CEA1 /* DetailController.swift in Sources */,
 				8AC9161620896BC700A9CEA1 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

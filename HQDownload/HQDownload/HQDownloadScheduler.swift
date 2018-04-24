@@ -50,16 +50,19 @@ public class HQDownloadScheduler: NSObject {
     // MARK: - Operation
     private weak var lastedOperation: Operation?
     
+    private var recordProgress: Bool = false
+    
     // private var cache:
     public private(set) var directory: URL!
     
     // TODO: progress tree
     public private(set) lazy var progress = HQDownloadProgress()
     
-    init(_ directory: URL, _ sessionConfig: URLSessionConfiguration = .default) {
+    init(_ directory: URL, _ record: Bool = false, _ sessionConfig: URLSessionConfiguration = .default) {
         super.init()
         sessionConfig.timeoutIntervalForRequest = 15
         ownSession = URLSession(configuration: sessionConfig, delegate: self, delegateQueue: nil)
+        recordProgress = record
         self.directory = directory
     }
     
@@ -121,7 +124,7 @@ public extension HQDownloadScheduler {
 // MARK: - Private functions
 private extension HQDownloadScheduler {
     func setOperation(_ operation: HQDownloadOperation) {
-        progress.addChild(operation.progress)
+        if recordProgress { progress.addChild(operation.progress) }
         downloadQueue.addOperation(operation)
         if executionOrder == .LIFO {
             lastedOperation?.addDependency(operation)
@@ -176,6 +179,7 @@ extension HQDownloadScheduler: URLSessionDataDelegate {
 
     }
     
+    
     /// task begin and authentication
     public func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         if let operation = operation(task: task) {
@@ -186,6 +190,7 @@ extension HQDownloadScheduler: URLSessionDataDelegate {
         }
     }
     
+    
     /// Handle session cache
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
         if let operation = operation(task: dataTask) {
@@ -195,6 +200,7 @@ extension HQDownloadScheduler: URLSessionDataDelegate {
             completionHandler(proposedResponse)
         }
     }
+    
     
     /// If session is invalid, call this function
     public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {

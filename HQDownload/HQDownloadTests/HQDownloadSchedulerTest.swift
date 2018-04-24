@@ -51,10 +51,10 @@ class HQDownloadSchedulerTest: HQDownloadTest {
         let op1 = scheduler.download(domain.appendingPathComponent("stream/\(123 * 1024)"))
         XCTAssertTrue(op1.isReady)
         async { (done) in
-            op1.begin { (_, _, _) in
+            op1.progress.started({ (_) in
                 XCTAssertTrue(op1.isExecuting)
                 done()
-            }
+            })
         }
     }
     
