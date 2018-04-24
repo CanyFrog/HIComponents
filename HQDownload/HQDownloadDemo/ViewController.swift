@@ -19,7 +19,7 @@ enum Options: String {
 class ViewController: UIViewController {
     var tableView: UITableView!
     
-    let options = ["单个文件下载", "多个文件下载", "大文件分段下载", "断点续传", "后台下载"]
+    let options: [Options] = [.single, .multiple, .big, .continue, .background]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,12 +42,20 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: "OptionCell")
         if cell == nil { cell = UITableViewCell(style: .default, reuseIdentifier: "OptionCell") }
-        cell?.textLabel?.text = options[indexPath.row]
+        cell?.textLabel?.text = options[indexPath.row].rawValue
         cell?.accessoryType = .disclosureIndicator
         return cell!
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        navigationController?.pushViewController(DetailController(), animated: true)
+        switch indexPath.row {
+        case 0:
+            navigationController?.pushViewController(SingleViewController(), animated: true)
+        case 1:
+            navigationController?.pushViewController(MultipleViewController(), animated: true)
+        default:
+            break
+        }
+        
     }
 }

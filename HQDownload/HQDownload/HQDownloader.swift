@@ -9,7 +9,7 @@
 import HQCache
 
 public class HQDownloader {
-    static let downloader = HQDownloader()
+    public static let Downloader = HQDownloader()
     
     public private(set) var directoryUrl: URL!
     public private(set) var tasks = [String]()
@@ -27,11 +27,15 @@ public class HQDownloader {
     
     public func download(_ source: URL, _ callback: (URL?, HQDownloadOperation?) -> Void) {
         guard cache.exist(forKey: source.absoluteString), let obj: HQDownloadProgress = cache.query(objectForKey: source.absoluteString) else {
-            callback(nil, scheduler.download(source))
+            let op = scheduler.download(source)
+            op.finished { (_, _) in
+                self.cache.insertOrUpdate(object: op.progress, forKey: source.absoluteString)
+            }
+            callback(nil, op)
             return
         }
-        if obj.fractionCompleted >= 1.0, let file = obj.fileUrl {
-            callback(file, nil)
+        if obj.fractionCompleted >= 1.0, let file = obj.fileUrl?.lastPathComponent {
+            callback(directoryUrl.appendingPathComponent(file), nil)
             return
         }
         
