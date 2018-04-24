@@ -81,7 +81,7 @@ public extension HQDownloadScheduler {
     @discardableResult
     public func download(_ url: URL, _ headers: [String: String]? = nil) -> HQDownloadOperation {
         if let existedOp = operation(url: url) { return existedOp }
-        var request = HQDownloadRequest(url, directory.appendingPathComponent(url.lastPathComponent))
+        var request = HQDownloadRequest(url, directory)
         if let h = headers { request.headers(h) }
         let newOp = HQDownloadOperation(request, ownSession)
         setOperation(newOp)

@@ -166,7 +166,7 @@ extension HQDownloadOperation {
 // MARK: - State & Helper function
 private extension HQDownloadOperation {
     func reset() {
-        session.invalidateAndCancel()
+        if injectSession == nil { session.invalidateAndCancel() }
         closeStream()
         dataTask = nil
     }

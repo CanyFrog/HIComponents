@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		605CE53E208F1B960014DDB3 /* HQDownload.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8A650AF62069119200C95462 /* HQDownload.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		605CE542208F1BB60014DDB3 /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; };
+		605CE543208F1BB60014DDB3 /* HQSqlite.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		605CE544208F1BB60014DDB3 /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F0F208095DA0088A579 /* HQCache.framework */; };
+		605CE545208F1BB60014DDB3 /* HQCache.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F0F208095DA0088A579 /* HQCache.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		605CE546208F1BB60014DDB3 /* HQFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F10208095DA0088A579 /* HQFoundation.framework */; };
+		605CE547208F1BB60014DDB3 /* HQFoundation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F10208095DA0088A579 /* HQFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		605CE549208F20510014DDB3 /* SingleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE548208F20510014DDB3 /* SingleViewController.swift */; };
+		605CE54B208F25160014DDB3 /* MultipleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE54A208F25160014DDB3 /* MultipleViewController.swift */; };
 		60B6E0F3207C4FA300C4C594 /* HQDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F2207C4FA300C4C594 /* HQDownloader.swift */; };
 		60B6E0F5207C511200C4C594 /* HQDownloadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F4207C511200C4C594 /* HQDownloadRequest.swift */; };
 		60B6E0F7207C83CE00C4C594 /* HQDownloadRequestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */; };
@@ -27,10 +36,16 @@
 		8AC9161B20896BC700A9CEA1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8AC9161920896BC700A9CEA1 /* Main.storyboard */; };
 		8AC9161D20896BC800A9CEA1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AC9161C20896BC800A9CEA1 /* Assets.xcassets */; };
 		8AC9162020896BC800A9CEA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8AC9161E20896BC800A9CEA1 /* LaunchScreen.storyboard */; };
-		8AC91627208A20DF00A9CEA1 /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC91626208A20DF00A9CEA1 /* DetailController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		605CE53F208F1B960014DDB3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8A650AED2069119200C95462 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8A650AF52069119200C95462;
+			remoteInfo = HQDownload;
+		};
 		8A650B012069119200C95462 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8A650AED2069119200C95462 /* Project object */;
@@ -40,7 +55,26 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		605CE541208F1B960014DDB3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				605CE53E208F1B960014DDB3 /* HQDownload.framework in Embed Frameworks */,
+				605CE545208F1BB60014DDB3 /* HQCache.framework in Embed Frameworks */,
+				605CE547208F1BB60014DDB3 /* HQFoundation.framework in Embed Frameworks */,
+				605CE543208F1BB60014DDB3 /* HQSqlite.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		605CE548208F20510014DDB3 /* SingleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleViewController.swift; sourceTree = "<group>"; };
+		605CE54A208F25160014DDB3 /* MultipleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleViewController.swift; sourceTree = "<group>"; };
 		60B6E0F2207C4FA300C4C594 /* HQDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloader.swift; sourceTree = "<group>"; };
 		60B6E0F4207C511200C4C594 /* HQDownloadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadRequest.swift; sourceTree = "<group>"; };
 		60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadRequestTest.swift; sourceTree = "<group>"; };
@@ -66,7 +100,6 @@
 		8AC9161C20896BC800A9CEA1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8AC9161F20896BC800A9CEA1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8AC9162120896BC800A9CEA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8AC91626208A20DF00A9CEA1 /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +125,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				605CE546208F1BB60014DDB3 /* HQFoundation.framework in Frameworks */,
+				605CE544208F1BB60014DDB3 /* HQCache.framework in Frameworks */,
+				605CE542208F1BB60014DDB3 /* HQSqlite.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,7 +197,8 @@
 			children = (
 				8AC9161520896BC700A9CEA1 /* AppDelegate.swift */,
 				8AC9161720896BC700A9CEA1 /* ViewController.swift */,
-				8AC91626208A20DF00A9CEA1 /* DetailController.swift */,
+				605CE548208F20510014DDB3 /* SingleViewController.swift */,
+				605CE54A208F25160014DDB3 /* MultipleViewController.swift */,
 				8AC9161920896BC700A9CEA1 /* Main.storyboard */,
 				8AC9161C20896BC800A9CEA1 /* Assets.xcassets */,
 				8AC9161E20896BC800A9CEA1 /* LaunchScreen.storyboard */,
@@ -228,10 +265,12 @@
 				8AC9160F20896BC700A9CEA1 /* Sources */,
 				8AC9161020896BC700A9CEA1 /* Frameworks */,
 				8AC9161120896BC700A9CEA1 /* Resources */,
+				605CE541208F1B960014DDB3 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				605CE540208F1B960014DDB3 /* PBXTargetDependency */,
 			);
 			name = HQDownloadDemo;
 			productName = HQDownloadDemo;
@@ -359,7 +398,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8AC9161820896BC700A9CEA1 /* ViewController.swift in Sources */,
-				8AC91627208A20DF00A9CEA1 /* DetailController.swift in Sources */,
+				605CE549208F20510014DDB3 /* SingleViewController.swift in Sources */,
+				605CE54B208F25160014DDB3 /* MultipleViewController.swift in Sources */,
 				8AC9161620896BC700A9CEA1 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -367,6 +407,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		605CE540208F1B960014DDB3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8A650AF52069119200C95462 /* HQDownload */;
+			targetProxy = 605CE53F208F1B960014DDB3 /* PBXContainerItemProxy */;
+		};
 		8A650B022069119200C95462 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 8A650AF52069119200C95462 /* HQDownload */;
@@ -599,12 +644,17 @@
 		8AC9162220896BC800A9CEA1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4EXDER2SUV;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = HQDownloadDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = HQ.HQDownloadDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -616,12 +666,17 @@
 		8AC9162320896BC800A9CEA1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4EXDER2SUV;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = HQDownloadDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = HQ.HQDownloadDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -40,7 +40,8 @@ public struct HQDownloadRequest {
     // MARK: - Task
     
     public var fileName: String {
-        return request.url?.lastPathComponent ?? ""
+        guard let url = request.url else { return "" }
+        return "\(url.hashValue).\(url.pathExtension)"
     }
     
     public private(set) var fileUrl: URL?
@@ -78,11 +79,11 @@ public struct HQDownloadRequest {
     }
     
     
-    public init(_ url: URL, _ file: URL?, _ method: Method = .get) {
+    public init(_ url: URL, _ directory: URL?, _ method: Method = .get) {
         request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: requestTimeout)
         request.httpShouldUsePipelining = true
         request.httpMethod = method.rawValue
-        fileUrl = file
+        fileUrl = directory?.appendingPathComponent(fileName)
     }
     
     public init?(_ progress: HQDownloadProgress) {
