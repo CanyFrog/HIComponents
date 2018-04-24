@@ -11,6 +11,7 @@ import HQFoundation
 public final class HQDownloadProgress {
     public enum HQDownloadError {
         case notEnoughSpace
+        case taskCancel
         case taskError(Error)
     }
     public var taskError: HQDownloadError?
@@ -19,9 +20,10 @@ public final class HQDownloadProgress {
     public var taskRange: (Int64?, Int64?)?
     
     /// Progress
-    public var completedUnitCount: Int64 = -1 
-    public var totalUnitCount: Int64 = -1
+    public private(set) var completedUnitCount: Int64 = 0
+    public private(set) var totalUnitCount: Int64 = 0
     public var fractionCompleted: Double {
+        if totalUnitCount == 0 { return 0 }
         return Double(completedUnitCount) / Double(totalUnitCount)
     }
     
@@ -55,6 +57,11 @@ public final class HQDownloadProgress {
         taskRange = range
     }
     
+    deinit {
+        if totalUnitCount > 0 && fractionCompleted < 1 {
+            finish(.taskCancel)
+        }
+    }
 }
 
 
@@ -111,12 +118,29 @@ extension HQDownloadProgress {
         HQDispatchLock.semaphore(childLock) {
             childs.append(progress)
         }
+        
         progress.started { [weak self] (total) in
-            self?.totalUnitCount += total
+            guard let wself = self else { return }
+            HQDispatchLock.semaphore(wself.childLock, closure: {
+                wself.totalUnitCount += total
+            })
         }
         
         progress.progress { [weak self] (count, _) in
-            self?.completedUnitCount += count
+            guard let wself = self else { return }
+            HQDispatchLock.semaphore(wself.childLock, closure: {
+                wself.completedUnitCount += count
+            })
+        }
+        
+        progress.finished { [weak self] (_, error) in
+            guard let wself = self else { return }
+            if let err = error, case HQDownloadError.taskCancel = err {
+                HQDispatchLock.semaphore(wself.childLock, closure: {
+                    wself.totalUnitCount -= progress.totalUnitCount
+                    wself.completedUnitCount -= progress.completedUnitCount
+                })
+            }
         }
     }
 }
@@ -139,7 +163,7 @@ extension HQDownloadProgress: Codable {
         sourceUrl = try values.decode(URL.self, forKey: .sourceUrl)
         completedUnitCount = try values.decode(Int64.self, forKey: .completedUnitCount)
         totalUnitCount = try values.decode(Int64.self, forKey: .totalUnitCount)
-        childs = try values.decode(Array.self, forKey: .childs)
+//        childs = try values.decode(Array.self, forKey: .childs)
         let rangeStart = try? values.decode(Int64.self, forKey: .rangeStart)
         let rangeEnd = try? values.decode(Int64.self, forKey: .rangeEnd)
         if rangeStart != nil || rangeEnd != nil {
@@ -153,10 +177,10 @@ extension HQDownloadProgress: Codable {
         try values.encode(sourceUrl, forKey: .sourceUrl)
         try values.encode(completedUnitCount, forKey: .completedUnitCount)
         try values.encode(totalUnitCount, forKey: .totalUnitCount)
-        try values.encode(childs, forKey: .childs)
-        if let r = taskRange {
-            try values.encode(r.0, forKey: .rangeStart)
-            try values.encode(r.1, forKey: .rangeEnd)
-        }
+//        try values.encode(childs, forKey: .childs)
+//        if let r = taskRange {
+//            try values.encode(r.0, forKey: .rangeStart)
+//            try values.encode(r.1, forKey: .rangeEnd)
+//        }
     }
 }

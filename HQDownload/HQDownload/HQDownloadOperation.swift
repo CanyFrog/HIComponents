@@ -29,7 +29,6 @@ public final class HQDownloadOperation: Operation {
         }
     }
     
-    
     public private(set) var progress: HQDownloadProgress!
     // MARK: - Opertion property
     
@@ -60,6 +59,7 @@ public final class HQDownloadOperation: Operation {
         }
     }
     
+    
     // MARK: - Private
     
     /// This is weak because it is injected by whoever manages this session. If this gets nil-ed out, we won't be able to run the task associated with this operation
@@ -76,7 +76,7 @@ public final class HQDownloadOperation: Operation {
     
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
     
-    private var stream: OutputStream!
+    private var stream: OutputStream?
 
     public init(_ request: HQDownloadRequest, _ session: URLSession? = nil) {
         super.init()
@@ -98,6 +98,7 @@ public extension HQDownloadOperation {
             if isExecuting { _executing = false }
             if !isFinished { _finished = true }
         }
+        progress.finish(HQDownloadProgress.HQDownloadError.taskCancel)
         reset()
     }
     
@@ -141,11 +142,30 @@ public extension HQDownloadOperation {
     }
 }
 
+// MARK: - Callbacks
+extension HQDownloadOperation {
+    @discardableResult
+    public func started(_ callback: @escaping HQDownloadProgress.StartedClosure) -> HQDownloadOperation {
+        progress.started(callback)
+        return self
+    }
+    
+    @discardableResult
+    public func finished(_ callback: @escaping HQDownloadProgress.FinishedClosure) -> HQDownloadOperation {
+        progress.finished(callback)
+        return self
+    }
+
+    @discardableResult
+    public func progress(_ callback: @escaping HQDownloadProgress.ProgressClosure) -> HQDownloadOperation {
+        progress.progress(callback)
+        return self
+    }
+}
 
 // MARK: - State & Helper function
 private extension HQDownloadOperation {
     func reset() {
-        progress.finish()
         session.invalidateAndCancel()
         closeStream()
         dataTask = nil
@@ -160,13 +180,13 @@ private extension HQDownloadOperation {
     func openStream() {
         guard let url = ownRequest.fileUrl else { return }
         stream = OutputStream(url: url, append: true)
-        stream.schedule(in: RunLoop.current, forMode: .defaultRunLoopMode)
-        stream.open()
+        stream?.schedule(in: RunLoop.current, forMode: .defaultRunLoopMode)
+        stream?.open()
     }
     
     func closeStream() {
-        stream.remove(from: RunLoop.current, forMode: .defaultRunLoopMode)
-        stream.close()
+        stream?.remove(from: RunLoop.current, forMode: .defaultRunLoopMode)
+        stream?.close()
     }
 }
 
@@ -202,44 +222,40 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         else {
             progress.start(response.expectedContentLength)
         }
-
+        
         completionHandler(disposition)
     }
     
     
     /// request receive data callback
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        
-        if stream.hasSpaceAvailable {
+        if let stream = stream, stream.hasSpaceAvailable {
             stream.write([UInt8](data), maxLength: data.count)
             progress.progress(Int64(data.count))
         }
         else {
-            done()
             progress.finish(.notEnoughSpace)
+            done()
         }
     }
 
     
     /// task completed
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        objc_sync_enter(self)
-        dataTask = nil
-        objc_sync_exit(self)
+        guard error != nil else {
+            dataTask = nil
+            progress.finish()
+            done()
+            return
+        }
         
-        /// error is nil means task complete, otherwise is error interrupt request
-        if error != nil {
-            if ownRequest.retryCount > 0 {
-                start() // restart
-                ownRequest.retryCount -= 1
-            }
-            else {
-                progress.finish(.taskError(error!))
-            }
+        if ownRequest.retryCount > 0 {
+            dataTask?.resume() // auto retry
+            ownRequest.retryCount -= 1
         }
         else {
+            progress.finish(.taskError(error!))
             done()
-            progress.finish()
         }
     }
     
@@ -281,7 +297,7 @@ extension HQDownloadOperation: URLSessionDataDelegate {
     }
     
     /// If session is invalid, call this function
-//    public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
-//        cancel()
-//    }
+    public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
+        cancel()
+    }
 }

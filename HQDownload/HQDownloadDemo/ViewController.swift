@@ -8,18 +8,46 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
+enum Options: String {
+    case single = "单个文件下载"
+    case multiple = "多个文件下载"
+    case big = "大文件分段下载"
+    case `continue` = "断点续传"
+    case background = "后台下载"
 }
 
+class ViewController: UIViewController {
+    var tableView: UITableView!
+    
+    let options = ["单个文件下载", "多个文件下载", "大文件分段下载", "断点续传", "后台下载"]
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView = UITableView(frame: view.bounds, style: .plain)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "OptionCell")
+        tableView.tableFooterView = UIView()
+        view.addSubview(tableView)
+        title = "HQDownloadDemo"
+    }
+}
+
+
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return options.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell = tableView.dequeueReusableCell(withIdentifier: "OptionCell")
+        if cell == nil { cell = UITableViewCell(style: .default, reuseIdentifier: "OptionCell") }
+        cell?.textLabel?.text = options[indexPath.row]
+        cell?.accessoryType = .disclosureIndicator
+        return cell!
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        navigationController?.pushViewController(DetailController(), animated: true)
+    }
+}

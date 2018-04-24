@@ -53,15 +53,15 @@ public struct HQDownloadRequest {
     
     /// Download range
     public var requestRange: (Int64?, Int64?)?
-    @discardableResult public mutating func requestRange(_ start: Int64? = nil, end: Int64? = nil) -> HQDownloadRequest {
-        if start == nil && end == nil {
+    @discardableResult public mutating func requestRange(_ range: (Int64?, Int64?)?) -> HQDownloadRequest {
+        if range == nil {
             requestRange = nil
             request.setValue(nil, forHTTPHeaderField: "Range")
         }
         else {
-            requestRange = (start, end)
-            let size = start ?? 0
-            if let total = end {
+            requestRange = range
+            let size = range?.0 ?? 0
+            if let total = range?.1 {
                 request.setValue("bytes=\(size)-\(total)", forHTTPHeaderField: "Range")
             }
             else {
@@ -85,13 +85,14 @@ public struct HQDownloadRequest {
         fileUrl = file
     }
     
-//    public init?(_ progress: HQDownloadProgress) {
-//        guard let url = progress.sourceURL, let path = progress.fileURL else { return nil }
-//        self.init(url, path)
-//        // Init set porperty can not trigger didSet function
-//        downloadRange = (progress.completedUnitCount, progress.totalUnitCount)
-//        setRange()
-//    }
+    public init?(_ progress: HQDownloadProgress) {
+        guard let url = progress.sourceUrl, let path = progress.fileUrl else { return nil }
+        self.init(url, path)
+        // Init set porperty can not trigger didSet function
+        if progress.completedUnitCount > 0 || progress.totalUnitCount > 0 {
+            requestRange((progress.completedUnitCount, progress.totalUnitCount))
+        }
+    }
 
     /// Request's function
     public func value(forHTTPHeaderField field: String) -> String? {

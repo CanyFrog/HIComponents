@@ -1,60 +1,51 @@
-////
-////  HQDownloader.swift
-////  HQDownload
-////
-////  Created by Magee Huang on 4/10/18.
-////  Copyright © 2018 com.personal.HQ. All rights reserved.
-////
 //
-//import HQCache
+//  HQDownloader.swift
+//  HQDownload
 //
-//public class HQDownloader {
-//    static let downloader = HQDownloader()
-//    
-//    public private(set) var directoryUrl: URL!
-//    public private(set) var tasks = [String]()
-//    
-//    private var scheduler: HQDownloadScheduler!
-//    private var cache: HQDiskCache!
-//    
-//    
-//    public init(_ directory: URL = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!).appendingPathComponent("downloader", isDirectory: true)) {
-//        directoryUrl = directory
-//        scheduler = HQDownloadScheduler(directory)
-//        cache = HQDiskCache(directory)
-//    }
-//    
-//    public func download(_ source: URL, _ start: HQDownloadOperation.BeginClosure? = nil, _ finished: HQDownloadOperation.FinishedClosure? = nil) {
-//        guard cache.exist(forKey: source.absoluteString), let obj: HQDownloadProgress = cache.query(objectForKey: source.absoluteString) else {
-//            scheduler.download(source).begin(start).finished(finished)
-//            return
-//        }
-//        
-//        if obj.fractionCompleted >= 1.0, let file = obj.fileURL {
-//            start?(source, file, obj.totalUnitCount)
-//            finished?(nil)
-//            return
-//        }
-//        
-//        if let request = HQDownloadRequest(obj) {
-//            scheduler.download(request).begin(start).finished(finished)
-//            return
-//        }
-//        
-//        scheduler.download(source).begin(start).finished(finished)
-//    }
-//    
-//    public func download(_ source: URL) -> HQDownloadProgress {
-//        guard cache.exist(forKey: source.absoluteString), let obj: HQDownloadProgress = cache.query(objectForKey: source.absoluteString) else { return scheduler.download(source).progress }
-//        
-//        if obj.fractionCompleted >= 1.0 {
-//            return obj
-//        }
-//        
-//        if let request = HQDownloadRequest(obj) {
-//            return scheduler.download(request).progress
-//        }
-//        
-//        return scheduler.download(source).progress
-//    }
-//}
+//  Created by Magee Huang on 4/10/18.
+//  Copyright © 2018 com.personal.HQ. All rights reserved.
+//
+
+import HQCache
+
+public class HQDownloader {
+    static let downloader = HQDownloader()
+    
+    public private(set) var directoryUrl: URL!
+    public private(set) var tasks = [String]()
+    
+    private var scheduler: HQDownloadScheduler!
+    private var cache: HQDiskCache!
+    
+    
+    public init(_ directory: URL = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!).appendingPathComponent("downloader", isDirectory: true)) {
+        directoryUrl = directory
+        scheduler = HQDownloadScheduler(directory)
+        cache = HQDiskCache(directory)
+    }
+    
+    
+    public func download(_ source: URL, _ callback: (URL?, HQDownloadOperation?) -> Void) {
+        guard cache.exist(forKey: source.absoluteString), let obj: HQDownloadProgress = cache.query(objectForKey: source.absoluteString) else {
+            callback(nil, scheduler.download(source))
+            return
+        }
+        if obj.fractionCompleted >= 1.0, let file = obj.fileUrl {
+            callback(file, nil)
+            return
+        }
+        
+        if let request = HQDownloadRequest(obj) {
+            callback(nil, scheduler.download(request))
+            return
+        }
+        
+        callback(nil, scheduler.download(source))
+    }
+}
+
+extension HQDownloader {
+    private func createDownloadTask() {
+        
+    }
+}
