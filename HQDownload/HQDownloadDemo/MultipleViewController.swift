@@ -32,6 +32,7 @@ class MultipleViewController: UIViewController, UICollectionViewDataSource {
         layout.minimumInteritemSpacing = 0
         layout.itemSize = CGSize(width: width, height: width)
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
+        collectionView.backgroundColor = UIColor.white
         collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
         collectionView?.dataSource = self
         
@@ -59,7 +60,8 @@ class CollectionViewCell: UICollectionViewCell {
         layer.borderColor = UIColor.white.cgColor
         layer.borderWidth = 1
         backgroundColor = UIColor.gray
-        imageView.frame = frame
+        imageView.frame = bounds
+        imageView.contentMode = .scaleAspectFit
         contentView.addSubview(imageView)
     }
     
@@ -68,22 +70,45 @@ class CollectionViewCell: UICollectionViewCell {
     }
     
     public func setImage(source: String) {
-        HQDownloader.Downloader.download(URL(string: source)!) { (file, oper) in
-            if let f = file {
-                DispatchQueue.main.async {
-                    print(f.absoluteString)
-                    self.imageView.image = UIImage(contentsOfFile: f.path)
-                }
-            }
-            else {
-                oper?.finished({ (file, err) in
-                    if let f = file {
-                        DispatchQueue.main.async {
-                            self.imageView.image = UIImage(contentsOfFile: f.path)
-                        }
+        HQDownloadOperation(HQDownloadRequest(URL(string: source)!, URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)))
+            .started { (total) in
+                print("source \(source) and total \(total)")
+            }.progress { (rece, frac) in
+                print("source \(source) and received \(rece)")
+            }.finished { (file, err) in
+                print("source \(source) and file \(String(describing: file?.path))")
+                if let f = file {
+                    DispatchQueue.main.async {
+                        print("render image \(f)")
+                        self.imageView.image = UIImage(contentsOfFile: f.path)
                     }
-                })
-            }
-        }
+                }
+            }.start()
     }
+    
+    
+//    public func downloadImge() {
+//        HQDownloader.Downloader.download(URL(string: source)!) { (file, oper) in
+//            if let f = file {
+//                print("\n\n\(source) file \(String(describing: file?.path))")
+//                DispatchQueue.main.async {
+//                    print(f.absoluteString)
+//                    self.imageView.image = UIImage(contentsOfFile: f.path)
+//                }
+//            }
+//            else {
+//                oper?.finished({ (file, err) in
+//                    print("\n\n\(source) file \(String(describing: file?.path))")
+//                    if let f = file {
+//                        DispatchQueue.main.async {
+//                            self.imageView.image = UIImage(contentsOfFile: f.path)
+//                        }
+//                    }
+//                    if let e = err {
+//                        print("\n\n\n\(e)")
+//                    }
+//                })
+//            }
+//        }
+//    }
 }

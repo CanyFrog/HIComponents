@@ -29,7 +29,6 @@ public final class HQDownloadOperation: Operation {
         }
     }
     
-    public private(set) var progress: HQDownloadProgress!
     // MARK: - Opertion property
     
     open override var isConcurrent: Bool { return true }
@@ -55,7 +54,6 @@ public final class HQDownloadOperation: Operation {
         }
         didSet {
             didChangeValue(forKey: "isFinished")
-            completionBlock?()
         }
     }
     
@@ -82,7 +80,6 @@ public final class HQDownloadOperation: Operation {
         super.init()
         injectSession = session
         ownRequest = request
-        progress = HQDownloadProgress(source: request.request.url, file: request.fileUrl, range: request.requestRange)
         openStream()
     }
 }
@@ -98,7 +95,7 @@ public extension HQDownloadOperation {
             if isExecuting { _executing = false }
             if !isFinished { _finished = true }
         }
-        progress.finish(HQDownloadProgress.HQDownloadError.taskCancel)
+        ownRequest.finish(HQDownloadError.taskCancel)
         reset()
     }
     
@@ -145,20 +142,20 @@ public extension HQDownloadOperation {
 // MARK: - Callbacks
 extension HQDownloadOperation {
     @discardableResult
-    public func started(_ callback: @escaping HQDownloadProgress.StartedClosure) -> HQDownloadOperation {
-        progress.started(callback)
+    public func started(_ callback: @escaping HQDownloadRequest.StartedClosure) -> HQDownloadOperation {
+        ownRequest.started(callback)
         return self
     }
     
     @discardableResult
-    public func finished(_ callback: @escaping HQDownloadProgress.FinishedClosure) -> HQDownloadOperation {
-        progress.finished(callback)
+    public func finished(_ callback: @escaping HQDownloadRequest.FinishedClosure) -> HQDownloadOperation {
+        ownRequest.finished(callback)
         return self
     }
 
     @discardableResult
-    public func progress(_ callback: @escaping HQDownloadProgress.ProgressClosure) -> HQDownloadOperation {
-        progress.progress(callback)
+    public func progress(_ callback: @escaping HQDownloadRequest.ProgressClosure) -> HQDownloadOperation {
+        ownRequest.progress(callback)
         return self
     }
 }
@@ -220,7 +217,7 @@ extension HQDownloadOperation: URLSessionDataDelegate {
             disposition = .cancel
         }
         else {
-            progress.start(response.expectedContentLength)
+            ownRequest.start(response.expectedContentLength)
         }
         
         completionHandler(disposition)
@@ -231,10 +228,10 @@ extension HQDownloadOperation: URLSessionDataDelegate {
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         if let stream = stream, stream.hasSpaceAvailable {
             stream.write([UInt8](data), maxLength: data.count)
-            progress.progress(Int64(data.count))
+            ownRequest.progress(Int64(data.count))
         }
         else {
-            progress.finish(.notEnoughSpace)
+            ownRequest.finish(.notEnoughSpace)
             done()
         }
     }
@@ -242,20 +239,19 @@ extension HQDownloadOperation: URLSessionDataDelegate {
     
     /// task completed
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        guard error != nil else {
-            dataTask = nil
-            progress.finish()
-            done()
-            return
-        }
-        
-        if ownRequest.retryCount > 0 {
-            dataTask?.resume() // auto retry
-            ownRequest.retryCount -= 1
+        dataTask = nil
+        done()
+        if let err = error {
+            if ownRequest.retryCount > 0 {
+                ownRequest.download()
+                ownRequest.retryCount -= 1
+            }
+            else {
+               ownRequest.finish(HQDownloadError.taskError(err))
+            }
         }
         else {
-            progress.finish(.taskError(error!))
-            done()
+            ownRequest.finish()
         }
     }
     
