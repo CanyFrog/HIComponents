@@ -41,7 +41,7 @@ public struct HQDownloadRequest {
     
     public var fileName: String {
         guard let url = request.url else { return "" }
-        return "\(url.hashValue).\(url.pathExtension)"
+        return "\(url.hashValue)\(url.absoluteString.hashValue)\(url.pathExtension.hashValue)"
     }
     
     public private(set) var fileUrl: URL?
