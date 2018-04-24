@@ -13,7 +13,8 @@ class SingleViewController: UIViewController {
     var progressLabel = UILabel()
     var imageView = UIImageView()
     
-    let image = "https://cdn.pixabay.com/photo/2018/04/22/12/48/owl-3340957_1280.jpg"
+    let image = URL(string: "https://cdn.pixabay.com/photo/2018/01/31/12/16/architecture-3121009_1280.jpg")!
+    let directory = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,23 +33,69 @@ class SingleViewController: UIViewController {
         view.addSubview(progressLabel)
         view.addSubview(imageView)
         
-        HQDownloader.Downloader.download(URL(string: image)!) { (file, oper) in
+//        HQDownloader.Downloader.download(URL(string: image)!) { (file, oper) in
+//            if let f = file {
+//                DispatchQueue.main.async {
+//                    self.imageView.image = UIImage(contentsOfFile: f.path)
+//                    self.progressLabel.text = "缓存图片"
+//                }
+//            }
+//            else {
+//                oper?.progress({ (comp, frac) in
+//                    DispatchQueue.main.async {
+//                        self.progressLabel.text = "下载了\(comp/1024)kb, \(frac*100)%"
+//                        if let data = try? Data(contentsOf: oper!.progress.fileUrl!) {
+//                            self.imageView.image = UIImage(data: data)
+//                        }
+//                    }
+//                })
+//            }
+//        }
+    }
+    
+    func downloadByScheduler() {
+        HQDownloadScheduler()
+    }
+    
+    func downloadByOperation() {
+        HQDownloadOperation(HQDownloadRequest(image, directory))
+        .started { (total) in
+            print("total \(total)")
+        }.progress { (rece, frac) in
+            print("received \(rece)")
+            DispatchQueue.main.async {
+                self.progressLabel.text = "下载了\(rece/1024)kb, \(frac*100)%"
+            }
+        }.finished { (file, err) in
+            print("file \(String(describing: file?.path))")
             if let f = file {
                 DispatchQueue.main.async {
+                    print("render image \(f)")
                     self.imageView.image = UIImage(contentsOfFile: f.path)
-                    self.progressLabel.text = "缓存图片"
                 }
             }
-            else {
-                oper?.progress({ (comp, frac) in
-                    DispatchQueue.main.async {
-                        self.progressLabel.text = "下载了\(comp/1024)kb, \(frac*100)%"
-                        if let data = try? Data(contentsOf: oper!.progress.fileUrl!) {
-                            self.imageView.image = UIImage(data: data)
-                        }
-                    }
-                })
+        }.start()
+    }
+    
+    func downloadByRequest() {
+        HQDownloadRequest(image, directory)
+        .started { (total) in
+            print("total \(total)")
+        }
+        .progress { (rece, frac) in
+            print("received \(rece)")
+            DispatchQueue.main.async {
+                self.progressLabel.text = "下载了\(rece/1024)kb, \(frac*100)%"
             }
         }
+        .finished { (file, err) in
+            print("file \(String(describing: file?.path))")
+            if let f = file {
+                DispatchQueue.main.async {
+                    print("render image \(f)")
+                    self.imageView.image = UIImage(contentsOfFile: f.path)
+                }
+            }
+        }.download()
     }
 }
