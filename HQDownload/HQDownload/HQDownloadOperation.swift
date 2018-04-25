@@ -12,8 +12,6 @@ import HQFoundation
 
 public final class HQDownloadOperation: Operation {
     // MARK: - network relevant
-    public var sessionConfig: URLSessionConfiguration { return session.configuration }
-    
     public private(set) var dataTask: URLSessionTask?
     
     public private(set) var response: URLResponse?
@@ -139,13 +137,6 @@ public extension HQDownloadOperation {
         }
         reset()
     }
-    
-//    public func cancel(resumeData: (Data?)->Void) {
-//        cancel()
-//        let encoder = JSONEncoder()
-//        let data = try? encoder.encode(ownRequest)
-//        resumeData(data)
-//    }
 }
 
 // MARK: - State & Helper function
@@ -166,8 +157,7 @@ private extension HQDownloadOperation {
     }
     
     func openStream() {
-        guard let url = request.fileUrl else { return }
-        stream = OutputStream(url: url, append: true)
+        stream = OutputStream(url: request.fileUrl, append: true)
         stream?.schedule(in: RunLoop.current, forMode: .defaultRunLoopMode)
         stream?.open()
     }
@@ -187,11 +177,7 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         var disposition = URLSession.ResponseDisposition.allow
         self.response = response
         
-        var statusCode = 200
-        if let rp = response as? HTTPURLResponse {
-            statusCode = rp.statusCode
-        }
-        
+        let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 200
         var valid = statusCode < 400
         
         //'304 Not Modified' is an exceptional one. It should be treated as cancelled if no cache data  
@@ -199,16 +185,16 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         var urlCache: URLCache! = session.configuration.urlCache
         if urlCache == nil { urlCache = URLCache.shared }
         
-        if (statusCode == 304 && urlCache.cachedResponse(for: ownRequest.request)?.data == nil) {
+        if (statusCode == 304 && urlCache.cachedResponse(for: request.request)?.data == nil) {
             valid = false
         }
         
-        if !valid {
-            // if not valid, cancel request. the session will call complete delegate function, so do not need invoke complete callback
-            disposition = .cancel
+        if valid {
+            request.start(max(0, response.expectedContentLength))
         }
         else {
-            ownRequest.start(response.expectedContentLength)
+            // if not valid, cancel request. the session will call complete delegate function, so do not need invoke complete callback
+            disposition = .cancel
         }
         
         completionHandler(disposition)
