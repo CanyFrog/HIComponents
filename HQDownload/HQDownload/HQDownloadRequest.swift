@@ -12,11 +12,6 @@ public final class HQDownloadRequest {
     /// Request
     public private(set) var request: URLRequest!
     
-//    public var fileName: String {
-//        guard let url = request.url else { return "" }
-//        return "\(url.hashValue)\(url.absoluteString.hashValue)\(url.pathExtension.hashValue)"
-//    }
-//
     public var fileUrl: URL { return config.directory.appendingPathComponent(record.fileName) }
     
     /// Record (progress)
@@ -109,8 +104,6 @@ public extension HQDownloadRequest {
 }
 
 
-
-
 // MARK: - Codable
 extension HQDownloadRequest: Codable {
     enum RequestKeys: String, CodingKey {
@@ -155,7 +148,7 @@ public enum HQDownloadError: CustomStringConvertible {
 // MARK:- Global configure options
 public struct HQDownloadOptions: OptionSet {
     /// Default contains priority default, handle cookies, allow ivalid ssl, no use url cache
-    public static let `default`: HQDownloadOptions = [.priorityDefault, .handleCookies, .allowInvalidSSLCert]
+    public static let `default`: HQDownloadOptions = [.handleCookies, .allowInvalidSSLCert]
     
     public let rawValue: UInt
     

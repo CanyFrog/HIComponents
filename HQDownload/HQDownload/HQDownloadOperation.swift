@@ -7,7 +7,6 @@
 //
 
 // TODO: Auto retry
-
 import HQFoundation
 
 public final class HQDownloadOperation: Operation {
@@ -15,7 +14,6 @@ public final class HQDownloadOperation: Operation {
     public private(set) var dataTask: URLSessionTask?
     
     public private(set) var response: URLResponse?
-    
     
     /// The request used by the operation's task
     public private(set) var request: HQDownloadRequest!
@@ -169,7 +167,7 @@ private extension HQDownloadOperation {
 }
 
 
-// MARK: - HQDownloadOperationProtocol
+// MARK: - URLSessionDataDelegate
 extension HQDownloadOperation: URLSessionDataDelegate {
     /// datatask first receive response
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
@@ -190,6 +188,7 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         }
         
         if valid {
+            request.record.fileName = response.suggestedFilename ?? request.request.url!.lastPathComponent
             request.start(max(0, response.expectedContentLength))
         }
         else {
@@ -205,10 +204,10 @@ extension HQDownloadOperation: URLSessionDataDelegate {
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         if let stream = stream, stream.hasSpaceAvailable {
             stream.write([UInt8](data), maxLength: data.count)
-            ownRequest.progress(Int64(data.count))
+            request.progress(Int64(data.count))
         }
         else {
-            ownRequest.finish(.notEnoughSpace)
+            request.finish(.notEnoughSpace)
             done()
         }
     }
