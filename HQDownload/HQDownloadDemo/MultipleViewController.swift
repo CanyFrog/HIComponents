@@ -70,45 +70,24 @@ class CollectionViewCell: UICollectionViewCell {
     }
     
     public func setImage(source: String) {
-        HQDownloadOperation(HQDownloadRequest(URL(string: source)!, URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)))
-            .started { (total) in
-                print("source \(source) and total \(total)")
-            }.progress { (rece, frac) in
-                print("source \(source) and received \(rece)")
-            }.finished { (file, err) in
-                print("source \(source) and file \(String(describing: file?.path))")
-                if let f = file {
-                    DispatchQueue.main.async {
-                        print("render image \(f)")
-                        self.imageView.image = UIImage(contentsOfFile: f.path)
-                    }
+        HQDownloader.Downloader.download(URL(string: source)!) { (file, operation) in
+            if let f = file {
+                DispatchQueue.main.async {
+                    self.imageView.image = UIImage(contentsOfFile: f.path)
                 }
-            }.start()
+            }
+            else {
+                operation?.finished({ (file, err) in
+                    if let e = err {
+                        print("error: \(e.description)")
+                    }
+                    if let f = file {
+                        DispatchQueue.main.async {
+                            self.imageView.image = UIImage(contentsOfFile: f.path)
+                        }
+                    }
+                })
+            }
+        }
     }
-    
-    
-//    public func downloadImge() {
-//        HQDownloader.Downloader.download(URL(string: source)!) { (file, oper) in
-//            if let f = file {
-//                print("\n\n\(source) file \(String(describing: file?.path))")
-//                DispatchQueue.main.async {
-//                    print(f.absoluteString)
-//                    self.imageView.image = UIImage(contentsOfFile: f.path)
-//                }
-//            }
-//            else {
-//                oper?.finished({ (file, err) in
-//                    print("\n\n\(source) file \(String(describing: file?.path))")
-//                    if let f = file {
-//                        DispatchQueue.main.async {
-//                            self.imageView.image = UIImage(contentsOfFile: f.path)
-//                        }
-//                    }
-//                    if let e = err {
-//                        print("\n\n\n\(e)")
-//                    }
-//                })
-//            }
-//        }
-//    }
 }

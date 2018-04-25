@@ -12,22 +12,16 @@ import HQFoundation
 
 public final class HQDownloadOperation: Operation {
     // MARK: - network relevant
-    public var sessionConfig: URLSessionConfiguration {
-        return session.configuration
-    }
-    
-    /// The request used by the operation's task
-    public private(set) var ownRequest: HQDownloadRequest!
+    public var sessionConfig: URLSessionConfiguration { return session.configuration }
     
     public private(set) var dataTask: URLSessionTask?
     
     public private(set) var response: URLResponse?
     
-    public var priority: Float = URLSessionTask.defaultPriority {
-        didSet {
-            dataTask?.priority = priority
-        }
-    }
+    
+    /// The request used by the operation's task
+    public private(set) var request: HQDownloadRequest!
+    
     
     // MARK: - Opertion property
     
@@ -64,28 +58,76 @@ public final class HQDownloadOperation: Operation {
     private weak var injectSession: URLSession?
     
     /// This is set if we're using not using an injected NSURLSession. We're responsible of invalidating this one
-    private lazy var taskSession: URLSession = {
-        let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 15.0
-        return URLSession(configuration: config, delegate: self, delegateQueue: nil)
-    }()
-    
-    private var session: URLSession { return injectSession ?? taskSession }
+    private var ownSession: URLSession?
     
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
     
     private var stream: OutputStream?
 
-    public init(_ request: HQDownloadRequest, _ session: URLSession? = nil) {
+    public init(request: HQDownloadRequest, session: URLSession? = nil) {
         super.init()
         injectSession = session
-        ownRequest = request
-        openStream()
+        self.request = request
     }
 }
 
 // MARK: - Override function
 public extension HQDownloadOperation {
+    public override func start() {
+        
+        HQObjectLock.synchronized(self) {
+            guard !isCancelled else {
+                _finished = true
+                reset()
+                return
+            }
+            
+            // Add background task
+            if request.config.options.contains(.taskInBackground) {
+                backgroundTaskId = UIApplication.shared.beginBackgroundTask { [weak self] in
+                    guard let wSelf = self else { return }
+                    wSelf.cancel()  // Handle background task finish
+                    UIApplication.shared.endBackgroundTask(wSelf.backgroundTaskId!)
+                    wSelf.backgroundTaskId = UIBackgroundTaskInvalid
+                }
+            }
+            
+            // Start session task
+            var session = injectSession
+            if session == nil {
+                let config = URLSessionConfiguration.default
+                config.timeoutIntervalForRequest = request.config.taskTimeout
+                session = URLSession(configuration: config, delegate: self, delegateQueue: nil)
+                ownSession = session
+            }
+            dataTask = session!.dataTask(with: request.request)
+            _executing = true
+        }
+        
+        
+        guard let task = dataTask else {
+            done()
+            return
+        }
+        
+        // Set task priority, priority is Float, so optional settings
+        if request.config.options.contains(.priorityHigh) {
+            task.priority = URLSessionTask.highPriority
+        }
+        else if request.config.options.contains(.priorityLow) {
+            task.priority = URLSessionTask.lowPriority
+        }
+        
+        // Start task
+        task.resume()
+
+        // If task finished, remove background task
+        if let backgroundTaskId = backgroundTaskId, backgroundTaskId != UIBackgroundTaskInvalid {
+            UIApplication.shared.endBackgroundTask(backgroundTaskId)
+            self.backgroundTaskId = UIBackgroundTaskInvalid
+        }
+    }
+    
     public override func cancel() {
         if isFinished { return }
         super.cancel()
@@ -95,77 +137,26 @@ public extension HQDownloadOperation {
             if isExecuting { _executing = false }
             if !isFinished { _finished = true }
         }
-        ownRequest.finish(HQDownloadError.taskCancel)
         reset()
     }
     
-    public override func start() {
-
-        objc_sync_enter(self)
-        
-        if isCancelled {
-            _finished = true
-            reset()
-            return
-        }
-        
-        // register background task
-        if ownRequest.background {
-            backgroundTaskId = UIApplication.shared.beginBackgroundTask { [weak self] in
-                // task finished block
-                if let wSelf = self {
-                    wSelf.cancel()
-                    UIApplication.shared.endBackgroundTask(wSelf.backgroundTaskId!)
-                    wSelf.backgroundTaskId = UIBackgroundTaskInvalid
-                }
-            }
-        }
-        
-        // add task
-        dataTask = session.dataTask(with: ownRequest.request)
-        dataTask?.priority = priority
-        _executing = true
-        
-        objc_sync_exit(self)
-        
-        // start task
-        dataTask?.resume()
-
-        // if task finished, remove background task
-        if let backgroundTaskId = backgroundTaskId, backgroundTaskId != UIBackgroundTaskInvalid {
-            UIApplication.shared.endBackgroundTask(backgroundTaskId)
-            self.backgroundTaskId = UIBackgroundTaskInvalid
-        }
-    }
-}
-
-// MARK: - Callbacks
-extension HQDownloadOperation {
-    @discardableResult
-    public func started(_ callback: @escaping HQDownloadRequest.StartedClosure) -> HQDownloadOperation {
-        ownRequest.started(callback)
-        return self
-    }
-    
-    @discardableResult
-    public func finished(_ callback: @escaping HQDownloadRequest.FinishedClosure) -> HQDownloadOperation {
-        ownRequest.finished(callback)
-        return self
-    }
-
-    @discardableResult
-    public func progress(_ callback: @escaping HQDownloadRequest.ProgressClosure) -> HQDownloadOperation {
-        ownRequest.progress(callback)
-        return self
-    }
+//    public func cancel(resumeData: (Data?)->Void) {
+//        cancel()
+//        let encoder = JSONEncoder()
+//        let data = try? encoder.encode(ownRequest)
+//        resumeData(data)
+//    }
 }
 
 // MARK: - State & Helper function
 private extension HQDownloadOperation {
     func reset() {
-        if injectSession == nil { session.invalidateAndCancel() }
         closeStream()
         dataTask = nil
+        if ownSession != nil {
+            ownSession?.invalidateAndCancel()
+            ownSession = nil
+        }
     }
     
     func done() {
@@ -175,7 +166,7 @@ private extension HQDownloadOperation {
     }
     
     func openStream() {
-        guard let url = ownRequest.fileUrl else { return }
+        guard let url = request.fileUrl else { return }
         stream = OutputStream(url: url, append: true)
         stream?.schedule(in: RunLoop.current, forMode: .defaultRunLoopMode)
         stream?.open()
@@ -241,9 +232,9 @@ extension HQDownloadOperation: URLSessionDataDelegate {
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         dataTask = nil
         done()
-        if let err = error {
-            if ownRequest.retryCount > 0 {
-                ownRequest.download()
+        if let err = error as NSError? {
+            if err.code != -999 && ownRequest.retryCount > 0 { // Code -999 is cancelled
+//                ownRequest.download()
                 ownRequest.retryCount -= 1
             }
             else {

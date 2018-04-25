@@ -16,6 +16,7 @@
 		605CE547208F1BB60014DDB3 /* HQFoundation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F10208095DA0088A579 /* HQFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		605CE549208F20510014DDB3 /* SingleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE548208F20510014DDB3 /* SingleViewController.swift */; };
 		605CE54B208F25160014DDB3 /* MultipleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE54A208F25160014DDB3 /* MultipleViewController.swift */; };
+		605CE54E20902A930014DDB3 /* ContinueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE54D20902A930014DDB3 /* ContinueViewController.swift */; };
 		60B6E0F3207C4FA300C4C594 /* HQDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F2207C4FA300C4C594 /* HQDownloader.swift */; };
 		60B6E0F5207C511200C4C594 /* HQDownloadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F4207C511200C4C594 /* HQDownloadRequest.swift */; };
 		60B6E0F7207C83CE00C4C594 /* HQDownloadRequestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */; };
@@ -24,7 +25,6 @@
 		60DC2F12208095DA0088A579 /* HQFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F10208095DA0088A579 /* HQFoundation.framework */; };
 		60DC2F14208097E80088A579 /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; };
 		60F0AF86207DCD3F00C5F6EE /* HQDownloadSchedulerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F0AF85207DCD3F00C5F6EE /* HQDownloadSchedulerTest.swift */; };
-		8A1CCC7F207F942400C0C6E1 /* HQDownloadProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1CCC7E207F942400C0C6E1 /* HQDownloadProgress.swift */; };
 		8A650B002069119200C95462 /* HQDownload.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A650AF62069119200C95462 /* HQDownload.framework */; };
 		8A650B052069119200C95462 /* HQDownloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B042069119200C95462 /* HQDownloadTests.swift */; };
 		8A650B072069119200C95462 /* HQDownload.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A650AF92069119200C95462 /* HQDownload.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -75,6 +75,7 @@
 /* Begin PBXFileReference section */
 		605CE548208F20510014DDB3 /* SingleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleViewController.swift; sourceTree = "<group>"; };
 		605CE54A208F25160014DDB3 /* MultipleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleViewController.swift; sourceTree = "<group>"; };
+		605CE54D20902A930014DDB3 /* ContinueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueViewController.swift; sourceTree = "<group>"; };
 		60B6E0F2207C4FA300C4C594 /* HQDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloader.swift; sourceTree = "<group>"; };
 		60B6E0F4207C511200C4C594 /* HQDownloadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadRequest.swift; sourceTree = "<group>"; };
 		60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadRequestTest.swift; sourceTree = "<group>"; };
@@ -83,7 +84,6 @@
 		60DC2F10208095DA0088A579 /* HQFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQFoundation.framework; path = Carthage/Build/iOS/HQFoundation.framework; sourceTree = "<group>"; };
 		60DC2F13208097E80088A579 /* HQSqlite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQSqlite.framework; path = Carthage/Build/iOS/HQSqlite.framework; sourceTree = "<group>"; };
 		60F0AF85207DCD3F00C5F6EE /* HQDownloadSchedulerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadSchedulerTest.swift; sourceTree = "<group>"; };
-		8A1CCC7E207F942400C0C6E1 /* HQDownloadProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadProgress.swift; sourceTree = "<group>"; };
 		8A650AF62069119200C95462 /* HQDownload.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HQDownload.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A650AF92069119200C95462 /* HQDownload.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HQDownload.h; sourceTree = "<group>"; };
 		8A650AFA2069119200C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -161,7 +161,6 @@
 				8A650AF92069119200C95462 /* HQDownload.h */,
 				60B6E0F4207C511200C4C594 /* HQDownloadRequest.swift */,
 				8A650B4A206A79D000C95462 /* HQDownloadOperation.swift */,
-				8A1CCC7E207F942400C0C6E1 /* HQDownloadProgress.swift */,
 				8A650B4E206BD61800C95462 /* HQDownloadScheduler.swift */,
 				60B6E0F2207C4FA300C4C594 /* HQDownloader.swift */,
 				8A650AFA2069119200C95462 /* Info.plist */,
@@ -199,6 +198,7 @@
 				8AC9161720896BC700A9CEA1 /* ViewController.swift */,
 				605CE548208F20510014DDB3 /* SingleViewController.swift */,
 				605CE54A208F25160014DDB3 /* MultipleViewController.swift */,
+				605CE54D20902A930014DDB3 /* ContinueViewController.swift */,
 				8AC9161920896BC700A9CEA1 /* Main.storyboard */,
 				8AC9161C20896BC800A9CEA1 /* Assets.xcassets */,
 				8AC9161E20896BC800A9CEA1 /* LaunchScreen.storyboard */,
@@ -374,7 +374,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				60B6E0F5207C511200C4C594 /* HQDownloadRequest.swift in Sources */,
-				8A1CCC7F207F942400C0C6E1 /* HQDownloadProgress.swift in Sources */,
 				60B6E0F3207C4FA300C4C594 /* HQDownloader.swift in Sources */,
 				8A650B4B206A79D000C95462 /* HQDownloadOperation.swift in Sources */,
 				8A650B4F206BD61800C95462 /* HQDownloadScheduler.swift in Sources */,
@@ -397,6 +396,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				605CE54E20902A930014DDB3 /* ContinueViewController.swift in Sources */,
 				8AC9161820896BC700A9CEA1 /* ViewController.swift in Sources */,
 				605CE549208F20510014DDB3 /* SingleViewController.swift in Sources */,
 				605CE54B208F25160014DDB3 /* MultipleViewController.swift in Sources */,

@@ -53,6 +53,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             navigationController?.pushViewController(SingleViewController(), animated: true)
         case 1:
             navigationController?.pushViewController(MultipleViewController(), animated: true)
+        case 3:
+            navigationController?.pushViewController(ContinueViewController(), animated: true)
         default:
             break
         }
