@@ -93,15 +93,14 @@ public extension HQDownloadScheduler {
 
     /// Once a session is invalidated, new tasks cannot be created in the session, but existing tasks continue until completion.
     /// use to change session
-//    public func invalidateAndCancelSession(_ cancelPendingOperations: Bool = true) {
-//        progress.cancel()
-//        if cancelPendingOperations {
-//            ownSession?.invalidateAndCancel()
-//        }
-//        else {
-//            ownSession?.finishTasksAndInvalidate()
-//        }
-//    }
+    public func invalidateAndCancelSession(_ cancelPendingOperations: Bool = true) {
+        if cancelPendingOperations {
+            ownSession?.invalidateAndCancel()
+        }
+        else {
+            ownSession?.finishTasksAndInvalidate()
+        }
+    }
 
     /**
      * When the value of this property is NO, the queue actively starts operations that are in the queue and ready to execute. Setting this property to YES prevents the queue from starting any queued operations, but already executing operations continue to execute

@@ -32,29 +32,59 @@ class SingleViewController: UIViewController {
         
         view.addSubview(progressLabel)
         view.addSubview(imageView)
-        
-//        HQDownloader.Downloader.download(URL(string: image)!) { (file, oper) in
-//            if let f = file {
-//                DispatchQueue.main.async {
-//                    self.imageView.image = UIImage(contentsOfFile: f.path)
-//                    self.progressLabel.text = "缓存图片"
-//                }
-//            }
-//            else {
-//                oper?.progress({ (comp, frac) in
-//                    DispatchQueue.main.async {
-//                        self.progressLabel.text = "下载了\(comp/1024)kb, \(frac*100)%"
-//                        if let data = try? Data(contentsOf: oper!.progress.fileUrl!) {
-//                            self.imageView.image = UIImage(data: data)
-//                        }
-//                    }
-//                })
-//            }
-//        }
+        downloadByDownloader()
     }
     
+    func downloadByDownloader() {
+        HQDownloader.Downloader.download(image) { (file, operation) in
+            if let f = file {
+                DispatchQueue.main.async {
+                    self.progressLabel.text = "缓存文件"
+                    self.imageView.image = UIImage(contentsOfFile: f.path)
+                }
+            }
+            else {
+                operation?.started({ (total) in
+                    print("total \(total)")
+                }).progress({ (rece, frac) in
+                    print("received \(rece)")
+                    DispatchQueue.main.async {
+                        self.progressLabel.text = "下载了\(rece/1024)kb, \(frac*100)%"
+                    }
+                }).finished({ (file, err) in
+                    print("file \(String(describing: file?.path))")
+                    if let f = file {
+                        DispatchQueue.main.async {
+                            print("render image \(f)")
+                            self.imageView.image = UIImage(contentsOfFile: f.path)
+                        }
+                    }
+                })
+            }
+        }
+    }
+    
+    
     func downloadByScheduler() {
-        HQDownloadScheduler()
+        HQDownloadScheduler(directory).download(image)
+            .started { (total) in
+            print("total \(total)")
+            }
+            .progress { (rece, frac) in
+                print("received \(rece)")
+                DispatchQueue.main.async {
+                    self.progressLabel.text = "下载了\(rece/1024)kb, \(frac*100)%"
+                }
+            }
+            .finished { (file, err) in
+                print("file \(String(describing: file?.path))")
+                if let f = file {
+                    DispatchQueue.main.async {
+                        print("render image \(f)")
+                        self.imageView.image = UIImage(contentsOfFile: f.path)
+                    }
+                }
+            }
     }
     
     func downloadByOperation() {
