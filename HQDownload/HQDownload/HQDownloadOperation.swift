@@ -44,7 +44,7 @@ public final class HQDownloadOperation: Operation {
     private var finishedHandlers = [FinishedClosure]()
     private var finishedLock = DispatchSemaphore(value: 1)
     
-    public typealias ProgressClosure = (URL, Float) -> Void
+    public typealias ProgressClosure = (Int64, Float) -> Void
     private var progressHandler = [ProgressClosure]()
     private var progressLock = DispatchSemaphore(value: 1)
     
@@ -87,13 +87,11 @@ public final class HQDownloadOperation: Operation {
         self.config.fileName = source.lastPathComponent
         createRequest(source: source)
     }
-}
-
-// MARK: - Override function
-public extension HQDownloadOperation {
+    
+    
     public override func start() {
         objc_sync_enter(self)
-        guard !isCancelled else { _finished = true; reset(); return }
+        guard !isCancelled else { _finished = true; return }
         
         // Add background task
         if config.taskInBackground {
@@ -113,10 +111,10 @@ public extension HQDownloadOperation {
         
         // Set task priority, priority is Float, so optional settings
         task.priority = config.priority
-
+        
         // Start task
         task.resume()
-
+        
         // If task finished, remove background task
         if let backgroundTaskId = backgroundTaskId, backgroundTaskId != UIBackgroundTaskInvalid {
             UIApplication.shared.endBackgroundTask(backgroundTaskId)
@@ -129,74 +127,26 @@ public extension HQDownloadOperation {
         super.cancel()
         if let task = task {
             task.cancel()
+            self.task = nil
             // add judge to avoid trigger KVO
             if isExecuting { _executing = false }
             if !isFinished { _finished = true }
         }
-        reset()
-    }
-}
-
-public extension HQDownloadOperation {
-    @discardableResult
-    public func started(callback: @escaping StartedClosure) -> Self {
-        HQDispatchLock.semaphore(startedLock) { startedHandlers.append(callback) }
-        return self
-    }
-    private func invokeStarted(_ total: Int64) {
-        config.execptedCount = total
-        HQDispatchLock.semaphore(startedLock) {
-            startedHandlers.forEach { [weak self] (call) in
-                guard let wself = self else { return }
-                call(wself.config.fileUrl, total)
-            }
-        }
     }
     
-    @discardableResult
-    public func progress(_ callback: @escaping ProgressClosure) -> Self {
-        HQDispatchLock.semaphore(progressLock) { progressHandler.append(callback) }
-        return self
-    }
-    private func invokeProgress(_ received: Int64) {
-        config.completedCount += received
-        HQDispatchLock.semaphore(progressLock) {
-            progressHandler.forEach { [weak self] (call) in
-                guard let wself = self else { return }
-                call(wself.config.fileUrl, wself.config.progressPercent)
-            }
-        }
-    }
-    
-    @discardableResult
-    public func finished(_ callback: @escaping FinishedClosure) -> Self {
-        HQDispatchLock.semaphore(finishedLock) { finishedHandlers.append(callback) }
-        return self
-    }
-    private func invokeFinished(_ taskError: HQDownloadError? = nil) {
-        error = taskError
-        HQDispatchLock.semaphore(finishedLock) {
-            finishedHandlers.forEach { [weak self] (call) in
-                guard let wself = self else { return }
-                call(wself.config.fileUrl, wself.error)
-            }
-        }
+    deinit {
+        closeStream()
+        if injectSession == nil { ownSession.invalidateAndCancel() }
     }
 }
 
 
 // MARK: - State & Helper function
 private extension HQDownloadOperation {
-    func reset() {
-        closeStream()
-        task = nil
-        if injectSession == nil { ownSession.invalidateAndCancel() }
-    }
-    
     func done() {
+        task = nil
         _finished = true
         _executing = false
-        reset()
     }
     
     func openStream() {
@@ -224,6 +174,52 @@ private extension HQDownloadOperation {
         }
         else {
             request.setValue("bytes=\(start)-", forHTTPHeaderField: "Range")
+        }
+    }
+}
+
+
+// MARK: - Call backs
+public extension HQDownloadOperation {
+    @discardableResult public func started(callback: @escaping StartedClosure) -> Self {
+        HQDispatchLock.semaphore(startedLock) { startedHandlers.append(callback) }
+        return self
+    }
+    private func invokeStarted(_ total: Int64) {
+        config.execptedCount = total
+        HQDispatchLock.semaphore(startedLock) {
+            startedHandlers.forEach { [weak self] (call) in
+                guard let wself = self else { return }
+                call(wself.config.fileUrl, total)
+            }
+        }
+    }
+    
+    @discardableResult public func progress(_ callback: @escaping ProgressClosure) -> Self {
+        HQDispatchLock.semaphore(progressLock) { progressHandler.append(callback) }
+        return self
+    }
+    private func invokeProgress(_ received: Int64) {
+        config.completedCount += received
+        HQDispatchLock.semaphore(progressLock) {
+            progressHandler.forEach { [weak self] (call) in
+                guard let wself = self else { return }
+                call(wself.config.completedCount, wself.config.progressPercent)
+            }
+        }
+    }
+    
+    @discardableResult public func finished(_ callback: @escaping FinishedClosure) -> Self {
+        HQDispatchLock.semaphore(finishedLock) { finishedHandlers.append(callback) }
+        return self
+    }
+    private func invokeFinished(_ taskError: HQDownloadError? = nil) {
+        error = taskError
+        HQDispatchLock.semaphore(finishedLock) {
+            finishedHandlers.forEach { [weak self] (call) in
+                guard let wself = self else { return }
+                call(wself.config.fileUrl, wself.error)
+            }
         }
     }
 }
@@ -278,18 +274,20 @@ extension HQDownloadOperation: URLSessionDataDelegate {
     
     /// task completed
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        self.task = nil
         done()
-        if let err = error as NSError? {
-            if err.code != -999 && config.autoRetryCount > 0 { // Code -999 is cancelled
-                self.task = session.dataTask(with: request)
-//                ownRequest.download()
-//                ownRequest.retryCount -= 1
-            }
-            else {
-               invokeFinished(HQDownloadError.taskError(err))
-            }
+        if let err = error {
+            invokeFinished(HQDownloadError.taskError(err))
         }
+//        if let err = error as NSError? {
+//            if err.code != -999 && config.autoRetryCount > 0 { // Code -999 is cancelled
+//                self.task = session.dataTask(with: request)
+////                ownRequest.download()
+////                ownRequest.retryCount -= 1
+//            }
+//            else {
+//               invokeFinished(HQDownloadError.taskError(err))
+//            }
+//        }
         else {
             invokeFinished()
         }
@@ -409,6 +407,7 @@ public struct HQDownloadConfig {
         return Float(completedCount) / Float(execptedCount)
     }
     
+    public var subConfigs: [HQDownloadConfig]?
     
     public init() { }
 }
