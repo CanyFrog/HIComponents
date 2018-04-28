@@ -18,7 +18,6 @@
 		605CE54B208F25160014DDB3 /* MultipleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE54A208F25160014DDB3 /* MultipleViewController.swift */; };
 		605CE54E20902A930014DDB3 /* ContinueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE54D20902A930014DDB3 /* ContinueViewController.swift */; };
 		60B6E0F3207C4FA300C4C594 /* HQDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F2207C4FA300C4C594 /* HQDownloader.swift */; };
-		60B6E0F5207C511200C4C594 /* HQDownloadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F4207C511200C4C594 /* HQDownloadRequest.swift */; };
 		60B6E0F7207C83CE00C4C594 /* HQDownloadRequestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */; };
 		60B6E0FC207C95B200C4C594 /* HQDownloadOperationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0FB207C95B200C4C594 /* HQDownloadOperationTest.swift */; };
 		60DC2F11208095DA0088A579 /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F0F208095DA0088A579 /* HQCache.framework */; };
@@ -77,7 +76,6 @@
 		605CE54A208F25160014DDB3 /* MultipleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleViewController.swift; sourceTree = "<group>"; };
 		605CE54D20902A930014DDB3 /* ContinueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueViewController.swift; sourceTree = "<group>"; };
 		60B6E0F2207C4FA300C4C594 /* HQDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloader.swift; sourceTree = "<group>"; };
-		60B6E0F4207C511200C4C594 /* HQDownloadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadRequest.swift; sourceTree = "<group>"; };
 		60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadRequestTest.swift; sourceTree = "<group>"; };
 		60B6E0FB207C95B200C4C594 /* HQDownloadOperationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadOperationTest.swift; sourceTree = "<group>"; };
 		60DC2F0F208095DA0088A579 /* HQCache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQCache.framework; path = Carthage/Build/iOS/HQCache.framework; sourceTree = "<group>"; };
@@ -159,7 +157,6 @@
 			isa = PBXGroup;
 			children = (
 				8A650AF92069119200C95462 /* HQDownload.h */,
-				60B6E0F4207C511200C4C594 /* HQDownloadRequest.swift */,
 				8A650B4A206A79D000C95462 /* HQDownloadOperation.swift */,
 				8A650B4E206BD61800C95462 /* HQDownloadScheduler.swift */,
 				60B6E0F2207C4FA300C4C594 /* HQDownloader.swift */,
@@ -373,7 +370,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60B6E0F5207C511200C4C594 /* HQDownloadRequest.swift in Sources */,
 				60B6E0F3207C4FA300C4C594 /* HQDownloader.swift in Sources */,
 				8A650B4B206A79D000C95462 /* HQDownloadOperation.swift in Sources */,
 				8A650B4F206BD61800C95462 /* HQDownloadScheduler.swift in Sources */,

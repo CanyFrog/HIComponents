@@ -1,30 +1,30 @@
+////
+////  HQDownloader.swift
+////  HQDownload
+////
+////  Created by Magee Huang on 4/10/18.
+////  Copyright © 2018 com.personal.HQ. All rights reserved.
+////
 //
-//  HQDownloader.swift
-//  HQDownload
+//import HQCache
 //
-//  Created by Magee Huang on 4/10/18.
-//  Copyright © 2018 com.personal.HQ. All rights reserved.
+//public class HQDownloader {
+//    public static let Downloader = HQDownloader()
 //
-
-import HQCache
-
-public class HQDownloader {
-    public static let Downloader = HQDownloader()
-    
-    public private(set) var directoryUrl: URL!
-    public private(set) var tasks = [String]()
-    
-    private var scheduler: HQDownloadScheduler!
-    private var cache: HQDiskCache!
-    
-    
-    public init(_ directory: URL = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!).appendingPathComponent("downloader", isDirectory: true)) {
-        directoryUrl = directory
-        scheduler = HQDownloadScheduler(directory)
-        cache = HQDiskCache(directory)
-    }
-    
-    
+//    public private(set) var directoryUrl: URL!
+//    public private(set) var tasks = [String]()
+//
+//    private var scheduler: HQDownloadScheduler!
+//    private var cache: HQDiskCache!
+//
+//
+//    public init(_ directory: URL = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!).appendingPathComponent("downloader", isDirectory: true)) {
+//        directoryUrl = directory
+//        scheduler = HQDownloadScheduler(directory)
+//        cache = HQDiskCache(directory)
+//    }
+//
+//
 //    public func download(_ source: URL, _ callback: @escaping (URL?, HQDownloadOperation?) -> Void) {
 //        cache.exist(forKey: source.absoluteString) { [weak self] (_, exist) in
 //            guard let wself = self else { return }
@@ -48,5 +48,5 @@ public class HQDownloader {
 //            }
 //        }
 //    }
-}
-
+//}
+//
