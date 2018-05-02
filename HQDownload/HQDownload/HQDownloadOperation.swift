@@ -19,6 +19,7 @@ public final class HQDownloadOperation: Operation {
     private lazy var ownSession: URLSession = {
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = config.taskTimeout
+        configuration.timeoutIntervalForResource = config.taskTimeout // From iOS 8, use this porperty, otherwise not call delegate function
         return URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }()
     
@@ -80,11 +81,10 @@ public final class HQDownloadOperation: Operation {
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
     
     
-    public init(source: URL, session: URLSession? = nil, config: HQDownloadConfig = HQDownloadConfig()) {
+    public init(source: URL, config: HQDownloadConfig = HQDownloadConfig(), session: URLSession? = nil) {
         super.init()
         injectSession = session
         self.config = config
-        self.config.fileName = source.lastPathComponent
         createRequest(source: source)
     }
     
@@ -94,7 +94,7 @@ public final class HQDownloadOperation: Operation {
         guard !isCancelled else { _finished = true; return }
         
         // Add background task
-        if config.taskInBackground {
+        if config.taskInBackground && backgroundTaskId == nil {
             backgroundTaskId = UIApplication.shared.beginBackgroundTask { [weak self] in
                 guard let wSelf = self else { return }
                 wSelf.cancel()  // Handle background task finish
@@ -134,6 +134,11 @@ public final class HQDownloadOperation: Operation {
         }
     }
     
+    public func cancel(resumeData: (Data?)->Void) {
+        cancel()
+        resumeData(try? JSONEncoder().encode(config))
+    }
+    
     deinit {
         closeStream()
         if injectSession == nil { ownSession.invalidateAndCancel() }
@@ -150,6 +155,10 @@ private extension HQDownloadOperation {
     }
     
     func openStream() {
+        if !FileManager.default.fileExists(atPath: config.directory.path) {
+            do { try FileManager.default.createDirectory(at: config.directory, withIntermediateDirectories: true, attributes: nil) }
+            catch { cancel(); return }
+        }
         stream = OutputStream(url: config.fileUrl, append: true)
         stream?.schedule(in: RunLoop.current, forMode: .defaultRunLoopMode)
         stream?.open()
@@ -167,10 +176,10 @@ private extension HQDownloadOperation {
         if config.fetchFileInfo { request.httpMethod = "HEAD" }
         config.headers.forEach{ request.setValue($1, forHTTPHeaderField: $0) }
         
-        let start = max(config.completedCount, config.rangeStart ?? 0)
-        guard start != 0 else { return }
-        if let end = config.rangeEnd {
-            request.setValue("bytes=\(start)-\(end)", forHTTPHeaderField: "Range")
+        guard config.rangeStart * config.rangeEnd * config.completedCount >= 0 else { return }
+        let start = max(0, max(config.rangeStart, config.completedCount))
+        if config.rangeEnd > 0 {
+            request.setValue("bytes=\(start)-\(config.rangeEnd)", forHTTPHeaderField: "Range")
         }
         else {
             request.setValue("bytes=\(start)-", forHTTPHeaderField: "Range")
@@ -247,8 +256,8 @@ extension HQDownloadOperation: URLSessionDataDelegate {
         
         if valid {
             if let fileName = response.suggestedFilename { config.fileName = fileName }
-            invokeStarted(max(0, response.expectedContentLength))
-            openStream()
+            invokeStarted(max(0, max(response.expectedContentLength, config.execptedCount)))
+            if !config.fetchFileInfo { openStream() }
         }
         else {
             // if not valid, cancel request. the session will call complete delegate function, so do not need invoke complete callback
@@ -266,31 +275,33 @@ extension HQDownloadOperation: URLSessionDataDelegate {
             invokeProgress(Int64(data.count))
         }
         else {
-            invokeFinished(.notEnoughSpace)
-            done()
+            cancel() // If not enough space, cancel task
         }
     }
 
     
     /// task completed
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        done()
-        if let err = error {
+        guard let err = error else { done(); invokeFinished(); return }
+        
+        if (err as NSError).code == -999 {
+            done() // Task cancel, did not retry
+            if let stream = stream, !stream.hasSpaceAvailable { invokeFinished(HQDownloadError.notEnoughSpace) } // No enough space cancel
+            else { invokeFinished(HQDownloadError.taskError(err)) }
+            return
+        }
+            
+        if config.autoRetryCount <= 0 {
+            done()
             invokeFinished(HQDownloadError.taskError(err))
         }
-//        if let err = error as NSError? {
-//            if err.code != -999 && config.autoRetryCount > 0 { // Code -999 is cancelled
-//                self.task = session.dataTask(with: request)
-////                ownRequest.download()
-////                ownRequest.retryCount -= 1
-//            }
-//            else {
-//               invokeFinished(HQDownloadError.taskError(err))
-//            }
-//        }
         else {
-            invokeFinished()
+            let source = request.url!
+            createRequest(source: source)
+            start()
+            config.autoRetryCount -= 1
         }
+        
     }
     
     
@@ -395,15 +406,16 @@ public struct HQDownloadConfig {
     
     public var fileUrl: URL { return directory.appendingPathComponent(fileName) }
     
-    public var autoRetryCount: UInt = 0
+    public var autoRetryCount: UInt = 3
     
+    public var range: Range<Int64>?
+    public var rangeStart: Int64 = -1
+    public var rangeEnd: Int64 = -1
     
-    public var rangeStart: Int64?
-    public var rangeEnd: Int64?
-    
-    public var completedCount: Int64 = 0
-    public var execptedCount: Int64 = 0
+    public var completedCount: Int64 = -1
+    public var execptedCount: Int64 = -1
     public var progressPercent: Float {
+        guard execptedCount > 0 else { return 0 }
         return Float(completedCount) / Float(execptedCount)
     }
     
