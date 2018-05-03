@@ -19,7 +19,7 @@
 		605CE54E20902A930014DDB3 /* ContinueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE54D20902A930014DDB3 /* ContinueViewController.swift */; };
 		609AF3412099652F002C76D4 /* BackgroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609AF3402099652F002C76D4 /* BackgroundViewController.swift */; };
 		60B6E0F7207C83CE00C4C594 /* HQDownloadRequestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */; };
-		60B6E0FC207C95B200C4C594 /* HQDownloadOperationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0FB207C95B200C4C594 /* HQDownloadOperationTest.swift */; };
+		60B6E0FC207C95B200C4C594 /* HQDownloaderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0FB207C95B200C4C594 /* HQDownloaderTest.swift */; };
 		60DC2F11208095DA0088A579 /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F0F208095DA0088A579 /* HQCache.framework */; };
 		60DC2F12208095DA0088A579 /* HQFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F10208095DA0088A579 /* HQFoundation.framework */; };
 		60DC2F14208097E80088A579 /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; };
@@ -77,7 +77,7 @@
 		605CE54D20902A930014DDB3 /* ContinueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueViewController.swift; sourceTree = "<group>"; };
 		609AF3402099652F002C76D4 /* BackgroundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundViewController.swift; sourceTree = "<group>"; };
 		60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadRequestTest.swift; sourceTree = "<group>"; };
-		60B6E0FB207C95B200C4C594 /* HQDownloadOperationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadOperationTest.swift; sourceTree = "<group>"; };
+		60B6E0FB207C95B200C4C594 /* HQDownloaderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloaderTest.swift; sourceTree = "<group>"; };
 		60DC2F0F208095DA0088A579 /* HQCache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQCache.framework; path = Carthage/Build/iOS/HQCache.framework; sourceTree = "<group>"; };
 		60DC2F10208095DA0088A579 /* HQFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQFoundation.framework; path = Carthage/Build/iOS/HQFoundation.framework; sourceTree = "<group>"; };
 		60DC2F13208097E80088A579 /* HQSqlite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQSqlite.framework; path = Carthage/Build/iOS/HQSqlite.framework; sourceTree = "<group>"; };
@@ -170,7 +170,7 @@
 				8A650B042069119200C95462 /* HQDownloadTests.swift */,
 				60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */,
 				8AA183CE2081896400FA51B5 /* HQDownloadProgressTest.swift */,
-				60B6E0FB207C95B200C4C594 /* HQDownloadOperationTest.swift */,
+				60B6E0FB207C95B200C4C594 /* HQDownloaderTest.swift */,
 				60F0AF85207DCD3F00C5F6EE /* HQDownloadSchedulerTest.swift */,
 				8A650B062069119200C95462 /* Info.plist */,
 			);
@@ -383,7 +383,7 @@
 				60B6E0F7207C83CE00C4C594 /* HQDownloadRequestTest.swift in Sources */,
 				8A650B052069119200C95462 /* HQDownloadTests.swift in Sources */,
 				8AA183CF2081896400FA51B5 /* HQDownloadProgressTest.swift in Sources */,
-				60B6E0FC207C95B200C4C594 /* HQDownloadOperationTest.swift in Sources */,
+				60B6E0FC207C95B200C4C594 /* HQDownloaderTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,5 +1,5 @@
 //
-//  HQDownloadOperationTest.swift
+//  HQDownloaderTest.swift
 //  HQDownloadTests
 //
 //  Created by Magee Huang on 4/10/18.
@@ -9,8 +9,8 @@
 import XCTest
 @testable import HQDownload
 
-class HQDownloadOperationTest: HQDownloadTest {
-    var defaultOperation: HQDownloadOperation {
+class HQDownloaderTest: HQDownloadTest {
+    var defaultOperation: HQDownloader {
         return HQDownloadOperation(HQDownloadRequest(domain, randomTargetPath()))
     }
     

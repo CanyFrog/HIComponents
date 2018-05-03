@@ -80,12 +80,17 @@ public final class HQDownloader: Operation {
     /// Background task id
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
     
-    
-    public init(source: URL, config: HQDownloadConfig = HQDownloadConfig(), session: URLSession? = nil) {
+    public init(config: HQDownloadConfig, session: URLSession? = nil) {
         super.init()
         injectSession = session
         self.config = config
-        createRequest(source: source)
+        initializeRequest()
+    }
+    
+    public convenience init(source: URL, session: URLSession? = nil) {
+        var config = HQDownloadConfig()
+        config.sourceUrl = source
+        self.init(config: config, session: session)
     }
     
     
@@ -170,8 +175,8 @@ private extension HQDownloader {
         stream?.close()
     }
     
-    private func createRequest(source: URL) {
-        request = URLRequest(url: source, cachePolicy: config.useUrlCache ? .useProtocolCachePolicy : .reloadIgnoringLocalCacheData, timeoutInterval: config.taskTimeout)
+    private func initializeRequest() {
+        request = URLRequest(url: config.sourceUrl, cachePolicy: config.useUrlCache ? .useProtocolCachePolicy : .reloadIgnoringLocalCacheData, timeoutInterval: config.taskTimeout)
         request.httpShouldUsePipelining = true
         request.httpShouldHandleCookies = config.handleCookies
         if config.fetchFileInfo { request.httpMethod = "HEAD" }
@@ -297,8 +302,7 @@ extension HQDownloader: URLSessionDataDelegate {
             invokeFinished(HQDownloadError.taskError(err))
         }
         else {
-            let source = request.url!
-            createRequest(source: source)
+            initializeRequest()
             start()
             config.autoRetryCount -= 1
         }
@@ -404,11 +408,12 @@ public struct HQDownloadConfig {
     
     public var fileName: String = "Unknown"
     
+    public var sourceUrl: URL!
+    
     public var fileUrl: URL { return URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!).appendingPathComponent(directory, isDirectory: true).appendingPathComponent(fileName) }
     
-    public var autoRetryCount: UInt = 3
+    public var autoRetryCount: UInt = 0
     
-    public var range: Range<Int64>?
     public var rangeStart: Int64 = -1
     public var rangeEnd: Int64 = -1
     
@@ -419,9 +424,10 @@ public struct HQDownloadConfig {
         return Float(completedCount) / Float(execptedCount)
     }
     
-    public var subConfigs: [HQDownloadConfig]?
-    
     public init() { }
+    public init(source: URL) {
+        sourceUrl = source
+    }
 }
 
 extension HQDownloadConfig: Codable {
@@ -435,6 +441,7 @@ extension HQDownloadConfig: Codable {
         case completedCount
         case execptedCount
         case fileName
+        case sourceUrl
     }
     
     public init(from decoder: Decoder) throws {
@@ -450,6 +457,7 @@ extension HQDownloadConfig: Codable {
         completedCount = try container.decode(Int64.self, forKey: .completedCount)
         execptedCount = try container.decode(Int64.self, forKey: .execptedCount)
         fileName = try container.decode(String.self, forKey: .fileName)
+        sourceUrl = try container.decode(URL.self, forKey: .sourceUrl)
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -464,5 +472,6 @@ extension HQDownloadConfig: Codable {
         try container.encode(completedCount, forKey: .completedCount)
         try container.encode(execptedCount, forKey: .execptedCount)
         try container.encode(fileName, forKey: .fileName)
+        try container.encode(sourceUrl, forKey: .sourceUrl)
     }
 }
