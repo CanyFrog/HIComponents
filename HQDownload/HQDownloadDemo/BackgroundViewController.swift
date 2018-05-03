@@ -37,7 +37,7 @@ class BackgroundViewController: UIViewController {
         config.taskInBackground = true
         config.fetchFileInfo = true
         
-        HQDownloadOperation(source: image, config: config)
+        HQDownloader(source: image, config: config)
             .started { (fiel, total) in
                 print("total \(total)")
             }

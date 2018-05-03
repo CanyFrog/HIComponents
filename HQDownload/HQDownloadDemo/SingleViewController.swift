@@ -33,24 +33,35 @@ class SingleViewController: UIViewController {
         view.addSubview(progressLabel)
         view.addSubview(imageView)
         
-        HQDownloadOperation(source: image)
-        .started { (fiel, total) in
-            print("total \(total)")
-        }
-        .progress { (rece, frac) in
-            print("received \(rece)")
-            DispatchQueue.main.async {
-                self.progressLabel.text = "下载了\(rece/1024)kb, \(frac*100)%"
-            }
-        }
-        .finished { (file, err) in
-            print("file \(String(describing: file?.path))")
+        HQDownloadScheduler.scheduler.download(source: image) { (file, downloader) in
             if let f = file {
                 DispatchQueue.main.async {
-                    print("render image \(f)")
+                    self.progressLabel.text = "缓存图片"
                     self.imageView.image = UIImage(contentsOfFile: f.path)
                 }
             }
-        }.start()
+            else if let downloader = downloader {
+                downloader
+                .started { (fiel, total) in
+                print("total \(total)")
+                }
+                .progress { (rece, frac) in
+                    print("received \(rece)")
+                    DispatchQueue.main.async {
+                        self.progressLabel.text = "下载了\(rece/1024)kb, \(frac*100)%"
+                    }
+                }
+                .finished { (file, err) in
+                    print("file \(String(describing: file?.path))")
+                    if let f = file {
+                        DispatchQueue.main.async {
+                            print("render image \(f)")
+                            self.imageView.image = UIImage(contentsOfFile: f.path)
+                        }
+                    }
+                }
+            }
+            
+        }
     }
 }

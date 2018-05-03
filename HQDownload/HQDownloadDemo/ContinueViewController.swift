@@ -20,7 +20,7 @@ class ContinueViewController: UIViewController {
     let source = URL(string: "http://p11s9kqxf.bkt.clouddn.com/iPhone.mp4")!
     let directory = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
 
-    var operation: HQDownloadOperation?
+    var operation: HQDownloader?
     var resumeData: Data?
 
     override func viewDidLoad() {
@@ -72,7 +72,10 @@ class ContinueViewController: UIViewController {
 
 
     @objc func start() {
-        operation = HQDownloadOperation(source: source)
+        HQDownloadScheduler.scheduler.download(source: source) { (file, downloader) in
+            
+        }
+        operation = HQDownloader(source: source)
             .started { (fiel, total) in
                 DispatchQueue.main.async {
                     self.statusLabel.text = "Start and total is \(total/1024) kb"
@@ -113,7 +116,7 @@ class ContinueViewController: UIViewController {
     @objc func resume() {
         do {
             let config = try JSONDecoder().decode(HQDownloadConfig.self, from: resumeData!)
-            operation = HQDownloadOperation(source: source, config: config)
+            operation = HQDownloader(source: source, config: config)
                 .started { (fiel, total) in
                     DispatchQueue.main.async {
                         self.statusLabel.text = "Start and total is \(total/1024) kb"
