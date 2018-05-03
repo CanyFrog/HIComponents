@@ -51,7 +51,6 @@ public class HQDownloadScheduler: NSObject {
 
     private var downloadSession: URLSession!
 
-
     // MARK: - Operation
     private weak var lastedOperation: Operation?
 
@@ -84,14 +83,15 @@ public extension HQDownloadScheduler {
                     callback(config.fileUrl, nil)
                 }
                 else {
-                    let downloader = HQDownloader(source: source, config: config, session: wself.downloadSession)
+                    let downloader = HQDownloader(config: config, session: wself.downloadSession)
                     wself.addOperation(downloader, source: source)
                     callback(nil, downloader)
                 }
             }
             else {
-                let c = wself.config ?? HQDownloadConfig()
-                let downloader = HQDownloader(source: source, config: c, session: wself.downloadSession)
+                var c = wself.config
+                c?.sourceUrl = source
+                let downloader = HQDownloader(config: c!, session: wself.downloadSession)
                 wself.addOperation(downloader, source: source)
                 callback(nil, downloader)
             }
