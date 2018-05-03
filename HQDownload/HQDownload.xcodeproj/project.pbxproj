@@ -18,7 +18,6 @@
 		605CE54B208F25160014DDB3 /* MultipleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE54A208F25160014DDB3 /* MultipleViewController.swift */; };
 		605CE54E20902A930014DDB3 /* ContinueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE54D20902A930014DDB3 /* ContinueViewController.swift */; };
 		609AF3412099652F002C76D4 /* BackgroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609AF3402099652F002C76D4 /* BackgroundViewController.swift */; };
-		60B6E0F3207C4FA300C4C594 /* HQDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F2207C4FA300C4C594 /* HQDownloader.swift */; };
 		60B6E0F7207C83CE00C4C594 /* HQDownloadRequestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */; };
 		60B6E0FC207C95B200C4C594 /* HQDownloadOperationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0FB207C95B200C4C594 /* HQDownloadOperationTest.swift */; };
 		60DC2F11208095DA0088A579 /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F0F208095DA0088A579 /* HQCache.framework */; };
@@ -28,8 +27,8 @@
 		8A650B002069119200C95462 /* HQDownload.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A650AF62069119200C95462 /* HQDownload.framework */; };
 		8A650B052069119200C95462 /* HQDownloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B042069119200C95462 /* HQDownloadTests.swift */; };
 		8A650B072069119200C95462 /* HQDownload.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A650AF92069119200C95462 /* HQDownload.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8A650B4B206A79D000C95462 /* HQDownloadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4A206A79D000C95462 /* HQDownloadOperation.swift */; };
-		8A650B4F206BD61800C95462 /* HQDownloadScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4E206BD61800C95462 /* HQDownloadScheduler.swift */; };
+		8A650B4B206A79D000C95462 /* HQDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4A206A79D000C95462 /* HQDownloader.swift */; };
+		8A650B4F206BD61800C95462 /* HQDownloaderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4E206BD61800C95462 /* HQDownloaderScheduler.swift */; };
 		8AA183CF2081896400FA51B5 /* HQDownloadProgressTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA183CE2081896400FA51B5 /* HQDownloadProgressTest.swift */; };
 		8AC9161620896BC700A9CEA1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9161520896BC700A9CEA1 /* AppDelegate.swift */; };
 		8AC9161820896BC700A9CEA1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9161720896BC700A9CEA1 /* ViewController.swift */; };
@@ -77,7 +76,6 @@
 		605CE54A208F25160014DDB3 /* MultipleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleViewController.swift; sourceTree = "<group>"; };
 		605CE54D20902A930014DDB3 /* ContinueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueViewController.swift; sourceTree = "<group>"; };
 		609AF3402099652F002C76D4 /* BackgroundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundViewController.swift; sourceTree = "<group>"; };
-		60B6E0F2207C4FA300C4C594 /* HQDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloader.swift; sourceTree = "<group>"; };
 		60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadRequestTest.swift; sourceTree = "<group>"; };
 		60B6E0FB207C95B200C4C594 /* HQDownloadOperationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadOperationTest.swift; sourceTree = "<group>"; };
 		60DC2F0F208095DA0088A579 /* HQCache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQCache.framework; path = Carthage/Build/iOS/HQCache.framework; sourceTree = "<group>"; };
@@ -90,8 +88,8 @@
 		8A650AFF2069119200C95462 /* HQDownloadTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HQDownloadTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A650B042069119200C95462 /* HQDownloadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadTests.swift; sourceTree = "<group>"; };
 		8A650B062069119200C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8A650B4A206A79D000C95462 /* HQDownloadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadOperation.swift; sourceTree = "<group>"; };
-		8A650B4E206BD61800C95462 /* HQDownloadScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadScheduler.swift; sourceTree = "<group>"; };
+		8A650B4A206A79D000C95462 /* HQDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloader.swift; sourceTree = "<group>"; };
+		8A650B4E206BD61800C95462 /* HQDownloaderScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloaderScheduler.swift; sourceTree = "<group>"; };
 		8AA183CE2081896400FA51B5 /* HQDownloadProgressTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadProgressTest.swift; sourceTree = "<group>"; };
 		8AC9161320896BC700A9CEA1 /* HQDownloadDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HQDownloadDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AC9161520896BC700A9CEA1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -159,9 +157,8 @@
 			isa = PBXGroup;
 			children = (
 				8A650AF92069119200C95462 /* HQDownload.h */,
-				8A650B4A206A79D000C95462 /* HQDownloadOperation.swift */,
-				8A650B4E206BD61800C95462 /* HQDownloadScheduler.swift */,
-				60B6E0F2207C4FA300C4C594 /* HQDownloader.swift */,
+				8A650B4A206A79D000C95462 /* HQDownloader.swift */,
+				8A650B4E206BD61800C95462 /* HQDownloaderScheduler.swift */,
 				8A650AFA2069119200C95462 /* Info.plist */,
 			);
 			path = HQDownload;
@@ -373,9 +370,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60B6E0F3207C4FA300C4C594 /* HQDownloader.swift in Sources */,
-				8A650B4B206A79D000C95462 /* HQDownloadOperation.swift in Sources */,
-				8A650B4F206BD61800C95462 /* HQDownloadScheduler.swift in Sources */,
+				8A650B4B206A79D000C95462 /* HQDownloader.swift in Sources */,
+				8A650B4F206BD61800C95462 /* HQDownloaderScheduler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

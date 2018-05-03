@@ -70,18 +70,25 @@ class CollectionViewCell: UICollectionViewCell {
     }
 
     public func setImage(source: String) {
-        HQDownloadOperation(source: URL(string: source)!)
-        .started { (fiel, total) in
-            print("total \(total)")
-        }
-        .finished { (file, err) in
-            print("file \(String(describing: file?.path))")
+        HQDownloadScheduler.scheduler.download(source: URL(string: source)!) { (file, downloader) in
             if let f = file {
+                print("Cache file \(f.path)")
                 DispatchQueue.main.async {
-                    print("render image \(f)")
                     self.imageView.image = UIImage(contentsOfFile: f.path)
                 }
             }
-        }.start()
+            else if let downloader = downloader {
+                downloader.finished({ (file, error) in
+                    if let err = error {
+                        print(err.description)
+                    }
+                    if let f = file {
+                        DispatchQueue.main.async {
+                            self.imageView.image = UIImage(contentsOfFile: f.path)
+                        }
+                    }
+                })
+            }
+        }
     }
 }
