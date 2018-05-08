@@ -12,7 +12,11 @@
 		601BA7642071F77600C62A11 /* HQFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 601BA7562071F77500C62A11 /* HQFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		601BA76F2071F79A00C62A11 /* HQLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA76E2071F79A00C62A11 /* HQLock.swift */; };
 		601BA7732071FAB100C62A11 /* HQTimer+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA7722071FAB100C62A11 /* HQTimer+extension.swift */; };
+		8A13EA2B20A12A0F0076549A /* HQKeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A13EA2A20A12A0F0076549A /* HQKeyChain.swift */; };
 		8AA183CD2080303500FA51B5 /* NSPointerArray+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA183CC2080303500FA51B5 /* NSPointerArray+extension.swift */; };
+		8AC9160320881D9400A9CEA1 /* HQRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9160220881D9400A9CEA1 /* HQRuntime.swift */; };
+		8AC9160920881FDD00A9CEA1 /* HQConvenienceAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9160820881FDD00A9CEA1 /* HQConvenienceAction.swift */; };
+		8AC9160C2088220D00A9CEA1 /* NSObject+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9160B2088220D00A9CEA1 /* NSObject+extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,7 +39,11 @@
 		601BA76E2071F79A00C62A11 /* HQLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQLock.swift; sourceTree = "<group>"; };
 		601BA7722071FAB100C62A11 /* HQTimer+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HQTimer+extension.swift"; sourceTree = "<group>"; };
 		601BA7742071FCD100C62A11 /* Runloop.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Runloop.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		8A13EA2A20A12A0F0076549A /* HQKeyChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQKeyChain.swift; sourceTree = "<group>"; };
 		8AA183CC2080303500FA51B5 /* NSPointerArray+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPointerArray+extension.swift"; sourceTree = "<group>"; };
+		8AC9160220881D9400A9CEA1 /* HQRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQRuntime.swift; sourceTree = "<group>"; };
+		8AC9160820881FDD00A9CEA1 /* HQConvenienceAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQConvenienceAction.swift; sourceTree = "<group>"; };
+		8AC9160B2088220D00A9CEA1 /* NSObject+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,10 +86,13 @@
 		601BA7552071F77500C62A11 /* HQFoundation */ = {
 			isa = PBXGroup;
 			children = (
+				8AC9160720881F9900A9CEA1 /* Control&Event */,
 				601BA7702071FA8D00C62A11 /* Extension */,
 				601BA76D2071F78E00C62A11 /* Lock */,
+				8AC9160120881D8000A9CEA1 /* Runtime */,
 				601BA7562071F77500C62A11 /* HQFoundation.h */,
 				601BA7572071F77500C62A11 /* Info.plist */,
+				8A13EA2A20A12A0F0076549A /* HQKeyChain.swift */,
 			);
 			path = HQFoundation;
 			sourceTree = "<group>";
@@ -106,6 +117,7 @@
 		601BA7702071FA8D00C62A11 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				8AC9160A208821FC00A9CEA1 /* NSObject */,
 				8AA183CB20802FF700FA51B5 /* Data Structure */,
 				601BA7712071FA9800C62A11 /* Timer */,
 			);
@@ -127,6 +139,30 @@
 				8AA183CC2080303500FA51B5 /* NSPointerArray+extension.swift */,
 			);
 			path = "Data Structure";
+			sourceTree = "<group>";
+		};
+		8AC9160120881D8000A9CEA1 /* Runtime */ = {
+			isa = PBXGroup;
+			children = (
+				8AC9160220881D9400A9CEA1 /* HQRuntime.swift */,
+			);
+			path = Runtime;
+			sourceTree = "<group>";
+		};
+		8AC9160720881F9900A9CEA1 /* Control&Event */ = {
+			isa = PBXGroup;
+			children = (
+				8AC9160820881FDD00A9CEA1 /* HQConvenienceAction.swift */,
+			);
+			path = "Control&Event";
+			sourceTree = "<group>";
+		};
+		8AC9160A208821FC00A9CEA1 /* NSObject */ = {
+			isa = PBXGroup;
+			children = (
+				8AC9160B2088220D00A9CEA1 /* NSObject+extension.swift */,
+			);
+			path = NSObject;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -240,9 +276,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A13EA2B20A12A0F0076549A /* HQKeyChain.swift in Sources */,
 				601BA7732071FAB100C62A11 /* HQTimer+extension.swift in Sources */,
+				8AC9160C2088220D00A9CEA1 /* NSObject+extension.swift in Sources */,
+				8AC9160920881FDD00A9CEA1 /* HQConvenienceAction.swift in Sources */,
 				8AA183CD2080303500FA51B5 /* NSPointerArray+extension.swift in Sources */,
 				601BA76F2071F79A00C62A11 /* HQLock.swift in Sources */,
+				8AC9160320881D9400A9CEA1 /* HQRuntime.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
