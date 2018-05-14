@@ -1,5 +1,5 @@
 //
-//  HQSqliteConnection.swift
+//  Connection.swift
 //  HQSqlite
 //
 //  Created by Magee Huang on 3/29/18.
@@ -13,7 +13,7 @@
 import Foundation
 import SQLite3
 
-public final class HQSqliteConnection {
+public final class Connection {
     
     /// sqlite handle
     public private(set) var handle: OpaquePointer?
@@ -49,10 +49,10 @@ public final class HQSqliteConnection {
     
     // MARK: - Initialize
     
-    public init(_ type: SqliteType = .memory, readOnly: Bool = false) throws {
+    public init(_ type: Location = .memory, readOnly: Bool = false) throws {
         let flags = readOnly ? SQLITE_OPEN_READONLY : SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE
         try checkCode(sqlite3_open_v2(type.description, &handle, flags | SQLITE_OPEN_FULLMUTEX, nil))
-        queue.setSpecific(key: HQSqliteConnection.queueKey, value: queueContext)
+        queue.setSpecific(key: Connection.queueKey, value: queueContext)
     }
     
     public convenience init(_ filepath: String, readOnly: Bool = false) throws {
@@ -271,7 +271,7 @@ public final class HQSqliteConnection {
 ///     must throw to roll the transaction back.
 ///
 /// - Throws: `Result.Error`, and rethrows.
-extension HQSqliteConnection {
+extension Connection {
     public func transaction(_ mode: TransactionMode = .deferred, block: () throws -> Void) throws {
         try transaction("BEGIN \(mode.rawValue) TRANSACTION", block, "COMMIT TRANSACTION", or: "ROLLBACK TRANSACTION")
     }
@@ -322,18 +322,18 @@ extension HQSqliteConnection {
 ///   - bindings: A list of parameters to bind to the statement.
 ///
 /// - Returns: A prepared statement.
-public extension HQSqliteConnection {
+public extension Connection {
     
-    public func prepare(_ statement: String, _ bindings: HQSqliteMapping?...) throws -> HQSqliteStatement {
+    public func prepare(_ statement: String, _ bindings: SqliteMapping?...) throws -> Statement {
         if !bindings.isEmpty { return try prepare(statement, bindings) }
-        return try HQSqliteStatement(self, statement) // final function
+        return try Statement(self, statement) // final function
     }
     
-    public func prepare(_ statement: String, _ bindings: [HQSqliteMapping?]) throws -> HQSqliteStatement {
+    public func prepare(_ statement: String, _ bindings: [SqliteMapping?]) throws -> Statement {
         return try prepare(statement).bind(bindings)
     }
     
-    public func prepare(_ statement: String, _ bindings: [String: HQSqliteMapping?]) throws -> HQSqliteStatement {
+    public func prepare(_ statement: String, _ bindings: [String: SqliteMapping?]) throws -> Statement {
         return try prepare(statement).bind(bindings)
     }
 }
@@ -351,24 +351,24 @@ public extension HQSqliteConnection {
 /// - Throws: `Result.Error` if query execution fails.
 ///
 /// - Returns: The statement.
-public extension HQSqliteConnection {
+public extension Connection {
 
-    @discardableResult public func run(_ statement: String, _ bindings: HQSqliteMapping?...) throws -> HQSqliteStatement {
+    @discardableResult public func run(_ statement: String, _ bindings: SqliteMapping?...) throws -> Statement {
         return try run(statement, bindings)
     }
     
-    @discardableResult public func run(_ statement: String, _ bindings: [HQSqliteMapping?]) throws -> HQSqliteStatement {
+    @discardableResult public func run(_ statement: String, _ bindings: [SqliteMapping?]) throws -> Statement {
         return try prepare(statement).run(bindings) // final function
     }
     
-    @discardableResult public func run(_ statement: String, _ bindings: [String: HQSqliteMapping?]) throws -> HQSqliteStatement {
+    @discardableResult public func run(_ statement: String, _ bindings: [String: SqliteMapping?]) throws -> Statement {
         return try prepare(statement).run(bindings)
     }
 
 }
 
 // MARK: - Public functions
-public extension HQSqliteConnection {
+public extension Connection {
     
     /// Execute a batch of sql statements
     public func execute(_ SQL: String) throws {
@@ -384,18 +384,18 @@ public extension HQSqliteConnection {
 
 
 // MARK: - Private helper function
-internal extension HQSqliteConnection {
+internal extension Connection {
     
     /// checkCode
     @discardableResult
-    func checkCode(_ resultCode: Int32, statement: HQSqliteStatement? = nil) throws -> Int32 {
-        guard let error = HQSqliteError(errorCode: resultCode, connection: self, statement: statement) else { return resultCode }
+    func checkCode(_ resultCode: Int32, statement: Statement? = nil) throws -> Int32 {
+        guard let error = SqliteError(errorCode: resultCode, connection: self, statement: statement) else { return resultCode }
         throw error
     }
     
     /// sync execute
     func sync<T>(_ block: () throws -> T) rethrows -> T {
-        if DispatchQueue.getSpecific(key: HQSqliteConnection.queueKey) == queueContext {
+        if DispatchQueue.getSpecific(key: Connection.queueKey) == queueContext {
             return try block() // if in self seecific queue, execute
         } else {
             return try queue.sync(execute: block) // otherwise back to queue sync execute
@@ -406,7 +406,7 @@ internal extension HQSqliteConnection {
 
 
 // MARK: - Connection filename
-extension HQSqliteConnection : CustomStringConvertible {
+extension Connection : CustomStringConvertible {
     public var description: String {
         return String(cString: sqlite3_db_filename(handle, nil))
     }
