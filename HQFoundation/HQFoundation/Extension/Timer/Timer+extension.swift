@@ -1,5 +1,5 @@
 //
-//  HQTimer+extension.swift
+//  Timer+extension.swift
 //  HQFoundation
 //
 //  Created by Magee Huang on 4/2/18.
@@ -17,34 +17,32 @@
 
 /// Desciption see Runloop.playground
 
-public extension Timer {
-    
+extension Namespace where T == Timer {
     // MARK: Schedule timers
     
     /// Create and schedule a timer that will call `block` once after the specified time.
     @discardableResult
-    public class func after(_ interval: TimeInterval, _ block: @escaping () -> Void) -> Timer {
-        let timer = Timer.new(after: interval, block)
-        timer.start()
+    public static func after(_ interval: TimeInterval, _ block: @escaping () -> Void) -> Timer {
+        let timer = Timer.hq.new(after: interval, block)
+        timer.hq.start()
         return timer
     }
     
     /// Create and schedule a timer that will call `block` repeatedly in specified time intervals.
     
     @discardableResult
-    public class func every(_ interval: TimeInterval, _ block: @escaping () -> Void) -> Timer {
-        let timer = Timer.new(every: interval, block)
-        timer.start()
+    public static func every(_ interval: TimeInterval, _ block: @escaping () -> Void) -> Timer {
+        let timer = Timer.hq.new(every: interval, block)
+        timer.hq.start()
         return timer
     }
     
     /// Create and schedule a timer that will call `block` repeatedly in specified time intervals.
     /// (This variant also passes the timer instance to the block)
-    
-    @nonobjc @discardableResult
-    public class func every( interval: TimeInterval, _ blockTimer: @escaping (Timer) -> Void) -> Timer {
-        let timer = Timer.new(every: interval, blockTimer)
-        timer.start()
+    @discardableResult
+    public static func every( interval: TimeInterval, _ blockTimer: @escaping (Timer) -> Void) -> Timer {
+        let timer = Timer.hq.new(every: interval, blockTimer)
+        timer.hq.start()
         return timer
     }
     
@@ -55,7 +53,7 @@ public extension Timer {
     /// - Note: The timer won't fire until it's scheduled on the run loop.
     ///         Use `NSTimer.after` to create and schedule a timer in one step.
     /// - Note: The `new` class function is a workaround for a crashing bug when using convenience initializers (rdar://18720947)
-    public class func new(after interval: TimeInterval, _ block: @escaping () -> Void) -> Timer {
+    public static func new(after interval: TimeInterval, _ block: @escaping () -> Void) -> Timer {
         return CFRunLoopTimerCreateWithHandler(kCFAllocatorDefault, CFAbsoluteTimeGetCurrent() + interval, 0, 0, 0) { _ in
             block()
         }
@@ -66,7 +64,7 @@ public extension Timer {
     /// - Note: The timer won't fire until it's scheduled on the run loop.
     ///         Use `NSTimer.every` to create and schedule a timer in one step.
     /// - Note: The `new` class function is a workaround for a crashing bug when using convenience initializers (rdar://18720947)
-    public class func new(every interval: TimeInterval, _ block: @escaping () -> Void) -> Timer {
+    public static func new(every interval: TimeInterval, _ block: @escaping () -> Void) -> Timer {
         return CFRunLoopTimerCreateWithHandler(kCFAllocatorDefault, CFAbsoluteTimeGetCurrent() + interval, interval, 0, 0) { _ in
             block()
         }
@@ -78,9 +76,7 @@ public extension Timer {
     /// - Note: The timer won't fire until it's scheduled on the run loop.
     ///         Use `NSTimer.every` to create and schedule a timer in one step.
     /// - Note: The `new` class function is a workaround for a crashing bug when using convenience initializers (rdar://18720947)
-    
-    @nonobjc
-    public class func new(every interval: TimeInterval, _ blockTimer: @escaping (Timer) -> Void) -> Timer {
+    public static func new(every interval: TimeInterval, _ blockTimer: @escaping (Timer) -> Void) -> Timer {
         var timer: Timer!
         timer = CFRunLoopTimerCreateWithHandler(kCFAllocatorDefault, CFAbsoluteTimeGetCurrent() + interval, interval, 0, 0) { _ in
             blockTimer(timer)
@@ -97,27 +93,7 @@ public extension Timer {
     
     public func start(runLoop: RunLoop = .current, modes: RunLoopMode...) {
         let modes = modes.isEmpty ? [.defaultRunLoopMode] : modes
-        _ = modes.map { runLoop.add(self, forMode: $0) }
+        _ = modes.map { runLoop.add(instance, forMode: $0) }
     }
-}
-
-
-// MARK: - Time extensions
-extension Double {
-    public var millisecond: TimeInterval  { return self / 1000 }
-    public var milliseconds: TimeInterval { return self / 1000 }
-    public var ms: TimeInterval           { return self / 1000 }
-    
-    public var second: TimeInterval       { return self }
-    public var seconds: TimeInterval      { return self }
-    
-    public var minute: TimeInterval       { return self * 60 }
-    public var minutes: TimeInterval      { return self * 60 }
-    
-    public var hour: TimeInterval         { return self * 3600 }
-    public var hours: TimeInterval        { return self * 3600 }
-    
-    public var day: TimeInterval          { return self * 3600 * 24 }
-    public var days: TimeInterval         { return self * 3600 * 24 }
 }
 
