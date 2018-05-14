@@ -1,5 +1,5 @@
 //
-//  HQSqliteTests.swift
+//  SqliteTests.swift
 //  HQSqliteTests
 //
 //  Created by Magee Huang on 3/29/18.
@@ -11,12 +11,12 @@ import SQLite3
 @testable import HQSqlite
 
 class HQSqliteTests: XCTestCase {
-    var connect: HQSqliteConnection!
+    var connect: Connection!
     var trace: [String: Int]!
-    
+
     override func setUp() {
         super.setUp()
-        connect = try! HQSqliteConnection()
+        connect = try! Connection()
         trace  =  [String: Int]()
         
         connect.trace { (SQL) in
@@ -45,7 +45,7 @@ class HQSqliteTests: XCTestCase {
     }
     
     @discardableResult
-    func insertUser(_ email: String, age: Int? = nil, salary: Double? = nil, desc: Data? = nil, admin: Bool = false) throws -> HQSqliteStatement {
+    func insertUser(_ email: String, age: Int? = nil, salary: Double? = nil, desc: Data? = nil, admin: Bool = false) throws -> Statement {
         return try connect.run("INSERT INTO \"users\" (email, age, salary, desc, admin) VALUES (?,?,?,?,?)", [email, age, salary, desc, admin])
     }
     
