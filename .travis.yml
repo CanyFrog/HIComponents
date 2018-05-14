@@ -16,9 +16,8 @@ before_install:
   - brew outdated carthage || brew upgrade carthage
 install:
   - cd $FRAMEWORK_NAME
-  - ../update_self.sh & chmod +x ../update_self.sh
 script:
-  - pwd
+  - ../update_self.sh & chmod +x ../update_self.sh
   - echo "Run test"
 
 before_deploy:

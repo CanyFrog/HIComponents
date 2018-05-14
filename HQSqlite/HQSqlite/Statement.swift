@@ -1,5 +1,5 @@
 //
-//  HQSqliteStatement.swift
+//  Statement.swift
 //  HQSqlite
 //
 //  Created by Magee Huang on 3/29/18.
@@ -9,11 +9,11 @@
 import Foundation
 import SQLite3
 
-public class HQSqliteStatement {
+public class Statement {
     internal var handle: OpaquePointer? = nil
-    internal let connection: HQSqliteConnection
+    internal let connection: Connection
     
-    init(_ connection: HQSqliteConnection, _ SQL: String) throws {
+    init(_ connection: Connection, _ SQL: String) throws {
         self.connection = connection
         try connection.checkCode(sqlite3_prepare_v2(connection.handle, SQL, -1, &handle, nil))
     }
@@ -28,7 +28,7 @@ public class HQSqliteStatement {
         String(cString: sqlite3_column_name(self.handle, $0))
     }
     
-    public lazy var cursor = HQSqliteCursor(self)
+    public lazy var cursor = Cursor(self)
 }
 
 
@@ -41,13 +41,13 @@ public class HQSqliteStatement {
 
 let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
 
-extension HQSqliteStatement {
+extension Statement {
     
-    public func bind(_ values: HQSqliteMapping?...) -> HQSqliteStatement {
+    public func bind(_ values: SqliteMapping?...) -> Statement {
         return bind(values)
     }
     
-    public func bind(_ values: [HQSqliteMapping?]) -> HQSqliteStatement {
+    public func bind(_ values: [SqliteMapping?]) -> Statement {
         if values.isEmpty { return self }
         reset()
         guard values.count == Int(sqlite3_bind_parameter_count(handle)) else {
@@ -59,7 +59,7 @@ extension HQSqliteStatement {
         return self
     }
     
-    public func bind(_ values: [String: HQSqliteMapping?]) -> HQSqliteStatement {
+    public func bind(_ values: [String: SqliteMapping?]) -> Statement {
         reset()
         for (name, value) in values {
             let idx = sqlite3_bind_parameter_index(handle, name)
@@ -69,7 +69,7 @@ extension HQSqliteStatement {
         return self
     }
     
-    private func bind(_ value: HQSqliteMapping?, atIndex idx: Int) {
+    private func bind(_ value: SqliteMapping?, atIndex idx: Int) {
         if value == nil {
             sqlite3_bind_null(handle, Int32(idx))
         } else if let value = value as? Data {
@@ -100,11 +100,11 @@ extension HQSqliteStatement {
 /// - Throws: `Result.Error` if query execution fails.
 ///
 /// - Returns: The statement object (useful for chaining).
-extension HQSqliteStatement {
+extension Statement {
 
     /// final run
     @discardableResult
-    public func run(_ bindings: HQSqliteMapping?...) throws -> HQSqliteStatement {
+    public func run(_ bindings: SqliteMapping?...) throws -> Statement {
         guard bindings.isEmpty else { return try run(bindings) }
         
         reset(false)
@@ -113,13 +113,13 @@ extension HQSqliteStatement {
     }
     
     @discardableResult
-    public func run(_ bindings: [HQSqliteMapping?]) throws -> HQSqliteStatement {
+    public func run(_ bindings: [SqliteMapping?]) throws -> Statement {
         return try bind(bindings).run()
     }
     
     
     @discardableResult
-    public func run(_ bindings: [String: HQSqliteMapping?]) throws -> HQSqliteStatement {
+    public func run(_ bindings: [String: SqliteMapping?]) throws -> Statement {
         return try bind(bindings).run()
     }
 
@@ -130,7 +130,7 @@ extension HQSqliteStatement {
 }
 
 // MARK: - Reset functions
-extension HQSqliteStatement {
+extension Statement {
     public func reset(_ clearBindings: Bool = true) {
         sqlite3_reset(handle)
         if clearBindings { sqlite3_clear_bindings(handle) }
@@ -138,7 +138,7 @@ extension HQSqliteStatement {
 }
 
 
-extension HQSqliteStatement: CustomStringConvertible {
+extension Statement: CustomStringConvertible {
     public var description: String {
         return String(cString: sqlite3_sql(handle))
     }

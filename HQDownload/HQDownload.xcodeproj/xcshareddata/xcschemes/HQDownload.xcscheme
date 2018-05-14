@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "609FF110206CC185004092B1"
-               BuildableName = "HQSqlite.framework"
-               BlueprintName = "HQSqlite"
-               ReferencedContainer = "container:HQSqlite.xcodeproj">
+               BlueprintIdentifier = "8A650AF52069119200C95462"
+               BuildableName = "HQDownload.framework"
+               BlueprintName = "HQDownload"
+               ReferencedContainer = "container:HQDownload.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,7 +28,26 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8A650AFE2069119200C95462"
+               BuildableName = "HQDownloadTests.xctest"
+               BlueprintName = "HQDownloadTests"
+               ReferencedContainer = "container:HQDownload.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "8A650AF52069119200C95462"
+            BuildableName = "HQDownload.framework"
+            BlueprintName = "HQDownload"
+            ReferencedContainer = "container:HQDownload.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -45,10 +64,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "609FF110206CC185004092B1"
-            BuildableName = "HQSqlite.framework"
-            BlueprintName = "HQSqlite"
-            ReferencedContainer = "container:HQSqlite.xcodeproj">
+            BlueprintIdentifier = "8A650AF52069119200C95462"
+            BuildableName = "HQDownload.framework"
+            BlueprintName = "HQDownload"
+            ReferencedContainer = "container:HQDownload.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -63,10 +82,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "609FF110206CC185004092B1"
-            BuildableName = "HQSqlite.framework"
-            BlueprintName = "HQSqlite"
-            ReferencedContainer = "container:HQSqlite.xcodeproj">
+            BlueprintIdentifier = "8A650AF52069119200C95462"
+            BuildableName = "HQDownload.framework"
+            BlueprintName = "HQDownload"
+            ReferencedContainer = "container:HQDownload.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>
