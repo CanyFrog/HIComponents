@@ -1,5 +1,5 @@
 //
-//  HQDiskCache.swift
+//  DiskCache.swift
 //  HQCache
 //
 //  Created by Magee Huang on 3/26/18.
@@ -24,7 +24,7 @@ import HQSqlite
                 /...
 */
 
-public class HQDiskCache: HQCacheInBackProtocol {
+public class DiskCache: CacheInBackProtocol {
 
     // MARK: - Public
     public var name: String = "DiskCache"
@@ -61,8 +61,8 @@ public class HQDiskCache: HQCacheInBackProtocol {
     internal var taskQueue = DispatchQueue(label: "com.disk.cache.personal.HQ", qos: .default, attributes: .concurrent)
     
     // MARK: - Sqlite
-    internal var connect: HQSqliteConnection?
-    internal var stmtDict = [String: HQSqliteStatement]()
+    internal var connect: Connection?
+    internal var stmtDict = [String: Statement]()
     
     
     public init?(_ path: URL) {
@@ -83,7 +83,7 @@ public class HQDiskCache: HQCacheInBackProtocol {
 
 
 // MARK: - Query & Check
-extension HQDiskCache {
+extension DiskCache {
     
     public func query<T: Codable>(objectForKey key: String) -> T? {
         guard !key.isEmpty, let data = queryDataFromSqlite(key) else { return nil }
@@ -124,7 +124,7 @@ extension HQDiskCache {
     /// Check
     public func exist(forKey key: String) -> Bool {
         guard !key.isEmpty else { return false }
-        return HQDispatchLock.semaphore(taskLock, closure: { () -> Bool in
+        return Lock.semaphore(taskLock, closure: { () -> Bool in
             return self.dbQuery(key) != nil
         })
     }
@@ -137,7 +137,7 @@ extension HQDiskCache {
     
     
     public func getTotalCount() -> Int {
-        return HQDispatchLock.semaphore(taskLock, closure: { () -> Int in
+        return Lock.semaphore(taskLock, closure: { () -> Int in
             return self.dbQueryTotalItemCount()
         })
     }
@@ -150,7 +150,7 @@ extension HQDiskCache {
     
     
     public func getTotalCost() -> Int {
-        return HQDispatchLock.semaphore(taskLock) { () -> Int in
+        return Lock.semaphore(taskLock) { () -> Int in
             return self.dbQueryTotalItemSize()
         }
     }
@@ -163,7 +163,7 @@ extension HQDiskCache {
 }
 
 // MARK: - Insert
-extension HQDiskCache {
+extension DiskCache {
     
     public func insertOrUpdate(originFile path: URL, size: Int = 0, forKey key: String) {
         let fileM = FileManager.default
@@ -172,7 +172,7 @@ extension HQDiskCache {
         let newPath = dataPath.appendingPathComponent(path.lastPathComponent)
         do {
             try fileM.moveItem(at: path, to: newPath)
-            HQDispatchLock.semaphore(taskLock) {
+            Lock.semaphore(taskLock) {
                 self.dbInsert(key: key, filename: newPath.path, size: size, data: nil)
             }
         } catch {
@@ -196,14 +196,14 @@ extension HQDiskCache {
             do {
                 try save(data: value, withFilename: String(key.hashValue))
                 let path = dataPath.appendingPathComponent("\(key.hashValue)")
-                HQDispatchLock.semaphore(taskLock) {
+                Lock.semaphore(taskLock) {
                     self.dbInsert(key: key, filename: path.path, size: value.count, data: nil)
                 }
             }
             catch {}
         }
         else {
-            HQDispatchLock.semaphore(taskLock) {
+            Lock.semaphore(taskLock) {
                 self.dbInsert(key: key, filename: nil, size: value.count, data: value)
             }
         }
@@ -220,11 +220,11 @@ extension HQDiskCache {
 
 
 // MARK: - Delete
-extension HQDiskCache {
+extension DiskCache {
 
     public func delete(objectForKey key: String) {
         guard !key.isEmpty else { return }
-        HQDispatchLock.semaphore(taskLock) {
+        Lock.semaphore(taskLock) {
             self.dbDelete(key)
         }
     }
@@ -236,7 +236,7 @@ extension HQDiskCache {
     }
 
     public func deleteAllCache() {
-        HQDispatchLock.semaphore(taskLock) {
+        Lock.semaphore(taskLock) {
             self.stmtDict.removeAll()
             // FIXME: BUG IN CLIENT OF libsqlite3.dylib: database integrity compromised by API violation: vnode unlinked while in use:
             self.connect = nil // close sqlite
@@ -388,7 +388,7 @@ extension HQDiskCache {
         let timeDelta = current - age
         if timeDelta >= Double(Int.max) { return }
         
-        HQDispatchLock.semaphore(taskLock) {
+        Lock.semaphore(taskLock) {
             self.dbDeleteTimerEarlierThan(timeDelta)
         }
     }
@@ -403,7 +403,7 @@ extension HQDiskCache {
     public func deleteCache(toFreeSpace space: Int) {
         if space <= 0 { return }
         
-        let totalBytes = HQDispatchLock.semaphore(taskLock) { () -> Int in
+        let totalBytes = Lock.semaphore(taskLock) { () -> Int in
             return self.dbQueryTotalItemSize()
         }
         if totalBytes <= 0 { return }
@@ -426,7 +426,7 @@ extension HQDiskCache {
 }
 
 // MARK: - Private function helper
-private extension HQDiskCache {
+private extension DiskCache {
     func queryDataFromSqlite(_ key: String) -> Data? {
         let _ = taskLock.wait(timeout: .distantFuture)
         defer { taskLock.signal() }

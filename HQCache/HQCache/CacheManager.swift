@@ -1,5 +1,5 @@
 //
-//  HQCacheManager.swift
+//  CacheManager.swift
 //  HQCache
 //
 //  Created by qihuang on 2018/4/5.
@@ -9,14 +9,14 @@
 import Foundation
 
 
-public final class HQCacheManager {
-    public private(set) var memoryCache: HQMemoryCache!
-    public private(set) var diskCache: HQDiskCache!
+public final class CacheManager {
+    public private(set) var memoryCache: MemoryCache!
+    public private(set) var diskCache: DiskCache!
     
     public init(_ path: URL) {
-        diskCache = HQDiskCache(path)
+        diskCache = DiskCache(path)
         if diskCache == nil { fatalError("Path is invalid") }
-        memoryCache = HQMemoryCache()
+        memoryCache = MemoryCache()
         
     }
     public convenience init(_ name: String = "cacheManager") {
@@ -24,7 +24,7 @@ public final class HQCacheManager {
     }
 }
 
-extension HQCacheManager {
+extension CacheManager {
     public func exist(forKey key: String) -> Bool {
         return memoryCache.exist(forKey:key) || diskCache.exist(forKey:key)
     }

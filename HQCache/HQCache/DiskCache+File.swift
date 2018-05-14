@@ -1,5 +1,5 @@
 //
-//  HQDiskCache+File.swift
+//  DiskCache+File.swift
 //  HQCache
 //
 //  Created by Magee Huang on 4/4/18.
@@ -8,7 +8,7 @@
 
 
 // MARK: - File manager helper
-internal extension HQDiskCache {
+internal extension DiskCache {
     func convertToUrl(_ name: String) -> URL {
         return dataPath.appendingPathComponent(name)
     }
