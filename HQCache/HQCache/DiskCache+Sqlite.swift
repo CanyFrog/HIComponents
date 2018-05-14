@@ -1,5 +1,5 @@
 //
-//  HQDiskCache+Sqlite.swift
+//  DiskCache+Sqlite.swift
 //  HQCache
 //
 //  Created by Magee Huang on 4/3/18.
@@ -21,7 +21,7 @@ import HQSqlite
  */
 
 
-internal struct HQSqliteItem {
+internal struct SqliteItem {
     var key: String!
     var filename: String?
     var size: Int = 0
@@ -30,10 +30,10 @@ internal struct HQSqliteItem {
     var data: Data?
 }
 
-extension HQDiskCache {
+extension DiskCache {
     // MARK: - Connect to sqlite
     func dbConnect() -> Bool {
-        connect = try? HQSqliteConnection(.uri(dbPath.path))
+        connect = try? Connection(.uri(dbPath.path))
         connect?.busyTimeout = 0.1
         return connect != nil && !dbInitTable()
     }
@@ -168,8 +168,8 @@ extension HQDiskCache {
 }
 
 
-extension HQDiskCache {
-    private func getOrCreateStatement(_ key: String, _ SQL: String) -> HQSqliteStatement? {
+extension DiskCache {
+    private func getOrCreateStatement(_ key: String, _ SQL: String) -> Statement? {
         guard let connect = connect else {
             let _ = dbConnect() // reconnect
             return nil

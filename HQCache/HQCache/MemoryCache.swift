@@ -1,5 +1,5 @@
 //
-//  HQMemoryCache.swift
+//  MemoryCache.swift
 //  HQCache
 //
 //  Created by qihuang on 2018/3/26.
@@ -8,7 +8,7 @@
 
 import HQFoundation
 
-public final class HQMemoryCache: HQCacheProtocol {
+public final class MemoryCache: CacheProtocol {
     
     // MARK: - Public property
     public var countLimit: Int = Int.max
@@ -23,9 +23,9 @@ public final class HQMemoryCache: HQCacheProtocol {
     
     public var autoEmptyCacheWhenEnteringBackground = true
     
-    public var didReceiveMemoryWarningClosure: ((HQMemoryCache)->Void)?
+    public var didReceiveMemoryWarningClosure: ((MemoryCache)->Void)?
     
-    public var didEnterBackgroundClosure: ((HQMemoryCache)->Void)?
+    public var didEnterBackgroundClosure: ((MemoryCache)->Void)?
     
     public var releaseAsynchronously: Bool {
         get {
@@ -56,9 +56,9 @@ public final class HQMemoryCache: HQCacheProtocol {
     }
     
     // MARK: - Private property
-    private var cacheMap = HQCacheLinkMap()
+    private var cacheMap = CacheLinkMap()
     private let queue = DispatchQueue(label: "com.memory.cache.personal.HQ", qos: .default, attributes: DispatchQueue.Attributes.concurrent)
-    private let mutex = HQMutexLock()
+    private let mutex = Lock.Mutex()
     
     // MARk: - Life cycle
     public init() {
@@ -77,7 +77,7 @@ public final class HQMemoryCache: HQCacheProtocol {
 
 
 // MARK: - Query and Check
-extension HQMemoryCache {
+extension MemoryCache {
     public func exist(forKey key: String) -> Bool {
         mutex.lock()
         let contains = cacheMap.dict.keys.contains(key)
@@ -112,7 +112,7 @@ extension HQMemoryCache {
 
 
 // MARK: - Insert & update
-extension HQMemoryCache {
+extension MemoryCache {
     public func insertOrUpdate<T>(object obj: T, forKey key: String, cost: Int = 0) {
         mutex.lock()
         let now = CACurrentMediaTime()
@@ -125,7 +125,7 @@ extension HQMemoryCache {
             cacheMap.toHead(node: node)
         }
         else {
-            let node = HQCacheLinkNode()
+            let node = CacheLinkNode()
             node.cost = cost
             node.value = obj
             node.time = now
@@ -145,7 +145,7 @@ extension HQMemoryCache {
 
 
 // MARK: - Delete
-extension HQMemoryCache {
+extension MemoryCache {
     public func delete(objectForKey key: String) {
         mutex.lock()
         guard let node = cacheMap.dict[key] else {
@@ -212,11 +212,11 @@ extension HQMemoryCache {
 
 
 // MARK: - Private clear cache helper
-private extension HQMemoryCache {
+private extension MemoryCache {
     
     func clearCacheCondition(cond: @autoclosure () -> Bool) {
         var finish = false
-        var holders = [HQCacheLinkNode]()
+        var holders = [CacheLinkNode]()
         
         while !finish {
             if mutex.tryLock() == 0 { // lock success
@@ -276,32 +276,32 @@ private extension HQMemoryCache {
 
 
 // MARK: - Data Struct -- Link table
-fileprivate class HQCacheLinkNode {
-    weak var prev: HQCacheLinkNode?
-    weak var next: HQCacheLinkNode?
+fileprivate class CacheLinkNode {
+    weak var prev: CacheLinkNode?
+    weak var next: CacheLinkNode?
     var key: String!
     var value: Any!
     var cost: Int = 0
     var time: TimeInterval!
 }
 
-extension HQCacheLinkNode: Equatable {
-    static func ==(lhs: HQCacheLinkNode, rhs: HQCacheLinkNode) -> Bool {
+extension CacheLinkNode: Equatable {
+    static func ==(lhs: CacheLinkNode, rhs: CacheLinkNode) -> Bool {
         return lhs.key == rhs.key
     }
 }
 
-fileprivate struct HQCacheLinkMap {
-    var dict = Dictionary<String, HQCacheLinkNode>()
+fileprivate struct CacheLinkMap {
+    var dict = Dictionary<String, CacheLinkNode>()
     var totalCost: Int = 0
     var totalCount: Int = 0
-    var head: HQCacheLinkNode?
-    var tail: HQCacheLinkNode?
+    var head: CacheLinkNode?
+    var tail: CacheLinkNode?
     
     var releaseOnMainThread = false
     var releaseAsynchronously = true
     
-    mutating func insert(node: HQCacheLinkNode) {
+    mutating func insert(node: CacheLinkNode) {
         dict[node.key] = node
         totalCost += node.cost
         totalCount += 1
@@ -316,7 +316,7 @@ fileprivate struct HQCacheLinkMap {
         }
     }
     
-    mutating func toHead(node: HQCacheLinkNode) {
+    mutating func toHead(node: CacheLinkNode) {
         guard let h = head, h != node else { return }
         if tail! == node {
             tail = node.prev
@@ -333,7 +333,7 @@ fileprivate struct HQCacheLinkMap {
         head = node
     }
     
-    mutating func remove(node: HQCacheLinkNode) {
+    mutating func remove(node: CacheLinkNode) {
         dict.removeValue(forKey: node.key)
         totalCost -= node.cost
         totalCount -= 1
@@ -343,7 +343,7 @@ fileprivate struct HQCacheLinkMap {
         if tail! == node { tail = node.prev }
     }
     
-    mutating func removeTail() -> HQCacheLinkNode? {
+    mutating func removeTail() -> CacheLinkNode? {
         guard let t = tail else { return nil }
         remove(node: t)
         return t
