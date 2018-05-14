@@ -1,5 +1,5 @@
 //
-//  HQMemoryCacheTest.swift
+//  MemoryCacheTest.swift
 //  HQCacheTests
 //
 //  Created by qihuang on 2018/4/5.
@@ -10,16 +10,16 @@ import XCTest
 @testable import HQCache
 
 class HQMemoryCacheTest: XCTestCase {
-    var memory: HQMemoryCache!
+    var memory: MemoryCache!
 
     override func setUp() {
         super.setUp()
-        memory = HQMemoryCache()
+        memory = MemoryCache()
     }
 
 
     func testMemoryObjExistAfterInsert() {
-        memory.insertOrUpdate(object: HQMemoryCache(), forKey: "testClass")
+        memory.insertOrUpdate(object: MemoryCache(), forKey: "testClass")
         XCTAssertTrue(memory.exist(forKey: "testClass"))
     }
 

@@ -7,18 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6043654520688D74001605FC /* HQDiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6043654420688D74001605FC /* HQDiskCache.swift */; };
+		6043654520688D74001605FC /* DiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6043654420688D74001605FC /* DiskCache.swift */; };
 		604A7D92207361C80060A869 /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604A7D91207361C80060A869 /* HQSqlite.framework */; };
-		604A7D97207371D90060A869 /* HQDiskCache+Sqlite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604A7D96207371D90060A869 /* HQDiskCache+Sqlite.swift */; };
-		604A7D9920748F730060A869 /* HQDiskCache+File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604A7D9820748F730060A869 /* HQDiskCache+File.swift */; };
+		604A7D97207371D90060A869 /* DiskCache+Sqlite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604A7D96207371D90060A869 /* DiskCache+Sqlite.swift */; };
+		604A7D9920748F730060A869 /* DiskCache+File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604A7D9820748F730060A869 /* DiskCache+File.swift */; };
 		8A650AD6206869CD00C95462 /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A650ACC206869CD00C95462 /* HQCache.framework */; };
 		8A650ADD206869CD00C95462 /* HQCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A650ACF206869CD00C95462 /* HQCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8A650AE920686A4300C95462 /* HQMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650AE820686A4300C95462 /* HQMemoryCache.swift */; };
-		8AD5F0C72075AE18001C9C6F /* HQCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD5F0C62075AE18001C9C6F /* HQCacheManager.swift */; };
-		8AD5F0C92075B59B001C9C6F /* HQCacheProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD5F0C82075B59B001C9C6F /* HQCacheProtocol.swift */; };
+		8A650AE920686A4300C95462 /* MemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650AE820686A4300C95462 /* MemoryCache.swift */; };
+		8AD5F0C72075AE18001C9C6F /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD5F0C62075AE18001C9C6F /* CacheManager.swift */; };
+		8AD5F0C92075B59B001C9C6F /* CacheProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD5F0C82075B59B001C9C6F /* CacheProtocol.swift */; };
 		8AD5F0CD2075B94E001C9C6F /* HQFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AD5F0CC2075B94E001C9C6F /* HQFoundation.framework */; };
-		8AD5F0CF2075BA3E001C9C6F /* HQMemoryCacheTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD5F0CE2075BA3E001C9C6F /* HQMemoryCacheTest.swift */; };
-		8AD9FA3E2075DBB8007224E9 /* HQDiskCacheTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD9FA3D2075DBB8007224E9 /* HQDiskCacheTest.swift */; };
+		8AD5F0CF2075BA3E001C9C6F /* MemoryCacheTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD5F0CE2075BA3E001C9C6F /* MemoryCacheTest.swift */; };
+		8AD9FA3E2075DBB8007224E9 /* DiskCacheTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD9FA3D2075DBB8007224E9 /* DiskCacheTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,21 +32,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		6043654420688D74001605FC /* HQDiskCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDiskCache.swift; sourceTree = "<group>"; };
+		6043654420688D74001605FC /* DiskCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskCache.swift; sourceTree = "<group>"; };
 		604A7D91207361C80060A869 /* HQSqlite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQSqlite.framework; path = Carthage/Build/iOS/HQSqlite.framework; sourceTree = "<group>"; };
-		604A7D96207371D90060A869 /* HQDiskCache+Sqlite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HQDiskCache+Sqlite.swift"; sourceTree = "<group>"; };
-		604A7D9820748F730060A869 /* HQDiskCache+File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HQDiskCache+File.swift"; sourceTree = "<group>"; };
+		604A7D96207371D90060A869 /* DiskCache+Sqlite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DiskCache+Sqlite.swift"; sourceTree = "<group>"; };
+		604A7D9820748F730060A869 /* DiskCache+File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DiskCache+File.swift"; sourceTree = "<group>"; };
 		8A650ACC206869CD00C95462 /* HQCache.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HQCache.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A650ACF206869CD00C95462 /* HQCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HQCache.h; sourceTree = "<group>"; };
 		8A650AD0206869CD00C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8A650AD5206869CD00C95462 /* HQCacheTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HQCacheTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A650ADC206869CD00C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8A650AE820686A4300C95462 /* HQMemoryCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQMemoryCache.swift; sourceTree = "<group>"; };
-		8AD5F0C62075AE18001C9C6F /* HQCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQCacheManager.swift; sourceTree = "<group>"; };
-		8AD5F0C82075B59B001C9C6F /* HQCacheProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HQCacheProtocol.swift; sourceTree = "<group>"; };
+		8A650AE820686A4300C95462 /* MemoryCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryCache.swift; sourceTree = "<group>"; };
+		8AD5F0C62075AE18001C9C6F /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
+		8AD5F0C82075B59B001C9C6F /* CacheProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheProtocol.swift; sourceTree = "<group>"; };
 		8AD5F0CC2075B94E001C9C6F /* HQFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQFoundation.framework; path = Carthage/Build/iOS/HQFoundation.framework; sourceTree = "<group>"; };
-		8AD5F0CE2075BA3E001C9C6F /* HQMemoryCacheTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQMemoryCacheTest.swift; sourceTree = "<group>"; };
-		8AD9FA3D2075DBB8007224E9 /* HQDiskCacheTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDiskCacheTest.swift; sourceTree = "<group>"; };
+		8AD5F0CE2075BA3E001C9C6F /* MemoryCacheTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryCacheTest.swift; sourceTree = "<group>"; };
+		8AD9FA3D2075DBB8007224E9 /* DiskCacheTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskCacheTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,12 +93,12 @@
 			isa = PBXGroup;
 			children = (
 				8A650ACF206869CD00C95462 /* HQCache.h */,
-				8AD5F0C62075AE18001C9C6F /* HQCacheManager.swift */,
-				8AD5F0C82075B59B001C9C6F /* HQCacheProtocol.swift */,
-				8A650AE820686A4300C95462 /* HQMemoryCache.swift */,
-				6043654420688D74001605FC /* HQDiskCache.swift */,
-				604A7D9820748F730060A869 /* HQDiskCache+File.swift */,
-				604A7D96207371D90060A869 /* HQDiskCache+Sqlite.swift */,
+				8AD5F0C62075AE18001C9C6F /* CacheManager.swift */,
+				8AD5F0C82075B59B001C9C6F /* CacheProtocol.swift */,
+				8A650AE820686A4300C95462 /* MemoryCache.swift */,
+				6043654420688D74001605FC /* DiskCache.swift */,
+				604A7D9820748F730060A869 /* DiskCache+File.swift */,
+				604A7D96207371D90060A869 /* DiskCache+Sqlite.swift */,
 				8A650AD0206869CD00C95462 /* Info.plist */,
 			);
 			path = HQCache;
@@ -107,8 +107,8 @@
 		8A650AD9206869CD00C95462 /* HQCacheTests */ = {
 			isa = PBXGroup;
 			children = (
-				8AD5F0CE2075BA3E001C9C6F /* HQMemoryCacheTest.swift */,
-				8AD9FA3D2075DBB8007224E9 /* HQDiskCacheTest.swift */,
+				8AD5F0CE2075BA3E001C9C6F /* MemoryCacheTest.swift */,
+				8AD9FA3D2075DBB8007224E9 /* DiskCacheTest.swift */,
 				8A650ADC206869CD00C95462 /* Info.plist */,
 			);
 			path = HQCacheTests;
@@ -254,12 +254,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6043654520688D74001605FC /* HQDiskCache.swift in Sources */,
-				8A650AE920686A4300C95462 /* HQMemoryCache.swift in Sources */,
-				8AD5F0C72075AE18001C9C6F /* HQCacheManager.swift in Sources */,
-				604A7D97207371D90060A869 /* HQDiskCache+Sqlite.swift in Sources */,
-				604A7D9920748F730060A869 /* HQDiskCache+File.swift in Sources */,
-				8AD5F0C92075B59B001C9C6F /* HQCacheProtocol.swift in Sources */,
+				6043654520688D74001605FC /* DiskCache.swift in Sources */,
+				8A650AE920686A4300C95462 /* MemoryCache.swift in Sources */,
+				8AD5F0C72075AE18001C9C6F /* CacheManager.swift in Sources */,
+				604A7D97207371D90060A869 /* DiskCache+Sqlite.swift in Sources */,
+				604A7D9920748F730060A869 /* DiskCache+File.swift in Sources */,
+				8AD5F0C92075B59B001C9C6F /* CacheProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,8 +267,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8AD9FA3E2075DBB8007224E9 /* HQDiskCacheTest.swift in Sources */,
-				8AD5F0CF2075BA3E001C9C6F /* HQMemoryCacheTest.swift in Sources */,
+				8AD9FA3E2075DBB8007224E9 /* DiskCacheTest.swift in Sources */,
+				8AD5F0CF2075BA3E001C9C6F /* MemoryCacheTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
