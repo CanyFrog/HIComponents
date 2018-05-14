@@ -6,36 +6,36 @@
 //  Copyright © 2018年 HQ.Personal.modules. All rights reserved.
 //
 
-public extension NSPointerArray {
+extension Namespace where T: NSPointerArray {
     public func addObject(_ object: AnyObject?) {
         guard let strongObject = object else { return }
         
         let pointer = Unmanaged.passUnretained(strongObject).toOpaque()
-        addPointer(pointer)
+        instance.addPointer(pointer)
     }
     
     public func insertObject(_ object: AnyObject?, at index: Int) {
-        guard index < count, let strongObject = object else { return }
+        guard index < instance.count, let strongObject = object else { return }
         
         let pointer = Unmanaged.passUnretained(strongObject).toOpaque()
-        insertPointer(pointer, at: index)
+        instance.insertPointer(pointer, at: index)
     }
     
     public func replaceObject(at index: Int, withObject object: AnyObject?) {
-        guard index < count, let strongObject = object else { return }
+        guard index < instance.count, let strongObject = object else { return }
         
         let pointer = Unmanaged.passUnretained(strongObject).toOpaque()
-        replacePointer(at: index, withPointer: pointer)
+        instance.replacePointer(at: index, withPointer: pointer)
     }
     
     public func object(at index: Int) -> AnyObject? {
-        guard index < count, let pointer = self.pointer(at: index) else { return nil }
+        guard index < instance.count, let pointer = instance.pointer(at: index) else { return nil }
         return Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
     }
     
     public func removeObject(at index: Int) {
-        guard index < count else { return }
+        guard index < instance.count else { return }
         
-        removePointer(at: index)
+        instance.removePointer(at: index)
     }
 }

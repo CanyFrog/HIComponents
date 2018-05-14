@@ -6,12 +6,13 @@
 //  Copyright © 2018年 HQ.Personal.modules. All rights reserved.
 //
 
-extension NSObject {
+extension NSObject: Namespaceable {}
+extension Namespace where T == String {
     public var className: String {
         return String(describing: type(of: self)).components(separatedBy: ".").last!
     }
     
-    public class var className: String {
+    public static var className: String {
         return String(describing: self).components(separatedBy: ".").last!
     }
 }
