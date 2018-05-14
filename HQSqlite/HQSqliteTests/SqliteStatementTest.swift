@@ -1,5 +1,5 @@
 //
-//  HQSqliteStatementTest.swift
+//  SqliteStatementTest.swift
 //  HQSqliteTests
 //
 //  Created by qihuang on 2018/4/1.
@@ -20,7 +20,7 @@ class HQSqliteStatementTest: HQSqliteTests {
     
     func testStatement() {
         try! insertUser("test_statement_email", age: 18, salary: 9999.0, desc: "This is description".data(using: .utf8), admin: true)
-        let stmt = try! HQSqliteStatement(connect, "SELECT * FROM users")
+        let stmt = try! Statement(connect, "SELECT * FROM users")
         let _ = try! stmt.step()
         XCTAssertEqual(stmt.columnCount, 7)
         XCTAssertEqual(stmt.columnNames.count, 7)

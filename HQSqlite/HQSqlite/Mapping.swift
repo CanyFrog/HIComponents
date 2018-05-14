@@ -1,5 +1,5 @@
 //
-//  HQSqliteMapping.swift
+//  Mapping.swift
 //  HQSqlite
 //
 //  Created by Magee Huang on 3/30/18.
@@ -11,23 +11,23 @@
 import SQLite3
 
 /// Protocol to mapping swift types to sqlite types
-public protocol HQSqliteMapping {}
+public protocol SqliteMapping {}
 
-extension Data: HQSqliteMapping {}
-extension Double: HQSqliteMapping {}
-extension Int64: HQSqliteMapping {}
-extension Int32: HQSqliteMapping {}
-extension String: HQSqliteMapping {}
-extension Bool: HQSqliteMapping {}
-extension Int: HQSqliteMapping {}
+extension Data: SqliteMapping {}
+extension Double: SqliteMapping {}
+extension Int64: SqliteMapping {}
+extension Int32: SqliteMapping {}
+extension String: SqliteMapping {}
+extension Bool: SqliteMapping {}
+extension Int: SqliteMapping {}
 
 
 // MARK: - Statement index cursor
-public struct HQSqliteCursor {
+public struct Cursor {
     internal let handle: OpaquePointer
     internal let columnCount: Int
     
-    internal init(_ statement: HQSqliteStatement) {
+    internal init(_ statement: Statement) {
         handle = statement.handle!
         columnCount = statement.columnCount
     }
@@ -35,7 +35,7 @@ public struct HQSqliteCursor {
 
 
 // MARK: - Cursor index
-extension HQSqliteCursor {
+extension Cursor {
     public subscript(idx: Int) -> Data {
         if let pointer = sqlite3_column_blob(handle, Int32(idx)) {
             let length = Int(sqlite3_column_bytes(handle, Int32(idx)))
@@ -71,8 +71,8 @@ extension HQSqliteCursor {
 }
 
 // MARK: - Sequence
-extension HQSqliteCursor: Sequence {
-    public subscript(idx: Int) -> HQSqliteMapping? {
+extension Cursor: Sequence {
+    public subscript(idx: Int) -> SqliteMapping? {
         switch sqlite3_column_type(handle, Int32(idx)) {
         case SQLITE_BLOB:
             return self[idx] as Data
@@ -89,11 +89,11 @@ extension HQSqliteCursor: Sequence {
         }
     }
         
-    public func makeIterator() -> AnyIterator<HQSqliteMapping?> {
+    public func makeIterator() -> AnyIterator<SqliteMapping?> {
         var idx = 0
         return AnyIterator {
             if idx > self.columnCount {
-                return Optional<HQSqliteMapping?>.none
+                return Optional<SqliteMapping?>.none
             } else {
                 idx += 1
                 return self[idx - 1]

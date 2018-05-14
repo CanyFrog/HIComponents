@@ -1,5 +1,5 @@
 //
-//  HQSqliteUtil.swift
+//  Util.swift
 //  HQSqlite
 //
 //  Created by Magee Huang on 3/29/18.
@@ -11,8 +11,8 @@ import Foundation
 import SQLite3
 
 
-extension HQSqliteConnection {
-    public enum SqliteType {
+extension Connection {
+    public enum Location {
         
         /// An in-memory database (equivalent to `.uri(":memory:")`).
         case memory
@@ -26,7 +26,7 @@ extension HQSqliteConnection {
 }
 
 
-extension HQSqliteConnection.SqliteType: CustomStringConvertible {
+extension Connection.Location: CustomStringConvertible {
     public var description: String {
         switch self {
         case .memory:
@@ -40,7 +40,7 @@ extension HQSqliteConnection.SqliteType: CustomStringConvertible {
 }
 
 
-extension HQSqliteConnection {
+extension Connection {
     /// An SQL operation passed to update callbacks.
     public enum SqliteOperation {
         
@@ -68,7 +68,7 @@ extension HQSqliteConnection {
     }
 }
 
-extension HQSqliteConnection {
+extension Connection {
     /// The mode in which a transaction acquires a lock.
     public enum TransactionMode : String {
         
