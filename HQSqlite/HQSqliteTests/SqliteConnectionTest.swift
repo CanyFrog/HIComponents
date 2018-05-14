@@ -1,5 +1,5 @@
 //
-//  HQSqliteConnectionTest.swift
+//  SqliteConnectionTest.swift
 //  HQSqliteTests
 //
 //  Created by qihuang on 2018/4/1.
@@ -17,38 +17,38 @@ class HQSqliteConnectionTest: HQSqliteTests {
     }
     
     func testConnectInitInMemory() {
-        let conn = try! HQSqliteConnection(.memory)
+        let conn = try! Connection(.memory)
         XCTAssertEqual("", conn.description)
     }
     
     func testConnectInitInTemporary() {
-        let conn = try! HQSqliteConnection(.temporary)
+        let conn = try! Connection(.temporary)
         XCTAssertEqual("", conn.description)
     }
     
     func testConnectInitByDefault() {
-        let conn = try! HQSqliteConnection()
+        let conn = try! Connection()
         XCTAssertEqual("", conn.description)
     }
     
     func testConnectInitWithUri() {
         let path = "\(NSTemporaryDirectory())/connection_test.sqlite3"
-        let conn = try! HQSqliteConnection(.uri(path))
+        let conn = try! Connection(.uri(path))
         XCTAssertEqual(path, conn.description)
     }
     
     func testConnectReadOnlyWhenInitReadOnly() {
-        let conn = try! HQSqliteConnection(.memory, readOnly: true)
+        let conn = try! Connection(.memory, readOnly: true)
         XCTAssertTrue(conn.readonly)
     }
     
     func testConnectNotReadOnlyByDefault() {
-        let conn = try! HQSqliteConnection()
+        let conn = try! Connection()
         XCTAssertFalse(conn.readonly)
     }
     
     func testConnectionInitNoChanges() {
-        let conn = try! HQSqliteConnection()
+        let conn = try! Connection()
         XCTAssertEqual(0, conn.changes)
         XCTAssertEqual(0, conn.totalChanges)
     }
@@ -65,7 +65,7 @@ class HQSqliteConnectionTest: HQSqliteTests {
         XCTAssertThrowsError(
             try connect.run("INSERT INTO \"users\" (email, age, admin) values ('error_user', 12, 'null')"), "insert error")
         { (err) in
-            if case HQSqliteError.error(message: _, code: let code, statement: _) = err {
+            if case SqliteError.error(message: _, code: let code, statement: _) = err {
                 XCTAssertEqual(SQLITE_CONSTRAINT, code) // sqlite3 failer code
             }
             else {
@@ -108,7 +108,7 @@ class HQSqliteConnectionTest: HQSqliteTests {
     func testConnectUpdateHookWithInsert() {
         async { (done) in
             connect.updateHook({ (operation, db, table, rowid) in
-                XCTAssertEqual(HQSqliteConnection.SqliteOperation.insert, operation)
+                XCTAssertEqual(Connection.SqliteOperation.insert, operation)
                 XCTAssertEqual("main", db)
                 XCTAssertEqual("users", table)
                 XCTAssertEqual(1, rowid)
@@ -122,7 +122,7 @@ class HQSqliteConnectionTest: HQSqliteTests {
         try! insertUser("test_update_hook_1")
         async { (done) in
             connect.updateHook({ (operation, db, table, rowid) in
-                XCTAssertEqual(HQSqliteConnection.SqliteOperation.update, operation)
+                XCTAssertEqual(Connection.SqliteOperation.update, operation)
                 XCTAssertEqual("main", db)
                 XCTAssertEqual("users", table)
                 XCTAssertEqual(1, rowid)
@@ -136,7 +136,7 @@ class HQSqliteConnectionTest: HQSqliteTests {
         try! insertUser("test_delete_hook")
         async { (done) in
             connect.updateHook({ (operation, db, table, rowid) in
-                XCTAssertEqual(HQSqliteConnection.SqliteOperation.delete, operation)
+                XCTAssertEqual(Connection.SqliteOperation.delete, operation)
                 XCTAssertEqual("main", db)
                 XCTAssertEqual("users", table)
                 XCTAssertEqual(1, rowid)
@@ -282,7 +282,7 @@ class HQSqliteConnectionTest: HQSqliteTests {
     }
     
     func testConnectMultiThreadWorking() {
-        let newConn = try! HQSqliteConnection(.uri("\(NSTemporaryDirectory())/\(UUID().uuidString)"))
+        let newConn = try! Connection(.uri("\(NSTemporaryDirectory())/\(UUID().uuidString)"))
         try! newConn.execute("DROP TABLE IF EXISTS test; CREATE TABLE test(value);")
         try! newConn.run("INSERT INTO test(value) VALUES(?)", 0)
         
