@@ -1,5 +1,5 @@
 //
-//  HQDiskCacheTest.swift
+//  DiskCacheTest.swift
 //  HQCacheTests
 //
 //  Created by qihuang on 2018/4/5.
@@ -47,12 +47,12 @@ struct DiskTestClass: Codable, Equatable {
 
 
 class HQDiskCacheTest: XCTestCase {
-    var disk: HQDiskCache!
+    var disk: DiskCache!
     let path: URL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("testDir")
 
     override func setUp() {
         super.setUp()
-        disk = HQDiskCache(path)
+        disk = DiskCache(path)
     }
     override func tearDown() {
         super.tearDown()

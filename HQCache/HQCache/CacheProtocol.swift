@@ -1,5 +1,5 @@
 //
-//  HQCacheProtocol.swift
+//  CacheProtocol.swift
 //  HQCache
 //
 //  Created by qihuang on 2018/3/26.
@@ -20,7 +20,7 @@ extension Decodable {
 }
 
 /// Cache background queue protocol
-protocol HQCacheInBackProtocol: HQCacheProtocol {
+protocol CacheInBackProtocol: CacheProtocol {
     
     func exist(forKey key: String, inBackThreadCallback callback: @escaping (_ key: String, _ isExists: Bool) -> Void)
     
@@ -43,7 +43,7 @@ protocol HQCacheInBackProtocol: HQCacheProtocol {
 }
 
 /// Cache protocol
-protocol HQCacheProtocol {
+protocol CacheProtocol {
     
     /// Cache count limit, default Int.max
     var countLimit: Int {get set}
