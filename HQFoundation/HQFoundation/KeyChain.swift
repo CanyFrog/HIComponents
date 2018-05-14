@@ -1,5 +1,5 @@
 //
-//  HQKeyChain.swift
+//  KeyChain.swift
 //  HQFoundation
 //
 //  Created by Qi on 2018/5/8.
@@ -9,7 +9,7 @@
 import Security
 import Foundation
 
-struct HQKeyChain {
+struct KeyChain {
     static let service = "keychain.service.personal.HQ"
     static let accessGroup: String? = nil
     
@@ -21,7 +21,7 @@ struct HQKeyChain {
     }
     
     /// creaste keychain query dict
-    static func keychainQuery(service: String = HQKeyChain.service, account: String? = nil, accessGroup: String? = HQKeyChain.accessGroup) -> [String: AnyObject] {
+    static func keychainQuery(service: String = KeyChain.service, account: String? = nil, accessGroup: String? = KeyChain.accessGroup) -> [String: AnyObject] {
         var query = [String: AnyObject]()
         query[kSecClass as String] = kSecClassGenericPassword
         query[kSecAttrService as String] = service as AnyObject?
@@ -38,10 +38,10 @@ struct HQKeyChain {
     }
 }
 
-extension HQKeyChain {
+extension KeyChain {
     
     static func readItem(account: String) throws -> String {
-        var query = HQKeyChain.keychainQuery(account: account)
+        var query = KeyChain.keychainQuery(account: account)
         query[kSecMatchLimit as String] = kSecMatchLimitOne
         query[kSecReturnAttributes as String] = kCFBooleanTrue
         query[kSecReturnData as String] = kCFBooleanTrue
@@ -80,7 +80,7 @@ extension HQKeyChain {
             var attributesToUpdate = [String : AnyObject]()
             attributesToUpdate[kSecValueData as String] = encodedValue as AnyObject?
             
-            let query = HQKeyChain.keychainQuery(account: account)
+            let query = KeyChain.keychainQuery(account: account)
             let status = SecItemUpdate(query as CFDictionary, attributesToUpdate as CFDictionary)
             
             // Throw an error if an unexpected status was returned.
@@ -91,7 +91,7 @@ extension HQKeyChain {
              No password was found in the keychain. Create a dictionary to save
              as a new keychain item.
              */
-            var newItem = HQKeyChain.keychainQuery(account: account)
+            var newItem = KeyChain.keychainQuery(account: account)
             newItem[kSecValueData as String] = encodedValue as AnyObject?
             
             // Add a the new item to the keychain.
@@ -107,7 +107,7 @@ extension HQKeyChain {
         var attributesToUpdate = [String : AnyObject]()
         attributesToUpdate[kSecAttrAccount as String] = newKey as AnyObject?
         
-        let query = HQKeyChain.keychainQuery(account: oldKey)
+        let query = KeyChain.keychainQuery(account: oldKey)
         let status = SecItemUpdate(query as CFDictionary, attributesToUpdate as CFDictionary)
         
         // Throw an error if an unexpected status was returned.
@@ -116,16 +116,16 @@ extension HQKeyChain {
     
     static func delete(key: String) throws {
         // Delete the existing item from the keychain.
-        let query = HQKeyChain.keychainQuery(account: key)
+        let query = KeyChain.keychainQuery(account: key)
         let status = SecItemDelete(query as CFDictionary)
         
         // Throw an error if an unexpected status was returned.
         guard status == noErr || status == errSecItemNotFound else { throw KeychainError.unhandledError(status: status) }
     }
     
-    static func readAllItems(forService service: String = HQKeyChain.service, accessGroup: String? = HQKeyChain.accessGroup) throws -> [String]? {
+    static func readAllItems(forService service: String = KeyChain.service, accessGroup: String? = KeyChain.accessGroup) throws -> [String]? {
         // Build a query for all items that match the service and access group.
-        var query = HQKeyChain.keychainQuery(service: service, accessGroup: accessGroup)
+        var query = KeyChain.keychainQuery(service: service, accessGroup: accessGroup)
         query[kSecMatchLimit as String] = kSecMatchLimitAll
         query[kSecReturnAttributes as String] = kCFBooleanTrue
         query[kSecReturnData as String] = kCFBooleanFalse
