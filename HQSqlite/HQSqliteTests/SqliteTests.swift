@@ -13,7 +13,7 @@ import SQLite3
 class HQSqliteTests: XCTestCase {
     var connect: Connection!
     var trace: [String: Int]!
-        
+
     override func setUp() {
         super.setUp()
         connect = try! Connection()

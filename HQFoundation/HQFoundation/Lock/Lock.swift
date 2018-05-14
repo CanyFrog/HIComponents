@@ -1,12 +1,13 @@
 //
-//  HQLock.swift
+//  Lock.swift
 //  HQFoundation
 //
 //  Created by Magee Huang on 4/2/18.
 //  Copyright © 2018 HQ.Personal.modules. All rights reserved.
 //
 
-public struct HQDispatchLock {
+public struct Lock {
+    // MARK: - Dispatch lock
     public static func semaphore(_ lock: DispatchSemaphore, closure: () -> Void) {
         let _ = lock.wait(timeout: .distantFuture)
         defer { lock.signal() }
@@ -26,11 +27,9 @@ public struct HQDispatchLock {
         defer { lock.signal() }
         return try closure()
     }
-}
-
-
-// MARK: - Object lock
-public struct HQObjectLock {
+    
+    
+    // MARK: - Object lock
     public static func synchronized(_ lock: AnyObject, closure: () -> ()) {
         objc_sync_enter(lock)
         defer { objc_sync_exit(lock) }
@@ -50,47 +49,49 @@ public struct HQObjectLock {
         defer { objc_sync_exit(lock) }
         return try closure()
     }
+    
+    
+    
+    // MARK: - Pthread lock
+    public final class Mutex {
+        private let _mutex = UnsafeMutablePointer<pthread_mutex_t>.allocate(capacity: 1)
+        public init() {
+            pthread_mutex_init(_mutex, nil)
+        }
+        
+        public static func autoLock(_ mutex: Mutex, closure: () -> Void) {
+            mutex.lock()
+            defer { mutex.unlock() }
+            closure()
+        }
+        
+        public static func autoLock<T>(_ mutex: Mutex, closure: () throws -> T) rethrows -> T {
+            mutex.lock()
+            defer { mutex.unlock() }
+            return try closure()
+        }
+        
+        @discardableResult
+        public func lock() -> Int32 {
+            return pthread_mutex_lock(_mutex)
+        }
+        
+        @discardableResult
+        public func unlock() -> Int32 {
+            return pthread_mutex_unlock(_mutex)
+        }
+        
+        @discardableResult
+        public func tryLock() -> Int32 {
+            return pthread_mutex_trylock(_mutex)
+        }
+        
+        deinit {
+            pthread_mutex_destroy(_mutex)
+            _mutex.deallocate()
+        }
+    }
 }
 
 
 
-
-// MARK: - Pthread lock
-public final class HQMutexLock {
-    private let _mutex = UnsafeMutablePointer<pthread_mutex_t>.allocate(capacity: 1)
-    public init() {
-        pthread_mutex_init(_mutex, nil)
-    }
-    
-    public static func autoLock(_ mutex: HQMutexLock, closure: () -> Void) {
-        mutex.lock()
-        defer { mutex.unlock() }
-        closure()
-    }
-    
-    public static func autoLock<T>(_ mutex: HQMutexLock, closure: () throws -> T) rethrows -> T {
-        mutex.lock()
-        defer { mutex.unlock() }
-        return try closure()
-    }
-    
-    @discardableResult
-    public func lock() -> Int32 {
-        return pthread_mutex_lock(_mutex)
-    }
-    
-    @discardableResult
-    public func unlock() -> Int32 {
-        return pthread_mutex_unlock(_mutex)
-    }
-    
-    @discardableResult
-    public func tryLock() -> Int32 {
-        return pthread_mutex_trylock(_mutex)
-    }
-    
-    deinit {
-        pthread_mutex_destroy(_mutex)
-        _mutex.deallocate()
-    }
-}
