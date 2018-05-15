@@ -8,15 +8,110 @@
 
 import Foundation
 
-public enum RouterType {
-    case remain
-    case push
-    case pop
-    case reset
+struct RouterTask {
+    enum Operate {
+        case push
+        case pop
+        case remain
+        case reset
+    }
+    
+    var operate: Operate = .push
+    var componentUri: String!
+    var targetVC: UIViewController!
+    var animated: Bool = true
+    var componentTranisitionDuration: TimeInterval = 0.5
+    
+    init() { }
 }
 
-protocol Component {
+struct RouterTaskQueue {
+    private var queue = [RouterTask]()
     
+    mutating func insert(uri: String, options: RouterOptions) {
+        // Step 1: Check url scheme
+        let newUrl = RouterURL.unserialize(url: uri)
+        let router = Router.default
+        guard newUrl.scheme == router.appScheme || newUrl.scheme == router.componentScheme else {
+            fatalError("Error: new url scheme must be app scheme or component scheme!")
+        }
+        
+        // Step 2: Prepare two state url
+        let fromAppUri = options.contains(.resetStack) ? "\(router.appScheme)://" : router.serialize()
+        var toAppUri = newUrl.serialize()
+        if newUrl.scheme == Router.default.componentScheme {
+            toAppUri = "\(fromAppUri)/\(newUrl.serializeComponents())"
+        }
+        
+        // Step 3: Compare two state, pick up and set task operation
+        /// split url to multi component
+        let fromTasks = RouterURL.splitComponents(url: fromAppUri)
+        let toTasks = RouterURL.splitComponents(url: toAppUri)
+        
+        var sameIdx = -1
+        for (idx, fromUri) in fromTasks.enumerated() {
+            if idx >= toTasks.count { break }
+            
+            let toUri = toTasks[idx]
+            if fromUri.scheme == router.componentScheme && fromUri.components.count == 1 && fromUri == toUri {
+                // If two uri is equal, sameIdx ++
+                sameIdx = idx
+            }
+            else {
+                break
+            }
+        }
+        
+        
+        // Step 4: Prepare to open / close / remain tasks
+        
+        /// Fill the open tasks
+        if sameIdx + 1 < toTasks.count {
+            toTasks[sameIdx+1 ..< toTasks.count].reversed().forEach { (taskUrl) in
+                var task = RouterTask()
+                task.operate = .push
+                task.componentUri = taskUrl.serialize()
+                // if no vc, 404 not found
+                self.queue.append(task)
+            }
+        }
+        
+        
+        // No same task, reset satck and reopen new stack
+        if sameIdx == -1 && sameIdx+1 < toTasks.count {
+            // Setting last task type reset
+            var task = queue.popLast()!
+            task.operate = .reset
+            queue.append(task)
+            return
+        }
+        
+        /// Fill the close stack
+        if sameIdx + 1 < fromTasks.count {
+            fromTasks[sameIdx+1 ..< fromTasks.count].forEach { (taskUrl) in
+                var task = RouterTask()
+                task.operate = .pop
+                task.componentUri = taskUrl.serialize()
+                self.queue.append(task)
+            }
+        }
+        
+        /// Fill the remain stack
+        if sameIdx > 0 {
+            toTasks[0 ... sameIdx].reversed().forEach { (taskUrl) in
+                var task = RouterTask()
+                task.operate = .remain
+                task.componentUri = taskUrl.serialize()
+                // Change target
+//                task.targetVC = new vc
+                self.queue.append(task)
+            }
+        }
+    }
+    
+    mutating func next() -> RouterTask? {
+        return queue.popLast()
+    }
 }
 
 struct RouterOptions: OptionSet {
@@ -34,31 +129,32 @@ struct RouterOptions: OptionSet {
 }
 
 typealias PendingTask = (uri: String, options: RouterOptions)
-struct RouterTask {
-    var type: RouterType = .push
-    var componentUri: String?
-    var targetVC: UIViewController?
-    var animated: Bool = true
-    var componentTranisitionDuration: TimeInterval = 0.5
-    
-    init() { }
-}
 
 public typealias RouterRegisterClosure = (_ component: RouterURLComponent)-> UIViewController
 
 open class Router {
     static let `default` = Router()
-    public var window: UIWindow?
+    
+    public var window = UIApplication.shared.keyWindow
     public var componentScheme: String = "component"
     public var appScheme: String = "app"
     
     private var components = [String: RouterRegisterClosure]()
-    private var taskQueue = [RouterTask]()
+    
     private var pendingTasks = [PendingTask]()
     
+    private var taskQueue = RouterTaskQueue()
     
-    func open(uri: String, options: RouterType = .push) {
-        
+    private var isTransitionInProgress = false
+    
+    
+    func open(url: String, options: RouterOptions = .animated) {
+        precondition(Thread.current == Thread.main, "Open event must be invoked in main thread!")
+        precondition(!RouterURL.unserialize(url: url).components.isEmpty, "Can not open a empty url: \(url)")
+        taskQueue.insert(uri: url, options: options)
+        if !isTransitionInProgress { // Previous task executed completed
+            executeNextTask()
+        }
     }
     
     func pop() {
@@ -67,7 +163,7 @@ open class Router {
     
     
     /// Get current state serialize string
-    func serializeUrls() -> String {
+    func serialize() -> String {
         return "holder"
     }
 }
@@ -79,105 +175,41 @@ extension Router {
 }
 
 extension Router {
-    func perform(task: PendingTask) {
-        pendingTasks.append(task)
+    func executeNextTask() {
+        precondition(!isTransitionInProgress, "Only when the previous navigation tranisition task is completed, we can perform next navigation task!!!")
+        guard let task = taskQueue.next() else { return }
+        switch task.operate {
+        case .push:
+            executePushTask()
+        case .pop:
+            executePopTask()
+        case .remain:
+            executeRemianTask()
+        case .reset:
+            executeResetTask()
+        }
     }
     
-    func nextTask() -> RouterTask? {
-        guard taskQueue.isEmpty else { return taskQueue.popLast() }
-        guard !pendingTasks.isEmpty else { return nil }
+    func executePushTask() {
+        // If push
+        window?.rootViewController?.navigationController?.setViewControllers([], animated: true)
         
-        /// Step 1: Get next task info
-        let info = pendingTasks.popLast()!
-        
-        /// Step 2: Prepare two state's uri
-        let targetUri = RouterURL.unserialize(url: info.uri)
-        
-        let currentUri = info.options.contains(.resetStack) ? "" : serializeUrls()
-        var nextUri = targetUri.serialize()
-        /// APP internel router
-        if targetUri.scheme == "Component URI holder" {
-            nextUri = "\(currentUri)/\(targetUri.serializeComponents())"
-        }
-        
-        /// Step 3: Prepare the navigation task
-        var pageAnimationCount = 0
-        let newTasks = diffState(current: currentUri, new: nextUri)
-//        newTasks.forEach { (task) in
-//            task.animated = info.options.contains(.animated)
-//            if task.type == .pop || task.type == .push {
-//                pageAnimationCount += 1
-//            }
-//        }
-        
-        taskQueue.append(contentsOf: newTasks)
-        
-        return taskQueue.popLast()
+        window?.rootViewController?.navigationController?.pushViewController(UIViewController(), animated: true)
     }
     
-    /// Get two state different component
-    func diffState(current: String, new: String) -> [RouterTask] {
-        let fromStack = RouterURL.splitComponents(url: current)
-        let toStack = RouterURL.splitComponents(url: new)
+    func executePopTask() {
         
-        var sameIdx = -1
-        for (idx, fromUri) in fromStack.enumerated() {
-            if idx >= toStack.count { break }
-            
-            let toUri = toStack[idx]
-            if fromUri.scheme != componentScheme && fromUri == toUri && fromUri.components.count == 1 {
-                sameIdx = idx
-            }
-            else {
-                break
-            }
+    }
+    
+    func executeRemianTask() {
+        // Update target vc state and execute next task
+        
+        DispatchQueue.main.async {
+            self.executeNextTask()
         }
-        
-        /// Fill the remain stack
-        let remainStack = toStack[0...sameIdx]
-        
-        /// Fill the close stack
-        var closeStack = toStack[sameIdx+1...fromStack.count]
-        
-        /// Fill the open stack
-        let openStack = toStack[sameIdx+1...toStack.count]
+    }
+    
+    func executeResetTask() {
 
-        
-        /// Add open task
-        var tasks = openStack.reversed().compactMap { (uri) -> RouterTask? in
-            var task = RouterTask()
-            task.componentUri = uri.serialize()
-            task.targetVC = UIViewController()
-            task.type = .push
-            return task
-        }
-        
-        /// If all task will be removed, reset the component task and close stack and convert open task to reset task
-        if sameIdx == -1 && !openStack.isEmpty {
-            closeStack.removeAll()
-            var task = tasks.popLast()
-            task?.type = .reset
-            tasks.append(task!)
-        }
-        
-        /// Add close task
-        closeStack.forEach { (uri) in
-            var task = RouterTask()
-            task.type = .pop
-            task.componentUri = uri.serialize()
-            tasks.append(task)
-        }
-        
-        /// Add remain task
-        remainStack.forEach { (uri) in
-            var task = RouterTask()
-            task.type = .remain
-            task.componentUri = uri.serialize()
-            task.targetVC = UIViewController()
-            tasks.append(task)
-        }
-        return tasks
     }
-    
-
 }
