@@ -32,7 +32,7 @@ struct RouterTaskQueue {
         }
         
         // Step 2: Prepare two state url
-        let fromAppUri = router.serialize()
+        let fromAppUri = router.mainURL.serialize()
         var toAppUri = newUrl.serialize()
         if newUrl.scheme == Router.default.componentScheme {
             toAppUri = "\(fromAppUri)/\(newUrl.serializeComponents())"
@@ -114,7 +114,7 @@ struct RouterTaskQueue {
 //typealias PendingTask = (uri: String, options: RouterOptions)
 
 typealias RouterComponentList = [String: UIViewController]
-public typealias RouterRegisterClosure = (_ component: RouterURLComponent)-> UIViewController
+public typealias RegisterComponentClosure = (_ component: RouterURLComponent?)-> UIViewController
 
 open class Router {
     static let `default` = Router()
@@ -123,35 +123,93 @@ open class Router {
     public var appScheme: String = "app"
     public var window = UIApplication.shared.keyWindow
     
+    public private(set) var mainURL: RouterURL!
+    
+    private var registeredComponents = [String: RegisterComponentClosure]()
+    private var activeURLS = [RouterURL]()
     private var taskQueue = RouterTaskQueue()
-    private var registeredComponents = [String: RouterRegisterClosure]()
-    private var url: RouterURL!
     private var isTransitionInProgress = false
     
     
-    func open(url: String) {
+    /// Enter into next view controller, custom open new viewcontroller closure
+    ///
+    /// - Parameters:
+    ///   - url: new VC url
+    ///   - handle: open VC closure
+    public func next(url: String, handle: (_ presentedVC: UIViewController, _ targetVC: UIViewController)->Void) {
         precondition(Thread.current == Thread.main, "Open event must be invoked in main thread!")
         precondition(!RouterURL.unserialize(url: url).components.isEmpty, "Can not open a empty url: \(url)")
-        taskQueue.insert(uri: url)
-        if !isTransitionInProgress { // Previous task executed completed
-            executeNextTask()
+
+        let uri = RouterURL.unserialize(url: url)
+        let mainUrl = activeURLS.filter{ $0.scheme == uri.scheme }.first
+        precondition(mainUrl != nil, "Error: Scheme \(uri.scheme) not registed")
+        if let register = registeredComponents[uri.scheme] {
+            let target = register(uri.components.first)
+            handle(currentViewController()!, target)
+        }
+        else {
+//            404
         }
     }
     
-    func pop() {
+    
+    /// Push into next view controller,
+    ///
+    /// - Parameter url: new VC url
+    public func push(url: String, animated: Bool = true) {
+        next(url: url) { (presented, target) in
+            presented.navigationController?.pushViewController(target, animated: animated)
+        }
+    }
+    
+    
+    /// Present into next view controller
+    ///
+    /// - Parameter url: new VC url
+    public func present(url: String, animated: Bool = true, completion: (()->Void)? = nil) {
+        next(url: url) { (presented, target) in
+            presented.navigationController?.present(target, animated: true, completion: completion)
+        }
+    }
+    
+    
+    /// Back to previous view controller
+    public func back() {
         
     }
     
     
+    /// Open new url, reset previous stack
+    public func open(url: String) {
+        
+    }
+    
     /// Get current state serialize string
-    func serialize() -> String {
+    public func serialize() -> String {
         return "holder"
+    }
+    
+    func currentViewController(rootViewController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+        if let navigation = rootViewController as? UINavigationController {
+            return currentViewController(rootViewController: navigation.visibleViewController)
+        }
+        else if let tabbar = rootViewController as? UITabBarController {
+            return currentViewController(rootViewController: tabbar.selectedViewController)
+        }
+        else if let presented = rootViewController?.presentedViewController {
+            return currentViewController(rootViewController: presented)
+        }
+        else {
+            return rootViewController
+        }
     }
 }
 
+
+// MARK: - Register
 extension Router {
-    func register(name: String, closure: @escaping RouterRegisterClosure) {
-        registeredComponents[name] = closure
+    public func register(component: String, configClosure: @escaping RegisterComponentClosure) {
+        registeredComponents[component] = configClosure
     }
 }
 

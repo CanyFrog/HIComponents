@@ -10,6 +10,11 @@
 		606E41BF20A59784009E4AA5 /* HQRouter.h in Headers */ = {isa = PBXBuildFile; fileRef = 606E41BD20A59784009E4AA5 /* HQRouter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		606E41C620A597DD009E4AA5 /* RouterURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E41C520A597DD009E4AA5 /* RouterURL.swift */; };
 		606E41C820A59BD3009E4AA5 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E41C720A59BD3009E4AA5 /* Router.swift */; };
+		8A8B65B720AB12F9008975ED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8B65B620AB12F9008975ED /* AppDelegate.swift */; };
+		8A8B65B920AB12F9008975ED /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8B65B820AB12F9008975ED /* ViewController.swift */; };
+		8A8B65BC20AB12F9008975ED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A8B65BA20AB12F9008975ED /* Main.storyboard */; };
+		8A8B65BE20AB12FA008975ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A8B65BD20AB12FA008975ED /* Assets.xcassets */; };
+		8A8B65C120AB12FA008975ED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A8B65BF20AB12FA008975ED /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,10 +23,24 @@
 		606E41BE20A59784009E4AA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		606E41C520A597DD009E4AA5 /* RouterURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterURL.swift; sourceTree = "<group>"; };
 		606E41C720A59BD3009E4AA5 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		8A8B65B420AB12F9008975ED /* HQRouterDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HQRouterDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A8B65B620AB12F9008975ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8A8B65B820AB12F9008975ED /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		8A8B65BB20AB12F9008975ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		8A8B65BD20AB12FA008975ED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8A8B65C020AB12FA008975ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8A8B65C220AB12FA008975ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		606E41B620A59784009E4AA5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8A8B65B120AB12F9008975ED /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -35,6 +54,7 @@
 			isa = PBXGroup;
 			children = (
 				606E41BC20A59784009E4AA5 /* HQRouter */,
+				8A8B65B520AB12F9008975ED /* HQRouterDemo */,
 				606E41BB20A59784009E4AA5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +63,7 @@
 			isa = PBXGroup;
 			children = (
 				606E41BA20A59784009E4AA5 /* HQRouter.framework */,
+				8A8B65B420AB12F9008975ED /* HQRouterDemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -56,6 +77,19 @@
 				606E41C720A59BD3009E4AA5 /* Router.swift */,
 			);
 			path = HQRouter;
+			sourceTree = "<group>";
+		};
+		8A8B65B520AB12F9008975ED /* HQRouterDemo */ = {
+			isa = PBXGroup;
+			children = (
+				8A8B65B620AB12F9008975ED /* AppDelegate.swift */,
+				8A8B65B820AB12F9008975ED /* ViewController.swift */,
+				8A8B65BA20AB12F9008975ED /* Main.storyboard */,
+				8A8B65BD20AB12FA008975ED /* Assets.xcassets */,
+				8A8B65BF20AB12FA008975ED /* LaunchScreen.storyboard */,
+				8A8B65C220AB12FA008975ED /* Info.plist */,
+			);
+			path = HQRouterDemo;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -90,6 +124,23 @@
 			productReference = 606E41BA20A59784009E4AA5 /* HQRouter.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		8A8B65B320AB12F9008975ED /* HQRouterDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8A8B65C520AB12FA008975ED /* Build configuration list for PBXNativeTarget "HQRouterDemo" */;
+			buildPhases = (
+				8A8B65B020AB12F9008975ED /* Sources */,
+				8A8B65B120AB12F9008975ED /* Frameworks */,
+				8A8B65B220AB12F9008975ED /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HQRouterDemo;
+			productName = HQRouterDemo;
+			productReference = 8A8B65B420AB12F9008975ED /* HQRouterDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -97,12 +148,16 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = HQRouter;
+				LastSwiftUpdateCheck = 0930;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = HQ.components.router;
 				TargetAttributes = {
 					606E41B920A59784009E4AA5 = {
 						CreatedOnToolsVersion = 9.3;
 						LastSwiftMigration = 0930;
+					};
+					8A8B65B320AB12F9008975ED = {
+						CreatedOnToolsVersion = 9.3;
 					};
 				};
 			};
@@ -112,6 +167,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 606E41B020A59784009E4AA5;
 			productRefGroup = 606E41BB20A59784009E4AA5 /* Products */;
@@ -119,6 +175,7 @@
 			projectRoot = "";
 			targets = (
 				606E41B920A59784009E4AA5 /* HQRouter */,
+				8A8B65B320AB12F9008975ED /* HQRouterDemo */,
 			);
 		};
 /* End PBXProject section */
@@ -128,6 +185,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8A8B65B220AB12F9008975ED /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8A8B65C120AB12FA008975ED /* LaunchScreen.storyboard in Resources */,
+				8A8B65BE20AB12FA008975ED /* Assets.xcassets in Resources */,
+				8A8B65BC20AB12F9008975ED /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,7 +210,35 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8A8B65B020AB12F9008975ED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8A8B65B920AB12F9008975ED /* ViewController.swift in Sources */,
+				8A8B65B720AB12F9008975ED /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		8A8B65BA20AB12F9008975ED /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8A8B65BB20AB12F9008975ED /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		8A8B65BF20AB12FA008975ED /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8A8B65C020AB12FA008975ED /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		606E41C020A59784009E4AA5 /* Debug */ = {
@@ -319,6 +414,44 @@
 			};
 			name = Release;
 		};
+		8A8B65C320AB12FA008975ED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4EXDER2SUV;
+				INFOPLIST_FILE = HQRouterDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.personal.HQ.HQRouterDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8A8B65C420AB12FA008975ED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4EXDER2SUV;
+				INFOPLIST_FILE = HQRouterDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.personal.HQ.HQRouterDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -336,6 +469,15 @@
 			buildConfigurations = (
 				606E41C320A59784009E4AA5 /* Debug */,
 				606E41C420A59784009E4AA5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8A8B65C520AB12FA008975ED /* Build configuration list for PBXNativeTarget "HQRouterDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8A8B65C320AB12FA008975ED /* Debug */,
+				8A8B65C420AB12FA008975ED /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
