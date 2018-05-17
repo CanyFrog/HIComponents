@@ -51,27 +51,41 @@ class HQRouterConfigsTests: XCTestCase {
 
 
 class HQRouterTests: XCTestCase {
-    
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+
+    func testRouterInit() {
+        let uri = "test://home?key=value"
+        let nav = UINavigationController()
+        let router = Router(uri: uri, navigator: nav)
+        
+        XCTAssertEqual(router.scheme, "test")
+        XCTAssertEqual(router.mainUrl.description, uri)
+        XCTAssertNotNil(router.navigator)
     }
     
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
+    func testRouterForward() {
+        let uri = "test://home?key=value"
+        let nav = UINavigationController()
+        let router = Router(uri: uri, navigator: nav)
+        
+        router.forward(component: "path1/path2")
+        XCTAssertEqual(router.mainUrl.description, uri.appending("/path1/path2"))
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testRouterBack() {
+        let uri = "test://home?key=value/path1/path2"
+        let nav = UINavigationController()
+        let router = Router(uri: uri, navigator: nav)
+        
+        router.back(steps: 2, animated: true)
+        XCTAssertEqual(router.mainUrl.description, "test://home?key=value")
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    func testRouterHome() {
+        let uri = "test://home?key=value/path1/path2"
+        let nav = UINavigationController()
+        let router = Router(uri: uri, navigator: nav)
+        
+        router.back(steps: 2, animated: true)
+        XCTAssertEqual(router.mainUrl.description, "test://home?key=value")
     }
-    
 }
