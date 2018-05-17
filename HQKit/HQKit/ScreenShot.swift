@@ -8,8 +8,7 @@
 
 import Foundation
 
-public struct ScreenShoot {
-    
+public struct ScreenShot {
     /// Call action when a screen shot is taken
     ///
     /// - Parameter action: executes after screen shot
@@ -17,5 +16,9 @@ public struct ScreenShoot {
         NotificationCenter.default.addObserver(forName: .UIApplicationUserDidTakeScreenshot, object: nil, queue: OperationQueue.main) { (_) in
             action()
         }
+    }
+    
+    public func shot() -> UIImage? {
+        return UIApplication.shared.keyWindow?.hq.snapshot()
     }
 }
