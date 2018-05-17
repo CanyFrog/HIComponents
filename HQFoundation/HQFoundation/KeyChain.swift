@@ -9,11 +9,11 @@
 import Security
 import Foundation
 
-struct KeyChain {
-    static let service = "keychain.service.personal.HQ"
-    static let accessGroup: String? = nil
+public struct KeyChain {
+    public static let service = "keychain.service.personal.HQ"
+    public static let accessGroup: String? = nil
     
-    enum KeychainError: Error {
+    public enum KeychainError: Error {
         case noItem
         case unexpectedData
         case unexpectedItemData
@@ -21,7 +21,7 @@ struct KeyChain {
     }
     
     /// creaste keychain query dict
-    static func keychainQuery(service: String = KeyChain.service, account: String? = nil, accessGroup: String? = KeyChain.accessGroup) -> [String: AnyObject] {
+    public static func keychainQuery(service: String = KeyChain.service, account: String? = nil, accessGroup: String? = KeyChain.accessGroup) -> [String: AnyObject] {
         var query = [String: AnyObject]()
         query[kSecClass as String] = kSecClassGenericPassword
         query[kSecAttrService as String] = service as AnyObject?
@@ -40,7 +40,7 @@ struct KeyChain {
 
 extension KeyChain {
     
-    static func readItem(account: String) throws -> String {
+    public static func readItem(account: String) throws -> String {
         var query = KeyChain.keychainQuery(account: account)
         query[kSecMatchLimit as String] = kSecMatchLimitOne
         query[kSecReturnAttributes as String] = kCFBooleanTrue
@@ -68,7 +68,7 @@ extension KeyChain {
     }
     
     
-    static func saveOrUpdateItem(account: String, item: String) throws {
+    public static func saveOrUpdateItem(account: String, item: String) throws {
         // Encode the password into an Data object.
         let encodedValue = item.data(using: String.Encoding.utf8)!
         
@@ -102,7 +102,7 @@ extension KeyChain {
         }
     }
     
-    static func renameItemKey(oldKey: String, to newKey: String) throws {
+    public static func renameItemKey(oldKey: String, to newKey: String) throws {
         // Try to update an existing item with the new account name.
         var attributesToUpdate = [String : AnyObject]()
         attributesToUpdate[kSecAttrAccount as String] = newKey as AnyObject?
@@ -114,7 +114,7 @@ extension KeyChain {
         guard status == noErr || status == errSecItemNotFound else { throw KeychainError.unhandledError(status: status) }
     }
     
-    static func delete(key: String) throws {
+    public static func delete(key: String) throws {
         // Delete the existing item from the keychain.
         let query = KeyChain.keychainQuery(account: key)
         let status = SecItemDelete(query as CFDictionary)
@@ -123,7 +123,7 @@ extension KeyChain {
         guard status == noErr || status == errSecItemNotFound else { throw KeychainError.unhandledError(status: status) }
     }
     
-    static func readAllItems(forService service: String = KeyChain.service, accessGroup: String? = KeyChain.accessGroup) throws -> [String]? {
+    public static func readAllItems(forService service: String = KeyChain.service, accessGroup: String? = KeyChain.accessGroup) throws -> [String]? {
         // Build a query for all items that match the service and access group.
         var query = KeyChain.keychainQuery(service: service, accessGroup: accessGroup)
         query[kSecMatchLimit as String] = kSecMatchLimitAll
