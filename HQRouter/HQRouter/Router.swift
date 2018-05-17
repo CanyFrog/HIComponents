@@ -53,7 +53,7 @@ open class Router {
     private var finishedTasks = [Component]()
     
     public init(scheme: String, navigator: UINavigationController) {
-        self.mainUrl = RouterURL(scheme: "\(scheme)://", components: [])
+        self.mainUrl = RouterURL(scheme: scheme, components: [])
         self.navigator = navigator
     }
 }
@@ -65,9 +65,10 @@ extension Router {
         let newUrl = RouterURL(url: url)
         guard newUrl.scheme == scheme else { fatalError("New url scheme is error, must be equal \(scheme)") }
         
-        pendingTasks.append(contentsOf: newUrl.components)
-        
         let idx = mainUrl.compare(other: newUrl)
+        mainUrl = newUrl
+        
+        pendingTasks.append(contentsOf: newUrl.components)
         
         /// reset stack
         if idx == -1 { executeResetTask() }
@@ -83,20 +84,19 @@ extension Router {
         /// Open new component
         executeOpenTask(animated: animated, mode: mode)
         
-        mainUrl = newUrl
+        
     }
     
     public func forward(component: String, animated: Bool = true, mode: RouterNavigateMode = .push) {
         let paths = RouterURLComponent.separate(url: component)
         guard !paths.isEmpty else { fatalError("Forward path is wrong \(component)") }
+        mainUrl.forward(path: paths)
         pendingTasks.append(contentsOf: paths)
         executeOpenTask(animated: animated, mode: mode)
-
-        mainUrl.components.append(contentsOf: paths)
     }
     
     public func back(steps: Int = 1, animated: Bool = true) {
-        mainUrl.components.removeLast(steps)
+        mainUrl.back(steps: steps)
         executeCloseTask(count: steps)
     }
     

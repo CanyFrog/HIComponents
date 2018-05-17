@@ -32,6 +32,10 @@ class DemoComponent: Component {
     }
     
     func componentWillActive() {
-        print(router?.mainUrl.description)
+        print(router!.mainUrl.description)
+        print(urlComponent.description)
+        for item in urlComponent.queryItems! {
+            print(item.description)
+        }
     }
 }

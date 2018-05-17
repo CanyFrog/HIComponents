@@ -14,12 +14,25 @@
 		606E41BF20A59784009E4AA5 /* HQRouter.h in Headers */ = {isa = PBXBuildFile; fileRef = 606E41BD20A59784009E4AA5 /* HQRouter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		606E41C620A597DD009E4AA5 /* RouterURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E41C520A597DD009E4AA5 /* RouterURL.swift */; };
 		606E41C820A59BD3009E4AA5 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E41C720A59BD3009E4AA5 /* Router.swift */; };
+		60757AAD20AD845700EBD87A /* HQRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60757AAC20AD845700EBD87A /* HQRouterTests.swift */; };
+		60757AAF20AD845700EBD87A /* HQRouter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 606E41BA20A59784009E4AA5 /* HQRouter.framework */; };
+		60757AB620AD848100EBD87A /* HQRouterURLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60757AB520AD848100EBD87A /* HQRouterURLTests.swift */; };
 		8A8B65B720AB12F9008975ED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8B65B620AB12F9008975ED /* AppDelegate.swift */; };
 		8A8B65B920AB12F9008975ED /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8B65B820AB12F9008975ED /* ViewController.swift */; };
 		8A8B65BC20AB12F9008975ED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A8B65BA20AB12F9008975ED /* Main.storyboard */; };
 		8A8B65BE20AB12FA008975ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A8B65BD20AB12FA008975ED /* Assets.xcassets */; };
 		8A8B65C120AB12FA008975ED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A8B65BF20AB12FA008975ED /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		60757AB020AD845700EBD87A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 606E41B120A59784009E4AA5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 606E41B920A59784009E4AA5;
+			remoteInfo = HQRouter;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		604BA95420AD29FB0014D30C /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
@@ -30,6 +43,10 @@
 		606E41BE20A59784009E4AA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		606E41C520A597DD009E4AA5 /* RouterURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterURL.swift; sourceTree = "<group>"; };
 		606E41C720A59BD3009E4AA5 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		60757AAA20AD845700EBD87A /* HQRouterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HQRouterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		60757AAC20AD845700EBD87A /* HQRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQRouterTests.swift; sourceTree = "<group>"; };
+		60757AAE20AD845700EBD87A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		60757AB520AD848100EBD87A /* HQRouterURLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQRouterURLTests.swift; sourceTree = "<group>"; };
 		8A8B65B420AB12F9008975ED /* HQRouterDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HQRouterDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A8B65B620AB12F9008975ED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8A8B65B820AB12F9008975ED /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -44,6 +61,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		60757AA720AD845700EBD87A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				60757AAF20AD845700EBD87A /* HQRouter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,6 +95,7 @@
 			children = (
 				606E41BC20A59784009E4AA5 /* HQRouter */,
 				8A8B65B520AB12F9008975ED /* HQRouterDemo */,
+				60757AAB20AD845700EBD87A /* HQRouterTests */,
 				606E41BB20A59784009E4AA5 /* Products */,
 				604BA95C20AD6B2F0014D30C /* Frameworks */,
 			);
@@ -80,6 +106,7 @@
 			children = (
 				606E41BA20A59784009E4AA5 /* HQRouter.framework */,
 				8A8B65B420AB12F9008975ED /* HQRouterDemo.app */,
+				60757AAA20AD845700EBD87A /* HQRouterTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,6 +122,16 @@
 				606E41C720A59BD3009E4AA5 /* Router.swift */,
 			);
 			path = HQRouter;
+			sourceTree = "<group>";
+		};
+		60757AAB20AD845700EBD87A /* HQRouterTests */ = {
+			isa = PBXGroup;
+			children = (
+				60757AAC20AD845700EBD87A /* HQRouterTests.swift */,
+				60757AB520AD848100EBD87A /* HQRouterURLTests.swift */,
+				60757AAE20AD845700EBD87A /* Info.plist */,
+			);
+			path = HQRouterTests;
 			sourceTree = "<group>";
 		};
 		8A8B65B520AB12F9008975ED /* HQRouterDemo */ = {
@@ -143,6 +180,24 @@
 			productReference = 606E41BA20A59784009E4AA5 /* HQRouter.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		60757AA920AD845700EBD87A /* HQRouterTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 60757AB420AD845700EBD87A /* Build configuration list for PBXNativeTarget "HQRouterTests" */;
+			buildPhases = (
+				60757AA620AD845700EBD87A /* Sources */,
+				60757AA720AD845700EBD87A /* Frameworks */,
+				60757AA820AD845700EBD87A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				60757AB120AD845700EBD87A /* PBXTargetDependency */,
+			);
+			name = HQRouterTests;
+			productName = HQRouterTests;
+			productReference = 60757AAA20AD845700EBD87A /* HQRouterTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		8A8B65B320AB12F9008975ED /* HQRouterDemo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8A8B65C520AB12FA008975ED /* Build configuration list for PBXNativeTarget "HQRouterDemo" */;
@@ -175,6 +230,9 @@
 						CreatedOnToolsVersion = 9.3;
 						LastSwiftMigration = 0930;
 					};
+					60757AA920AD845700EBD87A = {
+						CreatedOnToolsVersion = 9.3;
+					};
 					8A8B65B320AB12F9008975ED = {
 						CreatedOnToolsVersion = 9.3;
 					};
@@ -195,12 +253,20 @@
 			targets = (
 				606E41B920A59784009E4AA5 /* HQRouter */,
 				8A8B65B320AB12F9008975ED /* HQRouterDemo */,
+				60757AA920AD845700EBD87A /* HQRouterTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		606E41B820A59784009E4AA5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		60757AA820AD845700EBD87A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -231,6 +297,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		60757AA620AD845700EBD87A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				60757AAD20AD845700EBD87A /* HQRouterTests.swift in Sources */,
+				60757AB620AD848100EBD87A /* HQRouterURLTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8A8B65B020AB12F9008975ED /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -242,6 +317,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		60757AB120AD845700EBD87A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 606E41B920A59784009E4AA5 /* HQRouter */;
+			targetProxy = 60757AB020AD845700EBD87A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		8A8B65BA20AB12F9008975ED /* Main.storyboard */ = {
@@ -436,6 +519,44 @@
 			};
 			name = Release;
 		};
+		60757AB220AD845700EBD87A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4GWS96ARLN;
+				INFOPLIST_FILE = HQRouterTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = router.components.personal.HQ.HQRouterTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		60757AB320AD845700EBD87A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4GWS96ARLN;
+				INFOPLIST_FILE = HQRouterTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = router.components.personal.HQ.HQRouterTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		8A8B65C320AB12FA008975ED /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -491,6 +612,15 @@
 			buildConfigurations = (
 				606E41C320A59784009E4AA5 /* Debug */,
 				606E41C420A59784009E4AA5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		60757AB420AD845700EBD87A /* Build configuration list for PBXNativeTarget "HQRouterTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				60757AB220AD845700EBD87A /* Debug */,
+				60757AB320AD845700EBD87A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
