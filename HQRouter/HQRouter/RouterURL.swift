@@ -105,15 +105,7 @@ public struct RouterURL: RouterURLProtocol {
     public private(set) var components = [RouterURLComponent]()
     
     public var description: String {
-        return "\(scheme)://\(componentsDescription)"
-    }
-    
-    public var componentsDescription: String {
-        return components.compactMap{ $0.description }.joined(separator: "/")
-    }
-    
-    public var pathsDescription: String {
-        return components.compactMap{ $0.path }.joined(separator: "/")
+        return "\(scheme)://\(components.compactMap{ $0.description }.joined(separator: "/"))"
     }
     
     public init(scheme: String, components: [RouterURLComponent]) {
@@ -138,7 +130,7 @@ public struct RouterURL: RouterURLProtocol {
         components.append(contentsOf: path)
     }
     
-    public mutating func back(steps: Int) {
+    public mutating func back(steps: Int = 1) {
         components.removeLast(steps)
     }
     
@@ -147,11 +139,11 @@ public struct RouterURL: RouterURLProtocol {
         guard scheme == other.scheme else { return -1 }
         let count = min(components.count, other.components.count)
         for idx in 0 ..< count {
-            if components[idx] == other.components[idx] {
+            if components[idx] != other.components[idx] {
                 return idx
             }
         }
-        return -1
+        return count
     }
     
     /// Index
