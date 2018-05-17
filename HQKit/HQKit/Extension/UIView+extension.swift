@@ -38,52 +38,52 @@ extension Namespace where T: UIView {
 
 
 extension Namespace where T: UIView {
-    var left: CGFloat {
+    public var left: CGFloat {
         get { return instance.frame.origin.x }
         set { instance.frame.origin.x = newValue }
     }
     
-    var top: CGFloat {
+    public var top: CGFloat {
         get { return instance.frame.origin.y }
         set { instance.frame.origin.y = newValue }
     }
     
-    var width: CGFloat {
+    public var width: CGFloat {
         get { return instance.frame.size.width }
         set { instance.frame.size.width = newValue }
     }
     
-    var height: CGFloat {
+    public var height: CGFloat {
         get { return instance.frame.size.height }
         set { instance.frame.size.height = newValue }
     }
     
-    var right: CGFloat {
+    public var right: CGFloat {
         get { return instance.hq.left + instance.hq.width }
 //        set { instance.hq.left = newValue - instance.hq.width }
     }
     
-    var bottom: CGFloat {
+    public var bottom: CGFloat {
         get { return instance.hq.top + instance.hq.height }
 //        set { instance.hq.top = newValue - instance.hq.height }
     }
     
-    var origin: CGPoint {
+    public var origin: CGPoint {
         get { return instance.frame.origin }
         set { instance.frame.origin = newValue }
     }
     
-    var size: CGSize {
+    public var size: CGSize {
         get { return instance.frame.size }
         set { instance.frame.size = newValue }
     }
     
-    var centerX: CGFloat {
+    public var centerX: CGFloat {
         get { return instance.center.x }
         set { instance.center.x = newValue }
     }
     
-    var centerY: CGFloat {
+    public var centerY: CGFloat {
         get { return instance.center.y }
         set { instance.center.y = newValue }
     }

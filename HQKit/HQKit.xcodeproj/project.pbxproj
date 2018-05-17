@@ -60,10 +60,10 @@
 		8A8B65D220ABA98D008975ED /* HQKit */ = {
 			isa = PBXGroup;
 			children = (
+				8A52E7DB20ABACE700E93C5C /* ScreenShot.swift */,
 				8A8B65DB20ABA9AB008975ED /* Extension */,
 				8A8B65D320ABA98D008975ED /* HQKit.h */,
 				8A8B65D420ABA98D008975ED /* Info.plist */,
-				8A52E7DB20ABACE700E93C5C /* ScreenShot.swift */,
 			);
 			path = HQKit;
 			sourceTree = "<group>";
