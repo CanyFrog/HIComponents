@@ -52,8 +52,8 @@ open class Router {
     private var pendingTasks = [RouterURLComponent]()
     private var finishedTasks = [Component]()
     
-    public init(scheme: String, navigator: UINavigationController) {
-        self.mainUrl = RouterURL(scheme: scheme, components: [])
+    public init(uri: String, navigator: UINavigationController) {
+        self.mainUrl = RouterURL(url: uri)
         self.navigator = navigator
     }
 }
@@ -171,7 +171,7 @@ extension Router {
 }
 
 extension Router {
-    func push(component: Component, animated: Bool, reset: Bool) {
+    private func push(component: Component, animated: Bool, reset: Bool) {
         component.navigateMode = .push
         let vc = component.viewController
         if reset {
@@ -182,7 +182,7 @@ extension Router {
         }
     }
 
-    func pop(component: Component, animated: Bool) {
+    private func pop(component: Component, animated: Bool) {
         guard navigator != nil else { fatalError("Navigator is deinit") }
         precondition(navigator!.viewControllers.contains(component.viewController), "NavigationStack is error")
 
@@ -203,7 +203,7 @@ extension Router {
         }
     }
 
-    func present(component: Component, animated: Bool) {
+    private func present(component: Component, animated: Bool) {
         //        component.navigateMode = .present
         var pController = UIApplication.shared.keyWindow?.rootViewController // current VC
         while pController?.presentedViewController != nil {
@@ -212,7 +212,7 @@ extension Router {
         pController?.present(component.viewController, animated: animated, completion: nil)
     }
 
-    func dismiss(component: Component, animated: Bool) {
+    private func dismiss(component: Component, animated: Bool) {
         component.viewController.dismiss(animated: animated, completion: nil)
     }
 }
