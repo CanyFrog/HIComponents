@@ -8,247 +8,214 @@
 
 import Foundation
 
-struct RouterTask {
-    enum Operate {
-        case push
-        case pop
-        case remain
-        case reset
-    }
-    
-    var operate: Operate = .push
-    var componentUrl: RouterURL
+public typealias RegisterComponentClosure = (_ component: RouterURLComponent)-> Component
+public enum RouterNavigateMode: String {
+    case none       // Component is not presented or pushed in Main window, the initial state of Component
+    case push       // Componnet is pushed in main window
+    case present    // Component is presented in main window
 }
 
-struct RouterTaskQueue {
-    private var queue = [RouterTask]()
+public struct RouterConfigs {
+    static let `default` = RouterConfigs()
     
-    mutating func insert(uri: String) {
-        // Step 1: Check url scheme
-        let newUrl = RouterURL.unserialize(url: uri)
-        let router = Router.default
-        guard newUrl.scheme == router.appScheme || newUrl.scheme == router.componentScheme else {
-            fatalError("Error: new url scheme must be app scheme or component scheme!")
+    var components = [String: RegisterComponentClosure]()
+    
+    mutating func register(name: String, closure: @escaping RegisterComponentClosure) {
+        components[name] = closure
+    }
+    
+    subscript(name: String) -> RegisterComponentClosure? {
+        return components[name]
+    }
+    
+    subscript(urlComponent: RouterURLComponent) -> Component? {
+        let closure = components[urlComponent.path]
+        return closure?(urlComponent)
+    }
+    
+    private init() {}
+}
+
+
+open class Router {
+    
+    /// Url scheme
+    public var scheme: String { return mainUrl.scheme }
+    
+    public private(set) weak var navigator: UINavigationController?
+
+    public private(set) var mainUrl: RouterURL
+    
+    private var isTransitionInProgress: Bool = false
+    
+    /// Tasks and components
+    private var pendingTasks = [RouterURLComponent]()
+    private var finishedTasks = [Component]()
+    
+    public init(scheme: String, navigator: UINavigationController) {
+        self.mainUrl = RouterURL(scheme: "\(scheme)://", components: [])
+        self.navigator = navigator
+    }
+}
+
+extension Router {
+    
+    /// Open new url, if has old url, will compare two url and execute new task
+    public func open(url: String, animated: Bool = true, mode: RouterNavigateMode = .push) {
+        let newUrl = RouterURL(url: url)
+        guard newUrl.scheme == scheme else { fatalError("New url scheme is error, must be equal \(scheme)") }
+        
+        pendingTasks.append(contentsOf: newUrl.components)
+        
+        let idx = mainUrl.compare(other: newUrl)
+        
+        /// reset stack
+        if idx == -1 { executeResetTask() }
+        
+        /// Update the remain componet state
+        if idx > 0 { executeRemianTask(index: idx) }
+        
+        /// Close different component
+        if !finishedTasks.isEmpty && idx + 1 < finishedTasks.count {
+            executeCloseTask(count: finishedTasks.count - idx - 1)
         }
         
-        // Step 2: Prepare two state url
-        let fromAppUri = router.mainURL.serialize()
-        var toAppUri = newUrl.serialize()
-        if newUrl.scheme == Router.default.componentScheme {
-            toAppUri = "\(fromAppUri)/\(newUrl.serializeComponents())"
-        }
+        /// Open new component
+        executeOpenTask(animated: animated, mode: mode)
         
-        // Step 3: Compare two state, pick up and set task operation
-        /// split url to multi component
-        let fromTasks = RouterURL.splitComponents(url: fromAppUri)
-        let toTasks = RouterURL.splitComponents(url: toAppUri)
-        
-        var sameIdx = -1
-        for (idx, fromUri) in fromTasks.enumerated() {
-            if idx >= toTasks.count { break }
+        mainUrl = newUrl
+    }
+    
+    public func forward(component: String, animated: Bool = true, mode: RouterNavigateMode = .push) {
+        let paths = RouterURLComponent.separate(url: component)
+        guard !paths.isEmpty else { fatalError("Forward path is wrong \(component)") }
+        pendingTasks.append(contentsOf: paths)
+        executeOpenTask(animated: animated, mode: mode)
+
+        mainUrl.components.append(contentsOf: paths)
+    }
+    
+    public func back(steps: Int = 1, animated: Bool = true) {
+        mainUrl.components.removeLast(steps)
+        executeCloseTask(count: steps)
+    }
+    
+    public func home(animated: Bool = true) {
+        back(steps: mainUrl.components.count - 1, animated: animated)
+    }
+}
+
+
+extension Router {
+    private func executeOpenTask(animated: Bool, mode: RouterNavigateMode) {
+        while !pendingTasks.isEmpty {
+            let url = pendingTasks.removeFirst()
+            guard let component = RouterConfigs.default[url] else {
+                // 404
+                return
+            }
+            finishedTasks.last?.componentWillInactive()
             
-            let toUri = toTasks[idx]
-            if fromUri.scheme == router.componentScheme && fromUri.components.count == 1 && fromUri == toUri {
-                // If two uri is equal, sameIdx ++
-                sameIdx = idx
+            component.componentWillMount()
+            component.navigateMode = finishedTasks.isEmpty ? .none : mode
+            component.urlComponent = url
+            component.router = self
+            component.componentWillActive()
+            
+            if component.navigateMode == .push {
+                push(component: component, animated: animated, reset: finishedTasks.isEmpty)
             }
             else {
+                present(component: component, animated: animated)
+            }
+            
+            finishedTasks.append(component)
+        }
+    }
+
+    private func executeCloseTask(count: Int) {
+        var times = count
+        while times > 0 {
+            guard let component = finishedTasks.popLast() else { return }
+            component.componentWillInactive()
+            
+            if component.navigateMode == .push {
+                pop(component: component, animated: count == 1)
+            }
+            else {
+                dismiss(component: component, animated: count == 1)
+            }
+            
+            component.componentWillUnmount()
+            finishedTasks.last?.componentWillActive()
+            times -= 1
+        }
+        //        component?.rootViewController.pageTransitionDuration = task.
+    }
+
+    private func executeRemianTask(index: Int) {
+        // Update target vc state and execute next task
+        guard index > 0 else { return }
+        for i in 0 ... index {
+            finishedTasks[i].urlComponent = pendingTasks.removeFirst()
+        }
+    }
+
+    private func executeResetTask() {
+        while let component = finishedTasks.popLast() {
+            component.componentWillInactive()
+            component.componentWillUnmount()
+        }
+        
+        // Dismiss all presented VC
+        navigator?.presentedViewController?.dismiss(animated: false, completion: nil)
+        navigator?.setViewControllers([], animated: false)
+    }
+}
+
+extension Router {
+    func push(component: Component, animated: Bool, reset: Bool) {
+        component.navigateMode = .push
+        let vc = component.viewController
+        if reset {
+            navigator?.setViewControllers([vc], animated: animated)
+        }
+        else {
+            navigator?.pushViewController(vc, animated: animated)
+        }
+    }
+
+    func pop(component: Component, animated: Bool) {
+        guard navigator != nil else { fatalError("Navigator is deinit") }
+        precondition(navigator!.viewControllers.contains(component.viewController), "NavigationStack is error")
+
+        // find previous view controller before component
+        var index = 0
+        for idx in 0 ..< navigator!.viewControllers.count {
+            if navigator?.viewControllers[idx] == component.viewController {
+                index = idx
                 break
             }
         }
-        
-        
-        // Step 4: Prepare to open / close / remain tasks
-        
-        /// Fill the open tasks
-        if sameIdx + 1 < toTasks.count {
-            toTasks[sameIdx+1 ..< toTasks.count].reversed().forEach { (taskUrl) in
-                // if no vc, 404 not found
-                self.queue.append(RouterTask(operate: .push, componentUrl: taskUrl))
-            }
-        }
-        
-        // No same task, reset satck and reopen new stack
-        if sameIdx == -1 && sameIdx+1 < toTasks.count {
-            // Setting last task type reset
-            var task = queue.popLast()!
-            task.operate = .reset
-            queue.append(task)
-            return
-        }
-        
-        /// Fill the close stack
-        if sameIdx + 1 < fromTasks.count {
-            fromTasks[sameIdx+1 ..< fromTasks.count].forEach { (taskUrl) in
-                self.queue.append(RouterTask(operate: .pop, componentUrl: taskUrl))
-            }
-        }
-        
-        /// Fill the remain stack
-        if sameIdx > 0 {
-            toTasks[0 ... sameIdx].reversed().forEach { (taskUrl) in
-                self.queue.append(RouterTask(operate: .remain, componentUrl: taskUrl))
-            }
-        }
-    }
-    
-    mutating func next() -> RouterTask? {
-        return queue.popLast()
-    }
-}
 
-//struct RouterOptions: OptionSet {
-//    public let rawValue: UInt
-//
-//    public static let none          = RouterOptions(rawValue: 1 << 0)
-//
-//    public static let animated      = RouterOptions(rawValue: 1 << 1)
-//
-//    public static let resetStack    = RouterOptions(rawValue: 1 << 2)
-//
-//    public init(rawValue: RouterOptions.RawValue) {
-//        self.rawValue = rawValue
-//    }
-//}
+        if(index == 0) {
+            navigator?.setViewControllers([], animated: animated)
+        } else {
+            // dismiss all view controller until Componernt's rootViewController is dismissed
+            navigator?.popToViewController(navigator!.viewControllers[index-1], animated: animated)
+        }
+    }
 
-//typealias PendingTask = (uri: String, options: RouterOptions)
+    func present(component: Component, animated: Bool) {
+        //        component.navigateMode = .present
+        var pController = UIApplication.shared.keyWindow?.rootViewController // current VC
+        while pController?.presentedViewController != nil {
+            pController = pController?.presentedViewController
+        }
+        pController?.present(component.viewController, animated: animated, completion: nil)
+    }
 
-typealias RouterComponentList = [String: UIViewController]
-public typealias RegisterComponentClosure = (_ component: RouterURLComponent?)-> UIViewController
-
-open class Router {
-    static let `default` = Router()
-    
-    public var componentScheme: String = "component"
-    public var appScheme: String = "app"
-    public var window = UIApplication.shared.keyWindow
-    
-    public private(set) var mainURL: RouterURL!
-    
-    private var registeredComponents = [String: RegisterComponentClosure]()
-    private var activeURLS = [RouterURL]()
-    private var taskQueue = RouterTaskQueue()
-    private var isTransitionInProgress = false
-    
-    
-    /// Enter into next view controller, custom open new viewcontroller closure
-    ///
-    /// - Parameters:
-    ///   - url: new VC url
-    ///   - handle: open VC closure
-    public func next(url: String, handle: (_ presentedVC: UIViewController, _ targetVC: UIViewController)->Void) {
-        precondition(Thread.current == Thread.main, "Open event must be invoked in main thread!")
-        precondition(!RouterURL.unserialize(url: url).components.isEmpty, "Can not open a empty url: \(url)")
-
-        let uri = RouterURL.unserialize(url: url)
-        let mainUrl = activeURLS.filter{ $0.scheme == uri.scheme }.first
-        precondition(mainUrl != nil, "Error: Scheme \(uri.scheme) not registed")
-        if let register = registeredComponents[uri.scheme] {
-            let target = register(uri.components.first)
-            handle(currentViewController()!, target)
-        }
-        else {
-//            404
-        }
-    }
-    
-    
-    /// Push into next view controller,
-    ///
-    /// - Parameter url: new VC url
-    public func push(url: String, animated: Bool = true) {
-        next(url: url) { (presented, target) in
-            presented.navigationController?.pushViewController(target, animated: animated)
-        }
-    }
-    
-    
-    /// Present into next view controller
-    ///
-    /// - Parameter url: new VC url
-    public func present(url: String, animated: Bool = true, completion: (()->Void)? = nil) {
-        next(url: url) { (presented, target) in
-            presented.navigationController?.present(target, animated: true, completion: completion)
-        }
-    }
-    
-    
-    /// Back to previous view controller
-    public func back() {
-        
-    }
-    
-    
-    /// Open new url, reset previous stack
-    public func open(url: String) {
-        
-    }
-    
-    /// Get current state serialize string
-    public func serialize() -> String {
-        return "holder"
-    }
-    
-    func currentViewController(rootViewController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
-        if let navigation = rootViewController as? UINavigationController {
-            return currentViewController(rootViewController: navigation.visibleViewController)
-        }
-        else if let tabbar = rootViewController as? UITabBarController {
-            return currentViewController(rootViewController: tabbar.selectedViewController)
-        }
-        else if let presented = rootViewController?.presentedViewController {
-            return currentViewController(rootViewController: presented)
-        }
-        else {
-            return rootViewController
-        }
-    }
-}
-
-
-// MARK: - Register
-extension Router {
-    public func register(component: String, configClosure: @escaping RegisterComponentClosure) {
-        registeredComponents[component] = configClosure
-    }
-}
-
-extension Router {
-    func executeNextTask() {
-        precondition(!isTransitionInProgress, "Only when the previous navigation tranisition task is completed, we can perform next navigation task!!!")
-        guard let task = taskQueue.next() else { return }
-        switch task.operate {
-        case .push:
-            executePushTask()
-        case .pop:
-            executePopTask()
-        case .remain:
-            executeRemianTask()
-        case .reset:
-            executeResetTask()
-        }
-    }
-    
-    func executePushTask() {
-        // If push
-        window?.rootViewController?.navigationController?.setViewControllers([], animated: true)
-        
-        window?.rootViewController?.navigationController?.pushViewController(UIViewController(), animated: true)
-    }
-    
-    func executePopTask() {
-        
-    }
-    
-    func executeRemianTask() {
-        // Update target vc state and execute next task
-        
-        DispatchQueue.main.async {
-            self.executeNextTask()
-        }
-    }
-    
-    func executeResetTask() {
-
+    func dismiss(component: Component, animated: Bool) {
+        component.viewController.dismiss(animated: animated, completion: nil)
     }
 }

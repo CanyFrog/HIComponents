@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		604BA95520AD29FB0014D30C /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604BA95420AD29FB0014D30C /* DataProvider.swift */; };
+		604BA95920AD2A550014D30C /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604BA95820AD2A550014D30C /* Component.swift */; };
 		606E41BF20A59784009E4AA5 /* HQRouter.h in Headers */ = {isa = PBXBuildFile; fileRef = 606E41BD20A59784009E4AA5 /* HQRouter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		606E41C620A597DD009E4AA5 /* RouterURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E41C520A597DD009E4AA5 /* RouterURL.swift */; };
 		606E41C820A59BD3009E4AA5 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E41C720A59BD3009E4AA5 /* Router.swift */; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		604BA95420AD29FB0014D30C /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
+		604BA95820AD2A550014D30C /* Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Component.swift; sourceTree = "<group>"; };
 		606E41BA20A59784009E4AA5 /* HQRouter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HQRouter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		606E41BD20A59784009E4AA5 /* HQRouter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HQRouter.h; sourceTree = "<group>"; };
 		606E41BE20A59784009E4AA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -73,6 +77,8 @@
 			children = (
 				606E41BD20A59784009E4AA5 /* HQRouter.h */,
 				606E41BE20A59784009E4AA5 /* Info.plist */,
+				604BA95820AD2A550014D30C /* Component.swift */,
+				604BA95420AD29FB0014D30C /* DataProvider.swift */,
 				606E41C520A597DD009E4AA5 /* RouterURL.swift */,
 				606E41C720A59BD3009E4AA5 /* Router.swift */,
 			);
@@ -205,8 +211,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				604BA95520AD29FB0014D30C /* DataProvider.swift in Sources */,
 				606E41C620A597DD009E4AA5 /* RouterURL.swift in Sources */,
 				606E41C820A59BD3009E4AA5 /* Router.swift in Sources */,
+				604BA95920AD2A550014D30C /* Component.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
