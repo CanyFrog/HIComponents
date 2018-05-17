@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = nav
         window?.makeKeyAndVisible()
         
-        router?.forward(component: "demo-component")
+        router?.forward(component: "demo-component?auto=true;ratate=present")
         return true
     }
 

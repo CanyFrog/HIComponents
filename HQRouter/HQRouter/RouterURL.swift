@@ -12,8 +12,8 @@ protocol RouterURLProtocol: Equatable, CustomStringConvertible {}
 
 // MARK: - Query item eg: key=value
 public struct RouterURLQueryItem: RouterURLProtocol {
-    public var key: String
-    public var value: String?
+    public private(set) var key: String
+    public private(set) var value: String?
     
     public var description: String {
         if let value = value, !value.isEmpty {
@@ -31,8 +31,8 @@ public struct RouterURLQueryItem: RouterURLProtocol {
     
     public init(pair: String) {
         guard !pair.isEmpty else { fatalError("Error: Router Query item string is empty") }
-        let para = pair.split(separator: "=", maxSplits: 1, omittingEmptySubsequences: true).map { String($0) }
-        self.init(key: para.first!, value: para.last)
+        var para = pair.split(separator: "=", maxSplits: 1, omittingEmptySubsequences: true).map { String($0) }
+        self.init(key: para.removeFirst(), value: para.first)
     }
 }
 
@@ -40,8 +40,8 @@ public struct RouterURLQueryItem: RouterURLProtocol {
 // MARK: - Component eg: component?k1=v1;k2=v2....
 public struct RouterURLComponent: RouterURLProtocol {
     
-    public var path: String
-    public var queryItems: [RouterURLQueryItem]?
+    public private(set) var path: String
+    public private(set) var queryItems: [RouterURLQueryItem]?
     
     public var description: String {
         let pathSer = path.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed)
@@ -55,18 +55,17 @@ public struct RouterURLComponent: RouterURLProtocol {
     }
     
     public init(component: String) {
-        let components = component.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: true)
+        var components = component.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: true)
         guard components.count > 0 else { fatalError("Error: Router component string is empty") }
         
-        let pathStr = components.first
-        var items: [RouterURLQueryItem]? = nil
-        if components.count > 1 {
-            items = components.dropFirst().compactMap{ (item) -> RouterURLQueryItem? in
-                if !item.isEmpty { return RouterURLQueryItem(pair: String(item)) }
-                else { return nil }
-            }
+        let pathStr = String(components.removeFirst())
+        guard let params = components.last else { self.init(path: pathStr, queryItems: nil); return }
+
+        let items = String(params).components(separatedBy: ";").compactMap{ (item) -> RouterURLQueryItem? in
+            if !item.isEmpty { return RouterURLQueryItem(pair: String(item)) }
+            else { return nil }
         }
-        self.init(path: String(pathStr!), queryItems: items)
+        self.init(path: pathStr, queryItems: items)
     }
     
     public static func separate(url: String) -> [RouterURLComponent] {
@@ -102,8 +101,8 @@ public struct RouterURLComponent: RouterURLProtocol {
 // MARK: - URL eg: scheme://component1;k1=v1;k2=v2/component2;k3=v3;...
 public struct RouterURL: RouterURLProtocol {
     
-    public var scheme: String
-    public var components = [RouterURLComponent]()
+    public private(set) var scheme: String
+    public private(set) var components = [RouterURLComponent]()
     
     public var description: String {
         return "\(scheme)://\(componentsDescription)"
@@ -134,6 +133,14 @@ public struct RouterURL: RouterURLProtocol {
         self.init(scheme: schemeStr, components: components)
     }
     
+    
+    public mutating func forward(path: [RouterURLComponent]) {
+        components.append(contentsOf: path)
+    }
+    
+    public mutating func back(steps: Int) {
+        components.removeLast(steps)
+    }
     
     /// Compare two url, if scheme is different, return -1; otherwise return path equal count
     public func compare(other: RouterURL) -> Int {
