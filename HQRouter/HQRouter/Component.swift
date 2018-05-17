@@ -16,18 +16,15 @@ public enum NavigateMode {
 
 public protocol Component: class {
     /// Component's unqiue identifier
-    var uid: String { get set }
+    var uid: String! { get set }
     
     /// Component's uri
-    var urlComponent: RouterURLComponent { get set }
+    var urlComponent: RouterURLComponent! { get set }
     
     /// Router object
-    var router: Router { get set }
+    var router: Router? { get set }
     
     /// Component instance's navigate mode
-    var preferredNavigateMode: NavigateMode { get set }
-    
-    
     var navigateMode: RouterNavigateMode { get set }
     
     /// Component's main entry UIViewController
@@ -59,8 +56,8 @@ public protocol Component: class {
 }
 
 extension Component {
-    func componentWillMount() {}
-    func componentWillUnmount() {}
-    func componentWillActive() {}
-    func componentWillInactive() {}
+    public func componentWillMount() {}
+    public func componentWillUnmount() {}
+    public func componentWillActive() {}
+    public func componentWillInactive() {}
 }

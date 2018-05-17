@@ -15,20 +15,20 @@ public enum RouterNavigateMode: String {
     case present    // Component is presented in main window
 }
 
-public struct RouterConfigs {
-    static let `default` = RouterConfigs()
+public class RouterConfigs {
+    public static let `default` = RouterConfigs()
     
     var components = [String: RegisterComponentClosure]()
     
-    mutating func register(name: String, closure: @escaping RegisterComponentClosure) {
+    public func register(name: String, closure: @escaping RegisterComponentClosure) {
         components[name] = closure
     }
     
-    subscript(name: String) -> RegisterComponentClosure? {
+    public subscript(name: String) -> RegisterComponentClosure? {
         return components[name]
     }
     
-    subscript(urlComponent: RouterURLComponent) -> Component? {
+    public subscript(urlComponent: RouterURLComponent) -> Component? {
         let closure = components[urlComponent.path]
         return closure?(urlComponent)
     }

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		604BA95520AD29FB0014D30C /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604BA95420AD29FB0014D30C /* DataProvider.swift */; };
 		604BA95920AD2A550014D30C /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604BA95820AD2A550014D30C /* Component.swift */; };
+		604BA95B20AD69450014D30C /* DemoComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604BA95A20AD69450014D30C /* DemoComponent.swift */; };
+		604BA95D20AD6B2F0014D30C /* HQRouter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 606E41BA20A59784009E4AA5 /* HQRouter.framework */; };
 		606E41BF20A59784009E4AA5 /* HQRouter.h in Headers */ = {isa = PBXBuildFile; fileRef = 606E41BD20A59784009E4AA5 /* HQRouter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		606E41C620A597DD009E4AA5 /* RouterURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E41C520A597DD009E4AA5 /* RouterURL.swift */; };
 		606E41C820A59BD3009E4AA5 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E41C720A59BD3009E4AA5 /* Router.swift */; };
@@ -22,6 +24,7 @@
 /* Begin PBXFileReference section */
 		604BA95420AD29FB0014D30C /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
 		604BA95820AD2A550014D30C /* Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Component.swift; sourceTree = "<group>"; };
+		604BA95A20AD69450014D30C /* DemoComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoComponent.swift; sourceTree = "<group>"; };
 		606E41BA20A59784009E4AA5 /* HQRouter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HQRouter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		606E41BD20A59784009E4AA5 /* HQRouter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HQRouter.h; sourceTree = "<group>"; };
 		606E41BE20A59784009E4AA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -48,18 +51,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				604BA95D20AD6B2F0014D30C /* HQRouter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		604BA95C20AD6B2F0014D30C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		606E41B020A59784009E4AA5 = {
 			isa = PBXGroup;
 			children = (
 				606E41BC20A59784009E4AA5 /* HQRouter */,
 				8A8B65B520AB12F9008975ED /* HQRouterDemo */,
 				606E41BB20A59784009E4AA5 /* Products */,
+				604BA95C20AD6B2F0014D30C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -89,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				8A8B65B620AB12F9008975ED /* AppDelegate.swift */,
+				604BA95A20AD69450014D30C /* DemoComponent.swift */,
 				8A8B65B820AB12F9008975ED /* ViewController.swift */,
 				8A8B65BA20AB12F9008975ED /* Main.storyboard */,
 				8A8B65BD20AB12FA008975ED /* Assets.xcassets */,
@@ -224,6 +237,7 @@
 			files = (
 				8A8B65B920AB12F9008975ED /* ViewController.swift in Sources */,
 				8A8B65B720AB12F9008975ED /* AppDelegate.swift in Sources */,
+				604BA95B20AD69450014D30C /* DemoComponent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

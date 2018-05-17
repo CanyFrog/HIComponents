@@ -7,15 +7,24 @@
 //
 
 import UIKit
+import HQRouter
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var router: Router?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        RouterConfigs.default.register(name: "demo-component") { _ in DemoComponent() }
+        
+        window = UIWindow(frame: UIScreen.main.bounds)
+        let nav = UINavigationController()
+        router = Router(scheme: "demo", navigator: nav)
+        window?.rootViewController = nav
+        window?.makeKeyAndVisible()
+        
+        router?.forward(component: "demo-component")
         return true
     }
 
