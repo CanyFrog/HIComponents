@@ -18,7 +18,7 @@ public enum RouterNavigateMode: String {
 public class RouterConfigs {
     public static let `default` = RouterConfigs()
     
-    var components = [String: RegisterComponentClosure]()
+    private var components = [String: RegisterComponentClosure]()
     
     public func register(name: String, closure: @escaping RegisterComponentClosure) {
         components[name] = closure
@@ -71,20 +71,18 @@ extension Router {
         pendingTasks.append(contentsOf: newUrl.components)
         
         /// reset stack
-        if idx == -1 { executeResetTask() }
+        if idx < 1 { executeResetTask() }
         
         /// Update the remain componet state
         if idx > 0 { executeRemianTask(index: idx) }
         
         /// Close different component
-        if !finishedTasks.isEmpty && idx + 1 < finishedTasks.count {
-            executeCloseTask(count: finishedTasks.count - idx - 1)
+        if !finishedTasks.isEmpty && idx < finishedTasks.count {
+            executeCloseTask(count: finishedTasks.count - idx)
         }
         
         /// Open new component
         executeOpenTask(animated: animated, mode: mode)
-        
-        
     }
     
     public func forward(component: String, animated: Bool = true, mode: RouterNavigateMode = .push) {
@@ -155,7 +153,6 @@ extension Router {
 
     private func executeRemianTask(index: Int) {
         // Update target vc state and execute next task
-        guard index > 0 else { return }
         for i in 0 ... index {
             finishedTasks[i].urlComponent = pendingTasks.removeFirst()
         }
