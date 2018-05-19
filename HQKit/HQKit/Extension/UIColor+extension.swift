@@ -24,3 +24,12 @@ extension Namespace where T: UIColor {
                        alpha: alpha)
     }
 }
+
+extension Namespace where T: UIColor {
+    public static var disable: UIColor    { return UIColor.hq.color(rgbHexValue: 0xdddddd) }
+    public static var dark:    UIColor    { return UIColor.hq.color(rgbHexValue: 0x5a6a7a) }
+    public static var info:    UIColor    { return UIColor.hq.color(rgbHexValue: 0x4cb6cb) }
+    public static var warning: UIColor    { return UIColor.hq.color(rgbHexValue: 0xfad733) }
+    public static var danger:  UIColor    { return UIColor.hq.color(rgbHexValue: 0xf05050) }
+    public static var success: UIColor    { return UIColor.hq.color(rgbHexValue: 0x1ab667) }
+}
