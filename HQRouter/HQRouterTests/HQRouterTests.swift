@@ -10,7 +10,11 @@ import XCTest
 import HQRouter
 
 class HQRouterConfigsTests: XCTestCase {
-    class TestDataProvider: DataProvider { }
+    class TestDataProvider: DataProvider {
+        func invoke<T>(name: String, params: [String : Any]) -> T? {
+            return nil
+        }
+    }
     class TestComponent: Component {
         var uid: String!
         var urlComponent: RouterURLComponent!
@@ -76,7 +80,7 @@ class HQRouterTests: XCTestCase {
         let nav = UINavigationController()
         let router = Router(uri: uri, navigator: nav)
         
-        router.back(steps: 2, animated: true)
+        router.back(animated: true, steps: 2)
         XCTAssertEqual(router.mainUrl.description, "test://home?key=value")
     }
     
@@ -85,7 +89,7 @@ class HQRouterTests: XCTestCase {
         let nav = UINavigationController()
         let router = Router(uri: uri, navigator: nav)
         
-        router.back(steps: 2, animated: true)
+        router.back(animated: true, steps: 2)
         XCTAssertEqual(router.mainUrl.description, "test://home?key=value")
     }
 }

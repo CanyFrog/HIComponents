@@ -115,7 +115,7 @@ public struct RouterURL: RouterURLProtocol {
     
     public init(url: String) {
         let paths = url.components(separatedBy: "://")
-        guard paths.count == 2 else { fatalError("Error: Router uri must be xxxx://xxxx") }
+        guard paths.count <= 2 else { fatalError("Error: Router uri must be xxxx://xxxx") }
         
         let schemeStr = paths.first!
         let components = paths.last!.components(separatedBy: "/").compactMap { (path) -> RouterURLComponent? in
@@ -130,8 +130,12 @@ public struct RouterURL: RouterURLProtocol {
         components.append(contentsOf: path)
     }
     
-    public mutating func back(steps: Int = 1) {
-        components.removeLast(steps)
+    @discardableResult
+    public mutating func back(steps: Int = 1) -> [RouterURLComponent?] {
+        let count = min(steps, components.count)
+        let removed = components[(components.count-count)...].compactMap{ $0 }
+        components.removeLast(count)
+        return removed
     }
     
     /// Compare two url, if scheme is different, return -1; otherwise return path equal count

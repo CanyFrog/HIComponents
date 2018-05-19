@@ -8,4 +8,12 @@
 
 import Foundation
 
-public protocol DataProvider: class {}
+public protocol DataProvider {
+    func invoke<T>(name: String, params: [String: Any]) -> T?
+}
+
+extension DataProvider {
+    func invoke<T>(name: String, params: [String: Any]) -> T? {
+        return nil
+    }
+}

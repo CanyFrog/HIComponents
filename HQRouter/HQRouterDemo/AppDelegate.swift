@@ -16,15 +16,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var router: Router?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        RouterConfigs.default.register(name: "demo-component") { _ in DemoComponent() }
+        RouterConfigs.default.register(name: "demo-component") { _ in
+            return DemoComponent(dataProvider: DemoDataProvider())
+        }
         
         window = UIWindow(frame: UIScreen.main.bounds)
         let nav = UINavigationController()
-        router = Router(scheme: "demo", navigator: nav)
+        router = Router(uri: "demo", navigator: nav)
         window?.rootViewController = nav
         window?.makeKeyAndVisible()
-        
-        router?.forward(component: "demo-component?auto=true;ratate=present")
+        router?.open(url: "demo://demo-component?title=home;bgColor=white",mode: .push, animated: true)
         return true
     }
 
