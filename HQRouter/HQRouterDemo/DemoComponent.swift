@@ -8,8 +8,17 @@
 
 import HQRouter
 
-class DemoDataProvider: DataProvider {
-    
+struct DemoDataProvider: DataProvider {
+    enum FuncNames: String {
+        case demoDesc
+    }
+    func invoke<T>(name: String, params: [String : Any]) -> T? {
+        guard let funcName = FuncNames(rawValue: name) else { return nil }
+        switch funcName {
+        case .demoDesc:
+            return name as? T
+        }
+    }
 }
 
 class DemoComponent: Component {
@@ -25,17 +34,16 @@ class DemoComponent: Component {
     
     var dataProvider: DataProvider
     
-    public init() {
+    public init(dataProvider: DataProvider) {
         navigateMode = .push
         viewController = ViewController()
-        dataProvider = DemoDataProvider()
+        self.dataProvider = dataProvider
     }
     
     func componentWillActive() {
-        print(router!.mainUrl.description)
-        print(urlComponent.description)
-        for item in urlComponent.queryItems! {
-            print(item.description)
+        if let vc = viewController as? ViewController {
+            vc.title = urlComponent["title"]
+            vc.router = router
         }
     }
 }

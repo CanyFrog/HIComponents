@@ -28,7 +28,7 @@ public protocol Component: class {
     var navigateMode: RouterNavigateMode { get set }
     
     /// Component's main entry UIViewController
-    var viewController: UIViewController { get }
+    var viewController: UIViewController { get set }
     
     /// Component's data provider
     var dataProvider: DataProvider { get set }
