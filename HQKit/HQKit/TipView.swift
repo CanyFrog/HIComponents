@@ -12,6 +12,7 @@ import HQFoundation
 public class TipView: UIView {
     /// Tip level
     public enum Level { case info, warning, danger, success }
+    private var topCons: NSLayoutConstraint?
     
     private let label: UILabel = {
         let label = UILabel()
@@ -46,18 +47,18 @@ public class TipView: UIView {
     private func initConstrant() {
         let padding: CGFloat = 10
         guard let window = UIApplication.shared.keyWindow else { return }
-        var safeBottom: CGFloat = -50
-        if #available(iOS 11.0, *) { safeBottom -= window.safeAreaInsets.bottom }
         NSLayoutConstraint.activate([
             leadingAnchor.constraint(equalTo: window.leadingAnchor, constant: 12),
             trailingAnchor.constraint(equalTo: window.trailingAnchor, constant: -12),
-            bottomAnchor.constraint(equalTo: window.bottomAnchor, constant: safeBottom),
+            
             
             label.topAnchor.constraint(equalTo: topAnchor, constant: padding),
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
             label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding),
             label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding)
             ])
+        topCons = topAnchor.constraint(equalTo: window.topAnchor, constant: 0)
+        topCons?.isActive = true
     }
     
     private func match(level: Level) {
@@ -76,10 +77,17 @@ public class TipView: UIView {
 }
 
 extension TipView {
-    public func show(tips: String, level: Level = .info) {
+    public func show(tips: String, level: Level = .info, top: CGFloat = 64) {
+        if superview == nil { UIApplication.shared.keyWindow?.addSubview(self) }
+        
+        var safeTop = top
+        if #available(iOS 11.0, *) { safeTop += superview!.safeAreaInsets.top }
+        
         label.text = tips
         UIView.animate(withDuration: 0.5) {
+            self.topCons?.constant = safeTop
             self.match(level: level)
+            self.updateConstraintsIfNeeded()
             self.layoutIfNeeded()
         }
     }

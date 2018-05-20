@@ -57,14 +57,14 @@ class BaseDemo: UIViewController {
         title = customTitle
     }
     
-    func initBtn(title: String) -> UIButton {
+    func initBtn(title: String, width: CGFloat = UIScreen.main.bounds.width / 3) -> UIButton {
         let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.setTitle(title, for: .normal)
         btn.setTitleColor(UIColor.white, for: .normal)
         btn.backgroundColor = UIColor.black
         view.addSubview(btn)
-        btn.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width / 3).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: width).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 44).isActive = true
         return btn
     }
