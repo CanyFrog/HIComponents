@@ -30,22 +30,26 @@ class TipViewDemo: BaseDemo {
         
         warningBtn = initBtn(title: "Warning")
         warningBtn.hq.addEvent({
-            self.tip?.show(tips: "This is warning message!!!", level: .warning)
+            self.tip?.show(tips: "This is warning message!!!", level: .warning, top: 104)
         }, .touchUpInside)
         
         dangerBtn = initBtn(title: "Danger")
         dangerBtn.hq.addEvent({
-            self.tip?.show(tips: "This is danger message!!!", level: .danger)
+            self.tip?.show(tips: "This is danger message!!!", level: .danger, top: 144)
         }, .touchUpInside)
         
         successBtn = initBtn(title: "Success")
         successBtn.hq.addEvent({
-            self.tip?.show(tips: "This is success message!!!", level: .success)
+            self.tip?.show(tips: "This is success message!!!", level: .success, top: 184)
         }, .touchUpInside)
         
         infoBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-104-[info]-padding-[warning]-padding-[danger]-padding-[success]", options: .alignAllCenterX, metrics: ["padding": 24], views: ["info": infoBtn, "warning": warningBtn, "danger": dangerBtn, "success": successBtn]))
-        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tip?.dismiss()
     }
     
 }
