@@ -114,15 +114,15 @@ public struct RouterURL: RouterURLProtocol {
     }
     
     public init(url: String) {
-        let paths = url.components(separatedBy: "://")
+        var paths = url.components(separatedBy: "://")
         guard paths.count <= 2 else { fatalError("Error: Router uri must be xxxx://xxxx") }
         
-        let schemeStr = paths.first!
-        let components = paths.last!.components(separatedBy: "/").compactMap { (path) -> RouterURLComponent? in
+        let schemeStr = paths.removeFirst()
+        let components = paths.last?.components(separatedBy: "/").compactMap { (path) -> RouterURLComponent? in
             if path.isEmpty { return nil }
             else { return RouterURLComponent(component: path) }
         }
-        self.init(scheme: schemeStr, components: components)
+        self.init(scheme: schemeStr, components: components ?? [])
     }
     
     

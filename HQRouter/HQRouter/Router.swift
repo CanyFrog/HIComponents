@@ -59,9 +59,13 @@ open class Router: NSObject {
     
     public init(uri: String, navigator: UINavigationController) {
         super.init()
-        self.mainUrl = RouterURL(url: uri)
+        guard let scheme = uri.components(separatedBy: "://").first else {
+            fatalError("Uri must be xxxx://xxxxx")
+        }
+        mainUrl = RouterURL(url: scheme)
         navigator.delegate = self
         self.navigator = navigator
+        open(url: uri)
     }
 }
 
