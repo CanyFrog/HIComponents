@@ -23,5 +23,4 @@ extension Namespace where T: UIViewController {
             return instance
         }
     }
-    
 }
