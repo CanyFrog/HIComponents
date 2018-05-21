@@ -22,10 +22,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame: UIScreen.main.bounds)
         let nav = UINavigationController()
-        router = Router(uri: "demo", navigator: nav)
+        router = Router(uri: "demo://demo-component?title=home", navigator: nav)
+//        router = Router(uri: "demo", navigator: nav)
         window?.rootViewController = nav
         window?.makeKeyAndVisible()
-        router?.open(url: "demo://demo-component?title=home;bgColor=white",mode: .push, animated: true)
+//        router?.open(url: "demo://demo-component?title=home;bgColor=white",mode: .push, animated: true)
         return true
     }
 
