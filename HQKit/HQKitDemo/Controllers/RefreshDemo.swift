@@ -11,10 +11,10 @@ import HQKit
 
 class RefreshDemo: BaseDemo, UITableViewDataSource {
     var tableView: UITableView?
-//    var headerRefresh: HeaderRefreshView?
+    var headerRefresh: HeaderRefreshView?
     var footerRefresh: FooterRefreshView?
     
-    var dataRows: Int = 5
+    var dataRows: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,14 +26,22 @@ class RefreshDemo: BaseDemo, UITableViewDataSource {
         tableView?.dataSource = self
         tableView?.tableFooterView = UIView()
         
-//        headerRefresh = HeaderRefreshView(container: tableView!)
+        headerRefresh = HeaderRefreshView(container: tableView!, limit: 80)
+        headerRefresh?.beginRefreshClosure = { [weak self] in
+            Timer.hq.after(2, {
+                self?.dataRows = 5
+                self?.tableView?.reloadData()
+                self?.headerRefresh?.endRefresh()
+            })
+        }
+        
         footerRefresh = FooterRefreshView(container: tableView!)
-        footerRefresh?.backgroundColor = UIColor.red
         footerRefresh?.beginRefreshClosure = { [weak self] in
-            sleep(5)
-            self?.dataRows += 5
-            self?.tableView?.reloadData()
-            self?.footerRefresh?.endRefresh()
+            Timer.hq.after(2, {
+                self?.dataRows += 5
+                self?.tableView?.reloadData()
+                self?.footerRefresh?.endRefresh()
+            })
         }
         
         view.addSubview(tableView!)
@@ -41,12 +49,7 @@ class RefreshDemo: BaseDemo, UITableViewDataSource {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        headerRefresh?.beginRefresh()
-//        Timer.hq.after(1) {
-//            self.headerRefresh?.endRefresh()
-//            self.dataRows = 10
-//            self.tableView?.reloadData()
-//        }
+        headerRefresh?.beginRefresh()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
