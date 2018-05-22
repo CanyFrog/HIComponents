@@ -20,31 +20,23 @@ public enum RefreshState: Equatable {
 public protocol HeaderRefreshable: Refreshable {}
 extension HeaderRefreshable where Self: UIView {
     public func scrollViewContentOffset(didChange change: [NSKeyValueChangeKey : Any]) {
-        guard state != .refreshing else { return }
-        guard let scroll = scrollView, let _ = window else { return }
+        guard let scroll = scrollView, scroll.hq.contentHeight > 0, state != .refreshing else { return }
         
-        // offset is minus if scroll to down; so when current offset value more than origin offset, must be scroll to up
-        let currentOffsetY = scroll.contentOffset.y // current content offset in vertical
-        let originOffsetY = originInset!.top // origin content offset in vertical
-        let realOffsetY = abs(currentOffsetY - originOffsetY) // scroll offset delta
+        // If offset.y less than 0, means pull to down, didn't handle
+        guard let newOffset: CGPoint = change[NSKeyValueChangeKey.newKey] as? CGPoint, newOffset.y < 0 else { return }
         
-        resetOriginInset() // handle open other viewcontroller lead to insert change
+        // Scroll real content offset height
+        // inset.top auto minus
+        let offsetSizeY = -scroll.hq.inset.top
         
-        if currentOffsetY >= originOffsetY { return } // scroll to up and not display refreshing view
-        
-//        pullPercent = min(realOffsetY / pullLimit, 1)
-//        pullDelta = realOffsetY
-        
+        guard offsetSizeY > newOffset.y else { return }
+        // offset
+        let offsetDelta = offsetSizeY - newOffset.y
         if scroll.isDragging {
-            state = currentOffsetY < originOffsetY ? .ready : .idle
+            state = offsetDelta >= pullLimit ? .ready : .pulling(offsetDelta)
         }
         else {
-            if state == .ready {
-                state = realOffsetY >= pullLimit ? .refreshing : .idle
-            }
-            else {
-                state = realOffsetY >= pullLimit ? .ready : .idle
-            }
+            state = state == .ready ? .refreshing : .idle
         }
     }
 }
@@ -125,7 +117,10 @@ extension Refreshable {
     public func scrollViewContentSize(didChange change: [NSKeyValueChangeKey: Any]) {}
     public func scrollViewPanState(didChange change: [NSKeyValueChangeKey: Any]) {}
     
-    public func beginRefresh() { state = .refreshing }
+    public func beginRefresh() {
+        state = .pulling(pullLimit)
+        state = .refreshing
+    }
     public func endRefresh() { state = .idle }
 }
 
