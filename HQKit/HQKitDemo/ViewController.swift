@@ -7,17 +7,18 @@
 //
 
 import UIKit
+import Foundation
 
 struct DemoConfig {
     var title: String
-    var controller: UIViewController
+    var controller: BaseDemo.Type
 }
 
 class ViewController: UITableViewController {
     let demos: [DemoConfig] = [
-        DemoConfig(title: "TipViewDemo", controller: TipViewDemo(title: "TipViewDemo")),
-        DemoConfig(title: "RotaryCircleDemo", controller: RotaryCircleDemo(title: "RotaryCircleDemo")),
-        DemoConfig(title: "RefreshDemo", controller: RefreshDemo(title: "RefreshDemo"))
+        DemoConfig(title: "TipViewDemo", controller: TipViewDemo.self),
+        DemoConfig(title: "RotaryCircleDemo", controller: RotaryCircleDemo.self),
+        DemoConfig(title: "RefreshDemo", controller: RefreshDemo.self)
     ]
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +41,10 @@ extension ViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        navigationController?.pushViewController(demos[indexPath.row].controller, animated: true)
+        let data = demos[indexPath.row]
+        let vc = data.controller.init()
+        vc.customTitle = data.title
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 
