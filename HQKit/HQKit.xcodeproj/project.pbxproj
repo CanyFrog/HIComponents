@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		60B098C120B3B98300013A0B /* RefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B098C020B3B98300013A0B /* RefreshView.swift */; };
+		60B098C320B4035100013A0B /* UIScrollView+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B098C220B4035100013A0B /* UIScrollView+extension.swift */; };
 		8A47702820B1B298002E4A17 /* UIWindow+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A47702720B1B298002E4A17 /* UIWindow+extension.swift */; };
 		8A47703220B1C2B0002E4A17 /* UINavigationBar+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A47703120B1C2B0002E4A17 /* UINavigationBar+extension.swift */; };
 		8A52E7DC20ABACE700E93C5C /* ScreenShot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A52E7DB20ABACE700E93C5C /* ScreenShot.swift */; };
@@ -57,6 +59,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		60B098C020B3B98300013A0B /* RefreshView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshView.swift; sourceTree = "<group>"; };
+		60B098C220B4035100013A0B /* UIScrollView+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+extension.swift"; sourceTree = "<group>"; };
 		8A47702720B1B298002E4A17 /* UIWindow+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+extension.swift"; sourceTree = "<group>"; };
 		8A47703120B1C2B0002E4A17 /* UINavigationBar+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationBar+extension.swift"; sourceTree = "<group>"; };
 		8A52E7DB20ABACE700E93C5C /* ScreenShot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenShot.swift; sourceTree = "<group>"; };
@@ -121,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				8A86236820B01AA500F8CF73 /* Refreshable.swift */,
+				60B098C020B3B98300013A0B /* RefreshView.swift */,
 			);
 			path = Refresh;
 			sourceTree = "<group>";
@@ -177,6 +182,7 @@
 				8A5CD8BC20AD03210053EE51 /* UIImage+extension.swift */,
 				8A47702720B1B298002E4A17 /* UIWindow+extension.swift */,
 				8A47703120B1C2B0002E4A17 /* UINavigationBar+extension.swift */,
+				60B098C220B4035100013A0B /* UIScrollView+extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -226,6 +232,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8A8B65D820ABA98D008975ED /* Build configuration list for PBXNativeTarget "HQKit" */;
 			buildPhases = (
+				60B098BF20B3B75C00013A0B /* ShellScript */,
 				8A8B65CB20ABA98D008975ED /* Sources */,
 				8A8B65CC20ABA98D008975ED /* Frameworks */,
 				8A8B65CD20ABA98D008975ED /* Headers */,
@@ -300,6 +307,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		60B098BF20B3B75C00013A0B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = ../update_self.sh;
+		};
 		8A8B65DE20ABAA18008975ED /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -333,12 +353,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60B098C120B3B98300013A0B /* RefreshView.swift in Sources */,
 				8A86236B20B0220700F8CF73 /* TipView.swift in Sources */,
 				8A5CD8BD20AD03210053EE51 /* UIImage+extension.swift in Sources */,
 				8A5CD8B920AD00260053EE51 /* UIView+extension.swift in Sources */,
 				8A8B65DD20ABA9C0008975ED /* UIViewController+extension.swift in Sources */,
 				8A86236920B01AA500F8CF73 /* Refreshable.swift in Sources */,
 				8A47702820B1B298002E4A17 /* UIWindow+extension.swift in Sources */,
+				60B098C320B4035100013A0B /* UIScrollView+extension.swift in Sources */,
 				8A52E7DC20ABACE700E93C5C /* ScreenShot.swift in Sources */,
 				8A47703220B1C2B0002E4A17 /* UINavigationBar+extension.swift in Sources */,
 				8A5CD8BB20AD01B40053EE51 /* UIColor+extension.swift in Sources */,

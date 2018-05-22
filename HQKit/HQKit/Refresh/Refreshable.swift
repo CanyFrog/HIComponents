@@ -9,11 +9,18 @@
 import Foundation
 
 
+public enum RefreshState: Equatable {
+    case idle
+    case pulling(CGFloat)   // Pulling state, parameters is pulling delta
+    case ready              // Pulling offset more than limit, if let go, trigger refreshing
+    case refreshing
+}
+
 // MARK: - Header refresh protocol
 public protocol HeaderRefreshable: Refreshable {}
-extension HeaderRefreshable {
-    public mutating func scrollViewContentOffset(didChange change: [NSKeyValueChangeKey : Any]) {
-        if state == .refreshing { return }
+extension HeaderRefreshable where Self: UIView {
+    public func scrollViewContentOffset(didChange change: [NSKeyValueChangeKey : Any]) {
+        guard state != .refreshing else { return }
         guard let scroll = scrollView, let _ = window else { return }
         
         // offset is minus if scroll to down; so when current offset value more than origin offset, must be scroll to up
@@ -21,12 +28,12 @@ extension HeaderRefreshable {
         let originOffsetY = originInset!.top // origin content offset in vertical
         let realOffsetY = abs(currentOffsetY - originOffsetY) // scroll offset delta
         
-        //        setOriginInset() // handle open other viewcontroller lead to insert change
+        resetOriginInset() // handle open other viewcontroller lead to insert change
         
         if currentOffsetY >= originOffsetY { return } // scroll to up and not display refreshing view
         
-        pullPercent = min(realOffsetY / pullLimit, 1)
-        pullDelta = realOffsetY
+//        pullPercent = min(realOffsetY / pullLimit, 1)
+//        pullDelta = realOffsetY
         
         if scroll.isDragging {
             state = currentOffsetY < originOffsetY ? .ready : .idle
@@ -44,46 +51,43 @@ extension HeaderRefreshable {
 
 
 // MARK: - Footer refresh protocol
-public protocol FooterRefreshable: Refreshable {
-    var footerTop: CGFloat { get set }
-}
-extension FooterRefreshable {
-    public mutating func scrollViewContentOffset(didChange change: [NSKeyValueChangeKey : Any]) {
-        if state == .refreshing { return }
-        guard let scroll = scrollView, let _ = window else { return }
+public protocol FooterRefreshable: Refreshable {}
+extension FooterRefreshable where Self: UIView {
+    public func scrollViewContentOffset(didChange change: [NSKeyValueChangeKey : Any]) {
+        // Scrollview exist, and content size > 0
+        // scroll.hq.inset.top + scroll.hq.contentHeight > scroll.hq.height
+        guard let scroll = scrollView, scroll.hq.contentHeight > 0, state != .refreshing else { return }
         
-        // offset is minus if scroll to down; so when current offset value more than origin offset, must be scroll to up
-        let currentOffsetY = scroll.contentOffset.y // current content offset in vertical
+        // If offset.y less than 0, means pull to down, didn't handle
+        guard let newOffset: CGPoint = change[NSKeyValueChangeKey.newKey] as? CGPoint, newOffset.y > 0 else { return }
         
-        if currentOffsetY <= 0 { return } // pull to down
+        // Scroll real content offset height
+        // inset.top auto minus
+        let offsetSizeY = max(0, scroll.hq.contentHeight + scroll.hq.inset.bottom - scroll.hq.height)
         
-        let maxOffsetY = scroll.contentSize.height - (scroll.bounds.height - originInset!.bottom - originInset!.top)
-        let realOffsetY = abs(currentOffsetY - maxOffsetY) // scroll offset delta
-        
-        pullDelta = realOffsetY
-        pullPercent = min(realOffsetY / pullLimit, 1)
+        // offset
+        let offsetDelta = newOffset.y - offsetSizeY
+        guard offsetDelta > 0 else { return }
         
         if scroll.isDragging {
-            state = .ready
+            state = offsetDelta >= pullLimit ? .ready : .pulling(offsetDelta)
         }
-        else if state == .ready {
-            state = realOffsetY >= pullLimit ? .refreshing : .idle
+        else {
+            state = state == .ready ? .refreshing : .idle
         }
     }
     
-    
-    public mutating func scrollViewContentSize(didChange change: [NSKeyValueChangeKey : Any]) {
+    public func scrollViewContentSize(didChange change: [NSKeyValueChangeKey : Any]) {
         guard let height = (change[NSKeyValueChangeKey.newKey] as? CGSize)?.height else { return }
-        footerTop = height
+        frame.origin.y = height  // update footer origin.y equal scroll view height
     }
 }
+
+
+
 
 // MARK: - Base refresh protocol
-public enum RefreshState {
-    case idle, ready, refreshing
-}
-
-public protocol Refreshable where Self: UIView {
+public protocol Refreshable: class {
     
     var state: RefreshState { get set }
     
@@ -96,26 +100,23 @@ public protocol Refreshable where Self: UIView {
     /// Pulling limit of trigger refresh
     var pullLimit: CGFloat { get set }
     
-    /// Current pulling value
-    var pullDelta: CGFloat { get set }
-    
-    /// Current pulling percent, equal delta / limit
-    var pullPercent: CGFloat { get set }
-    
     /// Begin refresh callback
     var beginRefreshClosure: (()->Void)? { get set }
+    var endRefreshClosure: (()->Void)? { get set }
+    
+    init(container: UIScrollView, limit: CGFloat)
     
     func beginRefresh()
     
     func endRefresh()
     
-    mutating func scrollViewContentOffset(didChange change: [NSKeyValueChangeKey: Any])
+    func scrollViewContentOffset(didChange change: [NSKeyValueChangeKey: Any])
     
-    mutating func scrollViewContentSize(didChange change: [NSKeyValueChangeKey: Any])
+    func scrollViewContentSize(didChange change: [NSKeyValueChangeKey: Any])
     
     /// When user click navigation bar, VC will scroll to top
     /// listen pan state can catch this event
-    mutating func scrollViewPanState(didChange change: [NSKeyValueChangeKey: Any])
+    func scrollViewPanState(didChange change: [NSKeyValueChangeKey: Any])
 }
 
 // MARK: - Optional func
@@ -124,11 +125,12 @@ extension Refreshable {
     public func scrollViewContentSize(didChange change: [NSKeyValueChangeKey: Any]) {}
     public func scrollViewPanState(didChange change: [NSKeyValueChangeKey: Any]) {}
     
-    public mutating func endRefreshing() { state = .idle }
+    public func beginRefresh() { state = .refreshing }
+    public func endRefresh() { state = .idle }
 }
 
-extension Refreshable {
-    mutating func resetOriginInset() {
+extension Refreshable where Self: UIView {
+    func resetOriginInset() {
         if #available(iOS 11.0, *) {
             originInset = scrollView?.adjustedContentInset
         } else {
@@ -136,22 +138,33 @@ extension Refreshable {
         }
     }
     
-    mutating func injectView(superView: UIView?) {
+    func injectView(superView: UIView?) {
         guard let superScroll = superView as? UIScrollView  else { return }
+        
         removeObservers() // remove old observers
         
         scrollView = superScroll
+        
+        frame.size.width = superScroll.hq.width
+        if #available(iOS 11.0, *) {
+            frame.origin.x = superScroll.adjustedContentInset.left
+        }
+        else {
+            frame.origin.x = superScroll.contentInset.left
+        }
+        
+        
         // config self
         superScroll.alwaysBounceVertical = true
-        scrollView = superScroll
+        
         resetOriginInset()
         
-        addObservers()
+        addObservers() // add new observers
     }
     
     func addObservers() {
         guard let scroll = scrollView else { return }
-        let options = NSKeyValueObservingOptions.new.union(.old)
+        let options: NSKeyValueObservingOptions = [.new, .old]
         scroll.addObserver(self, forKeyPath: "contentOffset", options: options, context: nil)
         scroll.addObserver(self, forKeyPath: "contentSize", options: options, context: nil)
         scroll.panGestureRecognizer.addObserver(self, forKeyPath: "state", options: options, context: nil)
