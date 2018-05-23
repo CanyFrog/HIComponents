@@ -1,5 +1,5 @@
 //
-//  UIWindow+extension.swift
+//  UIWindow+Extension.swift
 //  HQKit
 //
 //  Created by Magee on 2018/5/20.
