@@ -33,11 +33,26 @@ extension Namespace where T: UIView {
     public func removeAllSubviews() {
         instance.subviews.forEach{ $0.removeFromSuperview() }
     }
+    
 }
 
 
 
 extension Namespace where T: UIView {
+    public var safeAreaBottomAnchor: NSLayoutYAxisAnchor {
+        if #available(iOS 11.0, *) {
+            return instance.safeAreaLayoutGuide.bottomAnchor
+        }
+        return instance.bottomAnchor
+    }
+    
+    public var safeAreaTopAnchor: NSLayoutYAxisAnchor {
+        if #available(iOS 11.0, *) {
+            return instance.safeAreaLayoutGuide.topAnchor
+        }
+        return instance.topAnchor
+    }
+    
     public var left: CGFloat {
         get { return instance.frame.origin.x }
         set { instance.frame.origin.x = newValue }
@@ -93,4 +108,20 @@ extension Namespace where T: UIView {
         v.translatesAutoresizingMaskIntoConstraints = false
         return v
     }
+    
+    public func constrainEqualWithSuperview() {
+        precondition(!instance.translatesAutoresizingMaskIntoConstraints, "Auto layout must be translatesAutoresizingMaskIntoConstraints == false")
+        let views = ["self": instance]
+        NSLayoutConstraint.constraints(withVisualFormat: "H:|[self]|", options: .init(rawValue: 0), metrics: nil, views: views)
+        NSLayoutConstraint.constraints(withVisualFormat: "V:|[self]|", options: .init(rawValue: 0), metrics: nil, views: views)
+    }
+    
+    public func constrainCenterInSuperview() {
+        precondition(!instance.translatesAutoresizingMaskIntoConstraints, "Auto layout must be translatesAutoresizingMaskIntoConstraints == false")
+        NSLayoutConstraint.activate([
+            instance.centerXAnchor.constraint(equalTo: instance.superview!.centerXAnchor),
+            instance.centerYAnchor.constraint(equalTo: instance.superview!.centerYAnchor)
+            ])
+    }
+
 }
