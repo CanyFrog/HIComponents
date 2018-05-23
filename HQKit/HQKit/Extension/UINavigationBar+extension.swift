@@ -9,6 +9,18 @@
 import HQFoundation
 
 extension Namespace where T: UINavigationBar {
+    /// Set back button image, only change image
+    public var backButtonImage: UIImage? {
+        get {
+            return instance.backIndicatorImage
+        }
+        set {
+            let image: UIImage? = newValue
+            instance.backIndicatorImage = image
+            instance.backIndicatorTransitionMaskImage = image
+        }
+    }
+    
     public func layoutSubviews() {
         instance.layoutSubviews()
         if #available(iOS 11.0, *) {
