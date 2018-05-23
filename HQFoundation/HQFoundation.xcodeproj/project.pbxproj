@@ -12,13 +12,12 @@
 		601BA7642071F77600C62A11 /* HQFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 601BA7562071F77500C62A11 /* HQFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		601BA76F2071F79A00C62A11 /* Lock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA76E2071F79A00C62A11 /* Lock.swift */; };
 		601BA7732071FAB100C62A11 /* Timer+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA7722071FAB100C62A11 /* Timer+extension.swift */; };
+		601EF95420B5262700155668 /* Formatter+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EF95320B5262700155668 /* Formatter+extension.swift */; };
+		601EF95620B5289B00155668 /* Date+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EF95520B5289B00155668 /* Date+extension.swift */; };
 		60F9101020A97AD90072AB55 /* NameSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F9100F20A97AD90072AB55 /* NameSpace.swift */; };
 		60F9101220A983AC0072AB55 /* Timeinterval+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F9101120A983AC0072AB55 /* Timeinterval+extension.swift */; };
 		8A13EA2B20A12A0F0076549A /* KeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A13EA2A20A12A0F0076549A /* KeyChain.swift */; };
 		8A52E7DE20ABAE8E00E93C5C /* Collection+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A52E7DD20ABAE8E00E93C5C /* Collection+extension.swift */; };
-		8A5CD8BF20ADBF110053EE51 /* Array+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5CD8BE20ADBF110053EE51 /* Array+extension.swift */; };
-		8AA183CD2080303500FA51B5 /* NSPointerArray+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA183CC2080303500FA51B5 /* NSPointerArray+extension.swift */; };
-		8AC9160320881D9400A9CEA1 /* Runtime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9160220881D9400A9CEA1 /* Runtime.swift */; };
 		8AC9160920881FDD00A9CEA1 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9160820881FDD00A9CEA1 /* Event.swift */; };
 		8AC9160C2088220D00A9CEA1 /* NSObject+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9160B2088220D00A9CEA1 /* NSObject+extension.swift */; };
 /* End PBXBuildFile section */
@@ -43,13 +42,12 @@
 		601BA76E2071F79A00C62A11 /* Lock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lock.swift; sourceTree = "<group>"; };
 		601BA7722071FAB100C62A11 /* Timer+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Timer+extension.swift"; sourceTree = "<group>"; };
 		601BA7742071FCD100C62A11 /* Runloop.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Runloop.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		601EF95320B5262700155668 /* Formatter+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Formatter+extension.swift"; sourceTree = "<group>"; };
+		601EF95520B5289B00155668 /* Date+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+extension.swift"; sourceTree = "<group>"; };
 		60F9100F20A97AD90072AB55 /* NameSpace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSpace.swift; sourceTree = "<group>"; };
 		60F9101120A983AC0072AB55 /* Timeinterval+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Timeinterval+extension.swift"; sourceTree = "<group>"; };
 		8A13EA2A20A12A0F0076549A /* KeyChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChain.swift; sourceTree = "<group>"; };
 		8A52E7DD20ABAE8E00E93C5C /* Collection+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+extension.swift"; sourceTree = "<group>"; };
-		8A5CD8BE20ADBF110053EE51 /* Array+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+extension.swift"; sourceTree = "<group>"; };
-		8AA183CC2080303500FA51B5 /* NSPointerArray+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPointerArray+extension.swift"; sourceTree = "<group>"; };
-		8AC9160220881D9400A9CEA1 /* Runtime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Runtime.swift; sourceTree = "<group>"; };
 		8AC9160820881FDD00A9CEA1 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		8AC9160B2088220D00A9CEA1 /* NSObject+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -94,13 +92,12 @@
 		601BA7552071F77500C62A11 /* HQFoundation */ = {
 			isa = PBXGroup;
 			children = (
+				601BA76E2071F79A00C62A11 /* Lock.swift */,
 				8A13EA2A20A12A0F0076549A /* KeyChain.swift */,
 				60F9100F20A97AD90072AB55 /* NameSpace.swift */,
 				8AC9160720881F9900A9CEA1 /* Control&Event */,
 				601BA7712071FA9800C62A11 /* Timer */,
 				601BA7702071FA8D00C62A11 /* Extension */,
-				601BA76D2071F78E00C62A11 /* Lock */,
-				8AC9160120881D8000A9CEA1 /* Runtime */,
 				601BA7562071F77500C62A11 /* HQFoundation.h */,
 				601BA7572071F77500C62A11 /* Info.plist */,
 			);
@@ -116,21 +113,13 @@
 			path = HQFoundationTests;
 			sourceTree = "<group>";
 		};
-		601BA76D2071F78E00C62A11 /* Lock */ = {
-			isa = PBXGroup;
-			children = (
-				601BA76E2071F79A00C62A11 /* Lock.swift */,
-			);
-			path = Lock;
-			sourceTree = "<group>";
-		};
 		601BA7702071FA8D00C62A11 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
 				8AC9160B2088220D00A9CEA1 /* NSObject+extension.swift */,
-				8AA183CC2080303500FA51B5 /* NSPointerArray+extension.swift */,
 				8A52E7DD20ABAE8E00E93C5C /* Collection+extension.swift */,
-				8A5CD8BE20ADBF110053EE51 /* Array+extension.swift */,
+				601EF95320B5262700155668 /* Formatter+extension.swift */,
+				601EF95520B5289B00155668 /* Date+extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -143,14 +132,6 @@
 				601BA7742071FCD100C62A11 /* Runloop.playground */,
 			);
 			path = Timer;
-			sourceTree = "<group>";
-		};
-		8AC9160120881D8000A9CEA1 /* Runtime */ = {
-			isa = PBXGroup;
-			children = (
-				8AC9160220881D9400A9CEA1 /* Runtime.swift */,
-			);
-			path = Runtime;
 			sourceTree = "<group>";
 		};
 		8AC9160720881F9900A9CEA1 /* Control&Event */ = {
@@ -275,14 +256,13 @@
 				8A13EA2B20A12A0F0076549A /* KeyChain.swift in Sources */,
 				601BA7732071FAB100C62A11 /* Timer+extension.swift in Sources */,
 				8AC9160C2088220D00A9CEA1 /* NSObject+extension.swift in Sources */,
+				601EF95420B5262700155668 /* Formatter+extension.swift in Sources */,
 				8A52E7DE20ABAE8E00E93C5C /* Collection+extension.swift in Sources */,
 				8AC9160920881FDD00A9CEA1 /* Event.swift in Sources */,
-				8AA183CD2080303500FA51B5 /* NSPointerArray+extension.swift in Sources */,
+				601EF95620B5289B00155668 /* Date+extension.swift in Sources */,
 				601BA76F2071F79A00C62A11 /* Lock.swift in Sources */,
 				60F9101220A983AC0072AB55 /* Timeinterval+extension.swift in Sources */,
-				8AC9160320881D9400A9CEA1 /* Runtime.swift in Sources */,
 				60F9101020A97AD90072AB55 /* NameSpace.swift in Sources */,
-				8A5CD8BF20ADBF110053EE51 /* Array+extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
