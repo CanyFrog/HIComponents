@@ -7,12 +7,21 @@
 //
 
 extension NSObject: Namespaceable {}
-extension Namespace where T == String {
-    public var className: String {
-        return String(describing: type(of: self)).components(separatedBy: ".").last!
+extension Namespace where T: NSObject {
+    /// Gets the Obj-C reference for the instance object within the UIView extension.
+    /// If nil, initializer object and associated.
+    @discardableResult
+    public static func associatedObject<C: Any>(base: Any, key: UnsafePointer<UInt8>, initializer: () -> C, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) -> C {
+        if let v = objc_getAssociatedObject(base, key) as? C { return v }
+        
+        let v = initializer()
+        objc_setAssociatedObject(base, key, v, policy)
+        return v
     }
     
-    public static var className: String {
-        return String(describing: self).components(separatedBy: ".").last!
+    public static func setAssociateObject<C: Any>(base: Any, key: UnsafePointer<UInt8>, value: C, policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC) {
+        objc_setAssociatedObject(base, key, value, policy)
     }
+
 }
+
