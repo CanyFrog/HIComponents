@@ -60,12 +60,12 @@ extension Namespace where T: UIView {
     
     public var right: CGFloat {
         get { return instance.hq.left + instance.hq.width }
-//        set { instance.hq.left = newValue - instance.hq.width }
+        set { instance.frame.origin.x = newValue - instance.hq.width }
     }
     
     public var bottom: CGFloat {
         get { return instance.hq.top + instance.hq.height }
-//        set { instance.hq.top = newValue - instance.hq.height }
+        set { instance.frame.origin.y = newValue - instance.hq.height }
     }
     
     public var origin: CGPoint {
