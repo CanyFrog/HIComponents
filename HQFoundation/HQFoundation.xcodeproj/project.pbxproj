@@ -12,14 +12,14 @@
 		601BA7642071F77600C62A11 /* HQFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 601BA7562071F77500C62A11 /* HQFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		601BA76F2071F79A00C62A11 /* Lock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA76E2071F79A00C62A11 /* Lock.swift */; };
 		601BA7732071FAB100C62A11 /* Timer+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA7722071FAB100C62A11 /* Timer+extension.swift */; };
-		601EF95420B5262700155668 /* Formatter+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EF95320B5262700155668 /* Formatter+extension.swift */; };
-		601EF95620B5289B00155668 /* Date+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EF95520B5289B00155668 /* Date+extension.swift */; };
+		601EF95420B5262700155668 /* Formatter+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EF95320B5262700155668 /* Formatter+Extension.swift */; };
+		601EF95620B5289B00155668 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EF95520B5289B00155668 /* Date+Extension.swift */; };
 		60F9101020A97AD90072AB55 /* NameSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F9100F20A97AD90072AB55 /* NameSpace.swift */; };
 		60F9101220A983AC0072AB55 /* Timeinterval+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F9101120A983AC0072AB55 /* Timeinterval+extension.swift */; };
 		8A13EA2B20A12A0F0076549A /* KeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A13EA2A20A12A0F0076549A /* KeyChain.swift */; };
-		8A52E7DE20ABAE8E00E93C5C /* Collection+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A52E7DD20ABAE8E00E93C5C /* Collection+extension.swift */; };
+		8A52E7DE20ABAE8E00E93C5C /* Collection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A52E7DD20ABAE8E00E93C5C /* Collection+Extension.swift */; };
 		8AC9160920881FDD00A9CEA1 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9160820881FDD00A9CEA1 /* Event.swift */; };
-		8AC9160C2088220D00A9CEA1 /* NSObject+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9160B2088220D00A9CEA1 /* NSObject+extension.swift */; };
+		8AC9160C2088220D00A9CEA1 /* NSObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9160B2088220D00A9CEA1 /* NSObject+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,14 +42,14 @@
 		601BA76E2071F79A00C62A11 /* Lock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lock.swift; sourceTree = "<group>"; };
 		601BA7722071FAB100C62A11 /* Timer+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Timer+extension.swift"; sourceTree = "<group>"; };
 		601BA7742071FCD100C62A11 /* Runloop.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Runloop.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		601EF95320B5262700155668 /* Formatter+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Formatter+extension.swift"; sourceTree = "<group>"; };
-		601EF95520B5289B00155668 /* Date+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+extension.swift"; sourceTree = "<group>"; };
+		601EF95320B5262700155668 /* Formatter+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Formatter+Extension.swift"; sourceTree = "<group>"; };
+		601EF95520B5289B00155668 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		60F9100F20A97AD90072AB55 /* NameSpace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSpace.swift; sourceTree = "<group>"; };
 		60F9101120A983AC0072AB55 /* Timeinterval+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Timeinterval+extension.swift"; sourceTree = "<group>"; };
 		8A13EA2A20A12A0F0076549A /* KeyChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChain.swift; sourceTree = "<group>"; };
-		8A52E7DD20ABAE8E00E93C5C /* Collection+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+extension.swift"; sourceTree = "<group>"; };
+		8A52E7DD20ABAE8E00E93C5C /* Collection+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extension.swift"; sourceTree = "<group>"; };
 		8AC9160820881FDD00A9CEA1 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
-		8AC9160B2088220D00A9CEA1 /* NSObject+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+extension.swift"; sourceTree = "<group>"; };
+		8AC9160B2088220D00A9CEA1 /* NSObject+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,10 +116,10 @@
 		601BA7702071FA8D00C62A11 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				8AC9160B2088220D00A9CEA1 /* NSObject+extension.swift */,
-				8A52E7DD20ABAE8E00E93C5C /* Collection+extension.swift */,
-				601EF95320B5262700155668 /* Formatter+extension.swift */,
-				601EF95520B5289B00155668 /* Date+extension.swift */,
+				8AC9160B2088220D00A9CEA1 /* NSObject+Extension.swift */,
+				8A52E7DD20ABAE8E00E93C5C /* Collection+Extension.swift */,
+				601EF95320B5262700155668 /* Formatter+Extension.swift */,
+				601EF95520B5289B00155668 /* Date+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -255,11 +255,11 @@
 			files = (
 				8A13EA2B20A12A0F0076549A /* KeyChain.swift in Sources */,
 				601BA7732071FAB100C62A11 /* Timer+extension.swift in Sources */,
-				8AC9160C2088220D00A9CEA1 /* NSObject+extension.swift in Sources */,
-				601EF95420B5262700155668 /* Formatter+extension.swift in Sources */,
-				8A52E7DE20ABAE8E00E93C5C /* Collection+extension.swift in Sources */,
+				8AC9160C2088220D00A9CEA1 /* NSObject+Extension.swift in Sources */,
+				601EF95420B5262700155668 /* Formatter+Extension.swift in Sources */,
+				8A52E7DE20ABAE8E00E93C5C /* Collection+Extension.swift in Sources */,
 				8AC9160920881FDD00A9CEA1 /* Event.swift in Sources */,
-				601EF95620B5289B00155668 /* Date+extension.swift in Sources */,
+				601EF95620B5289B00155668 /* Date+Extension.swift in Sources */,
 				601BA76F2071F79A00C62A11 /* Lock.swift in Sources */,
 				60F9101220A983AC0072AB55 /* Timeinterval+extension.swift in Sources */,
 				60F9101020A97AD90072AB55 /* NameSpace.swift in Sources */,

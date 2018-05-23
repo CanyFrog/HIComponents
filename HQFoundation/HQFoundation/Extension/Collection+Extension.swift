@@ -1,5 +1,5 @@
 //
-//  Collection+extension.swift
+//  Collection+Extension.swift
 //  HQFoundation
 //
 //  Created by Magee on 2018/5/16.
