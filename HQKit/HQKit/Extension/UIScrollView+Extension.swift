@@ -1,5 +1,5 @@
 //
-//  UIScrollView+extension.swift
+//  UIScrollView+Extension.swift
 //  HQKit
 //
 //  Created by Magee Huang on 5/22/18.
