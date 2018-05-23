@@ -1,5 +1,5 @@
 //
-//  NSObject+extension.swift
+//  NSObject+Extension.swift
 //  HQFoundation
 //
 //  Created by Qi on 2018/4/19.
