@@ -40,15 +40,19 @@ update_self_frameworks() {
         while read line || [ -n "$line" ]
         do
             echo $line > Cartfile
-            carthage update # update
+            carthage update --platform iOS # checkout
         done < $CARTSELF
     fi
 }
 
 reverted_origin_frameworks() {
+    show_msg "Empty cartfile file"
+    echo > Cartfile
+    echo > Cartfile.resolved
+
     show_msg "Reverted origin frameworks"
-    echo $CARTFILE > Cartfile
-    echo $CARTLOCK > Cartfile.resolved
+    echo "$CARTFILE" > Cartfile
+    echo "$CARTLOCK" > Cartfile.resolved
 }
 
 update_origin_frameworks() {
@@ -57,7 +61,7 @@ update_origin_frameworks() {
         show_msg "No custom dependencies need to be added!"
     else 
         show_msg "Start add custom dependencies!"
-        carthage bootstrap # checkout
+        carthage update --platform iOS # checkout
     fi
 }
 
