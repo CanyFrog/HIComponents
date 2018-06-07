@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		605335D220C8D1EA00F3434E /* ScrollLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605335D120C8D1EA00F3434E /* ScrollLabel.swift */; };
+		605335D420C8D34400F3434E /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605335D320C8D34400F3434E /* GradientView.swift */; };
+		605335DD20C8F91400F3434E /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605335DC20C8F91400F3434E /* WebViewController.swift */; };
 		60B098C120B3B98300013A0B /* RefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B098C020B3B98300013A0B /* RefreshView.swift */; };
 		60B098C320B4035100013A0B /* UIScrollView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B098C220B4035100013A0B /* UIScrollView+Extension.swift */; };
 		8A47702820B1B298002E4A17 /* UIWindow+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A47702720B1B298002E4A17 /* UIWindow+Extension.swift */; };
@@ -59,6 +62,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		605335D120C8D1EA00F3434E /* ScrollLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollLabel.swift; sourceTree = "<group>"; };
+		605335D320C8D34400F3434E /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
+		605335DC20C8F91400F3434E /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		60B098C020B3B98300013A0B /* RefreshView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshView.swift; sourceTree = "<group>"; };
 		60B098C220B4035100013A0B /* UIScrollView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Extension.swift"; sourceTree = "<group>"; };
 		8A47702720B1B298002E4A17 /* UIWindow+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Extension.swift"; sourceTree = "<group>"; };
@@ -107,6 +113,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		605335D020C8D1CC00F3434E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8A86236C20B024EC00F8CF73 /* RotaryCircleView.swift */,
+				8A86236A20B0220700F8CF73 /* TipView.swift */,
+				605335D120C8D1EA00F3434E /* ScrollLabel.swift */,
+				605335D320C8D34400F3434E /* GradientView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		8A86235520B0197F00F8CF73 /* HQKitDemo */ = {
 			isa = PBXGroup;
 			children = (
@@ -162,11 +179,11 @@
 		8A8B65D220ABA98D008975ED /* HQKit */ = {
 			isa = PBXGroup;
 			children = (
+				605335DC20C8F91400F3434E /* WebViewController.swift */,
+				8A52E7DB20ABACE700E93C5C /* ScreenShot.swift */,
+				605335D020C8D1CC00F3434E /* View */,
 				8A86236720B01A8200F8CF73 /* Refresh */,
 				8A8B65DB20ABA9AB008975ED /* Extension */,
-				8A52E7DB20ABACE700E93C5C /* ScreenShot.swift */,
-				8A86236C20B024EC00F8CF73 /* RotaryCircleView.swift */,
-				8A86236A20B0220700F8CF73 /* TipView.swift */,
 				8A8B65D320ABA98D008975ED /* HQKit.h */,
 				8A8B65D420ABA98D008975ED /* Info.plist */,
 			);
@@ -353,9 +370,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				605335D220C8D1EA00F3434E /* ScrollLabel.swift in Sources */,
 				60B098C120B3B98300013A0B /* RefreshView.swift in Sources */,
 				8A86236B20B0220700F8CF73 /* TipView.swift in Sources */,
 				8A5CD8BD20AD03210053EE51 /* UIImage+Extension.swift in Sources */,
+				605335D420C8D34400F3434E /* GradientView.swift in Sources */,
 				8A5CD8B920AD00260053EE51 /* UIView+Extension.swift in Sources */,
 				8A8B65DD20ABA9C0008975ED /* UIViewController+Extension.swift in Sources */,
 				8A86236920B01AA500F8CF73 /* Refreshable.swift in Sources */,
@@ -364,6 +383,7 @@
 				8A52E7DC20ABACE700E93C5C /* ScreenShot.swift in Sources */,
 				8A47703220B1C2B0002E4A17 /* UINavigationBar+Extension.swift in Sources */,
 				8A5CD8BB20AD01B40053EE51 /* UIColor+Extension.swift in Sources */,
+				605335DD20C8F91400F3434E /* WebViewController.swift in Sources */,
 				8A86236D20B024EC00F8CF73 /* RotaryCircleView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
