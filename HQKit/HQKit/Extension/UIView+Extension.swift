@@ -34,6 +34,16 @@ extension Namespace where T: UIView {
         instance.subviews.forEach{ $0.removeFromSuperview() }
     }
     
+    
+    public func animated(hidden: Bool, completion: (()->Void)? = nil) {
+        UIView.animate(withDuration: CATransaction.animationDuration(), animations: {
+            self.instance.alpha = hidden ? 0.0 : 1.0
+        }) { (_) in
+            self.instance.isHidden = hidden
+            self.instance.alpha = 1.0
+            completion?()
+        }
+    }
 }
 
 

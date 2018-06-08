@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		604E0AE920CA2F2600F6BF53 /* StackLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604E0AE820CA2F2600F6BF53 /* StackLabel.swift */; };
 		605335D220C8D1EA00F3434E /* ScrollLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605335D120C8D1EA00F3434E /* ScrollLabel.swift */; };
 		605335D420C8D34400F3434E /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605335D320C8D34400F3434E /* GradientView.swift */; };
 		605335DD20C8F91400F3434E /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605335DC20C8F91400F3434E /* WebViewController.swift */; };
@@ -62,6 +63,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		604E0AE820CA2F2600F6BF53 /* StackLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackLabel.swift; sourceTree = "<group>"; };
 		605335D120C8D1EA00F3434E /* ScrollLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollLabel.swift; sourceTree = "<group>"; };
 		605335D320C8D34400F3434E /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		605335DC20C8F91400F3434E /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
@@ -181,6 +183,7 @@
 			children = (
 				605335DC20C8F91400F3434E /* WebViewController.swift */,
 				8A52E7DB20ABACE700E93C5C /* ScreenShot.swift */,
+				604E0AE820CA2F2600F6BF53 /* StackLabel.swift */,
 				605335D020C8D1CC00F3434E /* View */,
 				8A86236720B01A8200F8CF73 /* Refresh */,
 				8A8B65DB20ABA9AB008975ED /* Extension */,
@@ -371,6 +374,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				605335D220C8D1EA00F3434E /* ScrollLabel.swift in Sources */,
+				604E0AE920CA2F2600F6BF53 /* StackLabel.swift in Sources */,
 				60B098C120B3B98300013A0B /* RefreshView.swift in Sources */,
 				8A86236B20B0220700F8CF73 /* TipView.swift in Sources */,
 				8A5CD8BD20AD03210053EE51 /* UIImage+Extension.swift in Sources */,
