@@ -18,7 +18,6 @@ class RotaryCircleDemo: BaseDemo {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.white
         
         circle.translatesAutoresizingMaskIntoConstraints = false
         sliderBar.translatesAutoresizingMaskIntoConstraints = false

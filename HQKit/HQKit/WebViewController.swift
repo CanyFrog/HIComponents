@@ -10,7 +10,11 @@ import UIKit
 import WebKit
 
 open class WebViewController: UIViewController {
+    open override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
+    
+    /// Public
     open weak var navigationDelegate: WKNavigationDelegate?
+    
     open var hasToolBar: Bool = true
     open var hasMoreOptionsButton: Bool = true
     open var hasProgressBar: Bool = true
@@ -20,22 +24,22 @@ open class WebViewController: UIViewController {
     public private(set) var contentView: UIView = UIView.hq.autoLayout()
     
     var request: URLRequest?
+    
+    /// UI
     var navBar = UIView.hq.autoLayout()
     var toolBar = UIView.hq.autoLayout()
-    var toolBarContentView = UIView.hq.autoLayout()
+    var toolBarContent = UIView.hq.autoLayout()
     var progressView = UIProgressView.hq.autoLayout()
-    var optionsStackView: UIStackView?
-    var transparentView: UIView?
     
-    var titleLabel: UILabel?
-    var backButton: UIButton?
-    var forwardButton: UIButton?
-    var refreshButton: UIButton?
-    var closeButton: UIButton?
-    var moreButton: UIButton?
+    var moreButton = UIButton.hq.autoLayout()
+    var titleLabel = UILabel.hq.autoLayout()
+    var backButton = UIButton.hq.autoLayout()
+    var forwardButton = UIButton.hq.autoLayout()
+    var refreshButton = UIButton.hq.autoLayout()
+    var closeButton = UIButton.hq.autoLayout()
     
-    var navBarHeight: CGFloat = 44
-    var compactNavBarHeight: CGFloat = 28
+    var navBarHeight: CGFloat = 46
+    var compactNavBarHeight: CGFloat { return UIDevice.current.userInterfaceIdiom == .pad ? 35 : 27 }
     
     var navHeightConstraint: NSLayoutConstraint?
     var toolbarBottomConstraint: NSLayoutConstraint?
@@ -43,11 +47,21 @@ open class WebViewController: UIViewController {
     
     let processPool: WKProcessPool = WKProcessPool()
     
+    public convenience init(url: String) {
+        self.init(nibName: nil, bundle: nil)
+        request = URLRequest(url: URL(string: url)!)
+    }
+    
     override open func viewDidLoad() {
         super.viewDidLoad()
-        initializeViews()
         
-        webView?.load(request!)
+        
+        initializeViews()
+        initializeConstrant()
+        
+        if let request = request {
+            webView.load(request)
+        }
     }
     
     deinit {
@@ -61,22 +75,27 @@ open class WebViewController: UIViewController {
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
     
+    
+    
     func initializeViews() {
-        view.addSubview(navBar)
+        /// View contains to navbar and content view
+        view.addSubview({
+          navBar.backgroundColor = UIColor.hq.info
+            return navBar
+        }())
         navBar.addSubview({
-            closeButton = UIButton(type: .contactAdd)
-            closeButton!.hq.addEvent({ [weak self] in
-                self?.dismiss(animated: true, completion: nil)
-                self?.closeBlock?()
-                }, .touchUpInside)
-                return closeButton!
+            closeButton.setImage(UIImage(named: "icon_close", in: Bundle(for: WebViewController.self), compatibleWith: nil), for: .normal)
+            closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+                return closeButton
             }())
         
         navBar.addSubview({
-            titleLabel = UILabel()
-            titleLabel?.text = self.title
-            // font color
-            return titleLabel!
+            titleLabel.text = self.title
+            titleLabel.textColor = UIColor.white
+            titleLabel.numberOfLines = 1
+            titleLabel.textAlignment = .center
+            titleLabel.font = UIFont.systemFont(ofSize: 18)
+            return titleLabel
             }())
         
         
@@ -86,15 +105,15 @@ open class WebViewController: UIViewController {
             config.processPool = processPool
             
             webView = WKWebView(frame: .zero, configuration: config)
-            webView?.translatesAutoresizingMaskIntoConstraints = false
-            webView?.uiDelegate = self
-            webView?.navigationDelegate = self
-            webView?.scrollView.delegate = self
-            webView?.addObserver(self, forKeyPath: "canGoBack", options: .new, context: nil)
-            webView?.addObserver(self, forKeyPath: "canGoForward", options: .new, context: nil)
-            webView?.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
+            webView.translatesAutoresizingMaskIntoConstraints = false
+            webView.uiDelegate = self
+            webView.navigationDelegate = self
+            webView.scrollView.delegate = self
+            webView.addObserver(self, forKeyPath: "canGoBack", options: .new, context: nil)
+            webView.addObserver(self, forKeyPath: "canGoForward", options: .new, context: nil)
+            webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
             
-            return webView!
+            return webView
             }())
         
         contentView.addSubview({
@@ -111,49 +130,36 @@ open class WebViewController: UIViewController {
             }())
         
         
-        toolBar.addSubview(toolBarContentView)
+        toolBar.addSubview(toolBarContent)
         
-        toolBarContentView.addSubview({
-            backButton = UIButton(type: .contactAdd)
-            backButton!.hq.addEvent({ [weak self] in
-                self?.webView.goBack()
-            }, .touchUpInside)
-            return backButton!
+        toolBarContent.addSubview({
+            backButton.setImage(UIImage(named: "icon_back", in: Bundle(for: WebViewController.self), compatibleWith: nil), for: .normal)
+            backButton.addTarget(self, action: #selector(goBack), for: .touchUpInside)
+            return backButton
             }())
         
-        toolBarContentView.addSubview({
-            forwardButton = UIButton(type: .custom)
-            forwardButton!.hq.addEvent({ [weak self] in
-                self?.webView.goForward()
-            }, .touchUpInside)
-            return forwardButton!
+        toolBarContent.addSubview({
+            forwardButton.setImage(UIImage(named: "icon_forward", in: Bundle(for: WebViewController.self), compatibleWith: nil), for: .normal)
+            forwardButton.addTarget(self, action: #selector(goForward), for: .touchUpInside)
+            return forwardButton
             }())
         
-        toolBarContentView.addSubview({
-            refreshButton = UIButton(type: .contactAdd)
-            refreshButton!.hq.addEvent({[weak self] in
-                self?.progressView.progress = 0
-                if let _ = self?.webView.url {
-                    self?.webView.reload()
-                }
-                else if let request = self?.request {
-                    self?.webView.load(request)
-                }
-            }, .touchUpInside)
-            return refreshButton!
+        toolBarContent.addSubview({
+            refreshButton.setImage(UIImage(named: "icon_refresh", in: Bundle(for: WebViewController.self), compatibleWith: nil), for: .normal)
+            refreshButton.addTarget(self, action: #selector(refresh), for: .touchUpInside)
+            return refreshButton
             }())
         
-        toolBarContentView.addSubview({
-            moreButton = UIButton(type: .contactAdd)
-            
-            return moreButton!
+        toolBarContent.addSubview({
+            moreButton.setImage(UIImage(named: "icon_more", in: Bundle(for: WebViewController.self), compatibleWith: nil), for: .normal)
+            moreButton.addTarget(self, action: #selector(more), for: .touchUpInside)
+            return moreButton
             }())
-        
-        
     }
     
     
     func initializeConstrant() {
+        /// View
         NSLayoutConstraint.activate([
             navBar.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor),
             navBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -175,15 +181,10 @@ open class WebViewController: UIViewController {
             
             toolBar.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             toolBar.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            
-            toolBarContentView.leadingAnchor.constraint(equalTo: toolBar.leadingAnchor),
-            toolBarContentView.trailingAnchor.constraint(equalTo: toolBar.trailingAnchor),
-            toolBarContentView.topAnchor.constraint(equalTo: toolBar.topAnchor),
-            toolBarContentView.bottomAnchor.constraint(equalTo: toolBar.hq.safeAreaBottomAnchor),
             ])
         
         
-        navHeightConstraint = navBar.heightAnchor.constraint(equalToConstant: 44)
+        navHeightConstraint = navBar.heightAnchor.constraint(equalToConstant: navBarHeight)
         navHeightConstraint?.isActive = true
         
         webViewBootomConstraint = webView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 56)
@@ -192,10 +193,50 @@ open class WebViewController: UIViewController {
         toolbarBottomConstraint = toolBar.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         toolbarBottomConstraint?.isActive = true
         
-        /// navbar subviews
-        let navViews = ["close": closeButton!, "title": titleLabel!]
-        NSLayoutConstraint.constraints(withVisualFormat: "V:|-1-[close(44)]-1-|", options: .init(rawValue: 0), metrics: nil, views:navViews)
-        NSLayoutConstraint.constraints(withVisualFormat: "H:|-2-[close(44)]-2-[title]-48-|", options: .init(rawValue: 0), metrics: nil, views: navViews)
+        /// Navbar
+        NSLayoutConstraint.activate([
+            closeButton.topAnchor.constraint(equalTo: navBar.topAnchor, constant: 1),
+            closeButton.leadingAnchor.constraint(equalTo: navBar.leadingAnchor, constant: 2),
+            closeButton.bottomAnchor.constraint(equalTo: navBar.bottomAnchor, constant: -1),
+            closeButton.widthAnchor.constraint(equalToConstant: 44),
+            
+            titleLabel.centerYAnchor.constraint(equalTo: navBar.centerYAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: navBar.leadingAnchor, constant: 48),
+            titleLabel.trailingAnchor.constraint(equalTo: navBar.trailingAnchor, constant: -48)
+            ])
+        
+        
+        /// Tool bar
+        let hPadding: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 10 : 2
+        let vPadding: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 10 : 6
+        NSLayoutConstraint.activate([
+            toolBarContent.leadingAnchor.constraint(equalTo: toolBar.leadingAnchor),
+            toolBarContent.trailingAnchor.constraint(equalTo: toolBar.trailingAnchor),
+            toolBarContent.topAnchor.constraint(equalTo: toolBar.topAnchor),
+            toolBarContent.bottomAnchor.constraint(equalTo: toolBar.hq.safeAreaBottomAnchor),
+            
+            backButton.topAnchor.constraint(equalTo: toolBarContent.topAnchor, constant: vPadding),
+            backButton.bottomAnchor.constraint(equalTo: toolBarContent.bottomAnchor, constant: -vPadding),
+            backButton.leadingAnchor.constraint(equalTo: toolBarContent.leadingAnchor, constant: hPadding),
+            backButton.widthAnchor.constraint(equalToConstant: 44),
+            backButton.heightAnchor.constraint(equalToConstant: 44),
+            
+            forwardButton.centerYAnchor.constraint(equalTo: backButton.centerYAnchor),
+            forwardButton.leadingAnchor.constraint(equalTo: backButton.trailingAnchor, constant: hPadding),
+            forwardButton.widthAnchor.constraint(equalTo: backButton.widthAnchor),
+            forwardButton.heightAnchor.constraint(equalTo: backButton.heightAnchor),
+            
+            refreshButton.trailingAnchor.constraint(greaterThanOrEqualTo: forwardButton.leadingAnchor, constant: hPadding),
+            refreshButton.centerYAnchor.constraint(equalTo: backButton.centerYAnchor),
+            refreshButton.widthAnchor.constraint(equalTo: backButton.widthAnchor),
+            refreshButton.heightAnchor.constraint(equalTo: backButton.heightAnchor),
+            
+            moreButton.leadingAnchor.constraint(equalTo: refreshButton.trailingAnchor, constant: hPadding),
+            moreButton.trailingAnchor.constraint(equalTo: toolBarContent.trailingAnchor, constant: -hPadding),
+            moreButton.centerYAnchor.constraint(equalTo: backButton.centerYAnchor),
+            moreButton.widthAnchor.constraint(equalTo: backButton.widthAnchor),
+            moreButton.heightAnchor.constraint(equalTo: backButton.heightAnchor),
+            ])
     }
     
     
@@ -207,19 +248,57 @@ open class WebViewController: UIViewController {
         if hasProgressBar && path == "estimatedProgress" {
             progressView.isHidden = false
             progressView.setProgress(Float(webView.estimatedProgress), animated: true)
-            if webView.estimatedProgress > 1.0 {
+            if webView.estimatedProgress >= 1.0 {
                 progressView.hq.animated(hidden: true) { [weak self] in
                     self?.progressView.progress = 0.0
                 }
             }
         }
         else if (path ==  "canGoBack" || path == "canGoForward") {
-            backButton?.isEnabled = webView.canGoBack
-            forwardButton?.isEnabled = webView.canGoForward
+            backButton.isEnabled = webView.canGoBack
+            forwardButton.isEnabled = webView.canGoForward
         }
         else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
+    }
+    
+    open func load(url: String) {
+        load(request: URLRequest(url: URL(string: url)!))
+    }
+    
+    open func load(request: URLRequest) {
+        self.request = request
+        webView.load(request)
+    }
+}
+
+
+extension WebViewController {
+    @objc private func goBack() {
+        webView.goBack()
+    }
+    
+    @objc private func goForward() {
+        webView.goForward()
+    }
+    
+    @objc private func refresh() {
+        progressView.progress = 0
+        if let _ = webView.url {
+            webView.reload()
+        }
+        else if let request = request {
+            webView.load(request)
+        }
+    }
+    
+    @objc private func close() {
+        dismiss(animated: true, completion: closeBlock)
+    }
+    
+    @objc private func more() {
+        
     }
 }
 
@@ -237,18 +316,12 @@ extension WebViewController: UIScrollViewDelegate {
     }
     
     func navBar(compact: Bool) {
-        closeButton?.hq.animated(hidden: compact)
-        if compact {
-            NSLayoutConstraint.deactivate((closeButton?.constraints)!)
-        }
-        else {
-            NSLayoutConstraint.activate((closeButton?.constraints)!)
-        }
+        closeButton.hq.animated(hidden: compact)
         view.layoutIfNeeded()
         
         UIView.animate(withDuration: 0.4) {
-            let scale = compact ? UIFont.systemFont(ofSize: 12).pointSize / self.titleLabel!.font.pointSize : 1.0
-            self.titleLabel?.transform = CGAffineTransform().scaledBy(x: scale, y: scale)
+            let scale = compact ? UIFont.systemFont(ofSize: 14).pointSize / self.titleLabel.font.pointSize : 1.0
+            self.titleLabel.transform = CGAffineTransform.identity.scaledBy(x: scale, y: scale)
             self.navHeightConstraint?.constant = compact ? self.compactNavBarHeight : self.navBarHeight
             self.view.layoutIfNeeded()
         }

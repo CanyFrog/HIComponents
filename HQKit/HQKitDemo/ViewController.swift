@@ -18,7 +18,8 @@ class ViewController: UITableViewController {
     let demos: [DemoConfig] = [
         DemoConfig(title: "TipViewDemo", controller: TipViewDemo.self),
         DemoConfig(title: "RotaryCircleDemo", controller: RotaryCircleDemo.self),
-        DemoConfig(title: "RefreshDemo", controller: RefreshDemo.self)
+        DemoConfig(title: "RefreshDemo", controller: RefreshDemo.self),
+        DemoConfig(title: "WebViewDemo", controller: WebViewDemo.self)
     ]
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,6 +59,7 @@ class BaseDemo: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor.white
         title = customTitle
     }
     
