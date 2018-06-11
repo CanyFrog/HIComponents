@@ -11,6 +11,9 @@
 		605335D220C8D1EA00F3434E /* ScrollLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605335D120C8D1EA00F3434E /* ScrollLabel.swift */; };
 		605335D420C8D34400F3434E /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605335D320C8D34400F3434E /* GradientView.swift */; };
 		605335DD20C8F91400F3434E /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605335DC20C8F91400F3434E /* WebViewController.swift */; };
+		606E2B4020CE21EF0095AA86 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 606E2B3F20CE21EF0095AA86 /* Assets.xcassets */; };
+		606E2B4220CE2E730095AA86 /* HQKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E2B4120CE2E730095AA86 /* HQKit.swift */; };
+		606E2B4420CE3A140095AA86 /* WebViewDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E2B4320CE3A140095AA86 /* WebViewDemo.swift */; };
 		60B098C120B3B98300013A0B /* RefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B098C020B3B98300013A0B /* RefreshView.swift */; };
 		60B098C320B4035100013A0B /* UIScrollView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B098C220B4035100013A0B /* UIScrollView+Extension.swift */; };
 		8A47702820B1B298002E4A17 /* UIWindow+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A47702720B1B298002E4A17 /* UIWindow+Extension.swift */; };
@@ -67,6 +70,9 @@
 		605335D120C8D1EA00F3434E /* ScrollLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollLabel.swift; sourceTree = "<group>"; };
 		605335D320C8D34400F3434E /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		605335DC20C8F91400F3434E /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		606E2B3F20CE21EF0095AA86 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		606E2B4120CE2E730095AA86 /* HQKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQKit.swift; sourceTree = "<group>"; };
+		606E2B4320CE3A140095AA86 /* WebViewDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewDemo.swift; sourceTree = "<group>"; };
 		60B098C020B3B98300013A0B /* RefreshView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshView.swift; sourceTree = "<group>"; };
 		60B098C220B4035100013A0B /* UIScrollView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Extension.swift"; sourceTree = "<group>"; };
 		8A47702720B1B298002E4A17 /* UIWindow+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Extension.swift"; sourceTree = "<group>"; };
@@ -155,6 +161,7 @@
 				8A86236F20B0294800F8CF73 /* TipViewDemo.swift */,
 				8A86237120B02B0C00F8CF73 /* RotaryCircleDemo.swift */,
 				8A86237320B02B1F00F8CF73 /* RefreshDemo.swift */,
+				606E2B4320CE3A140095AA86 /* WebViewDemo.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -181,6 +188,7 @@
 		8A8B65D220ABA98D008975ED /* HQKit */ = {
 			isa = PBXGroup;
 			children = (
+				606E2B4120CE2E730095AA86 /* HQKit.swift */,
 				605335DC20C8F91400F3434E /* WebViewController.swift */,
 				8A52E7DB20ABACE700E93C5C /* ScreenShot.swift */,
 				604E0AE820CA2F2600F6BF53 /* StackLabel.swift */,
@@ -189,6 +197,7 @@
 				8A8B65DB20ABA9AB008975ED /* Extension */,
 				8A8B65D320ABA98D008975ED /* HQKit.h */,
 				8A8B65D420ABA98D008975ED /* Info.plist */,
+				606E2B3F20CE21EF0095AA86 /* Assets.xcassets */,
 			);
 			path = HQKit;
 			sourceTree = "<group>";
@@ -321,6 +330,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				606E2B4020CE21EF0095AA86 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,6 +371,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				606E2B4420CE3A140095AA86 /* WebViewDemo.swift in Sources */,
 				8A86237020B0294800F8CF73 /* TipViewDemo.swift in Sources */,
 				8A86237220B02B0C00F8CF73 /* RotaryCircleDemo.swift in Sources */,
 				8A86235920B0197F00F8CF73 /* ViewController.swift in Sources */,
@@ -386,6 +397,7 @@
 				60B098C320B4035100013A0B /* UIScrollView+Extension.swift in Sources */,
 				8A52E7DC20ABACE700E93C5C /* ScreenShot.swift in Sources */,
 				8A47703220B1C2B0002E4A17 /* UINavigationBar+Extension.swift in Sources */,
+				606E2B4220CE2E730095AA86 /* HQKit.swift in Sources */,
 				8A5CD8BB20AD01B40053EE51 /* UIColor+Extension.swift in Sources */,
 				605335DD20C8F91400F3434E /* WebViewController.swift in Sources */,
 				8A86236D20B024EC00F8CF73 /* RotaryCircleView.swift in Sources */,
