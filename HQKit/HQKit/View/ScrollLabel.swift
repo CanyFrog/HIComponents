@@ -10,7 +10,4 @@ import UIKit
 import WebKit
 
 open class ScrollLabel: UIView {
-    func set() {
-        WKWebView()
-    }
 }

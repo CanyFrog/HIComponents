@@ -27,6 +27,7 @@ open class WebViewController: UIViewController {
     
     /// UI
     var navBar = UIView.hq.autoLayout()
+    var navBarContent = UIView.hq.autoLayout()
     var toolBar = UIView.hq.autoLayout()
     var toolBarContent = UIView.hq.autoLayout()
     var progressView = UIProgressView.hq.autoLayout()
@@ -54,8 +55,6 @@ open class WebViewController: UIViewController {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         initializeViews()
         initializeConstrant()
         
@@ -83,13 +82,16 @@ open class WebViewController: UIViewController {
           navBar.backgroundColor = UIColor.hq.info
             return navBar
         }())
-        navBar.addSubview({
+        
+        navBar.addSubview(navBarContent)
+        
+        navBarContent.addSubview({
             closeButton.setImage(UIImage(named: "icon_close", in: Bundle(for: WebViewController.self), compatibleWith: nil), for: .normal)
             closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
                 return closeButton
             }())
         
-        navBar.addSubview({
+        navBarContent.addSubview({
             titleLabel.text = self.title
             titleLabel.textColor = UIColor.white
             titleLabel.numberOfLines = 1
@@ -153,6 +155,7 @@ open class WebViewController: UIViewController {
         toolBarContent.addSubview({
             moreButton.setImage(UIImage(named: "icon_more", in: Bundle(for: WebViewController.self), compatibleWith: nil), for: .normal)
             moreButton.addTarget(self, action: #selector(more), for: .touchUpInside)
+            moreButton.isHidden = !hasMoreOptionsButton
             return moreButton
             }())
     }
@@ -161,9 +164,14 @@ open class WebViewController: UIViewController {
     func initializeConstrant() {
         /// View
         NSLayoutConstraint.activate([
-            navBar.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor),
+            navBar.topAnchor.constraint(equalTo: view.topAnchor),
             navBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            navBarContent.topAnchor.constraint(equalTo: navBar.hq.safeAreaTopAnchor),
+            navBarContent.leadingAnchor.constraint(equalTo: navBar.leadingAnchor),
+            navBarContent.trailingAnchor.constraint(equalTo: navBar.trailingAnchor),
+            navBarContent.bottomAnchor.constraint(equalTo: navBar.bottomAnchor),
             
             contentView.topAnchor.constraint(equalTo: navBar.bottomAnchor),
             
@@ -184,7 +192,7 @@ open class WebViewController: UIViewController {
             ])
         
         
-        navHeightConstraint = navBar.heightAnchor.constraint(equalToConstant: navBarHeight)
+        navHeightConstraint = navBarContent.heightAnchor.constraint(equalToConstant: navBarHeight)
         navHeightConstraint?.isActive = true
         
         webViewBootomConstraint = webView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 56)
@@ -195,14 +203,14 @@ open class WebViewController: UIViewController {
         
         /// Navbar
         NSLayoutConstraint.activate([
-            closeButton.topAnchor.constraint(equalTo: navBar.topAnchor, constant: 1),
-            closeButton.leadingAnchor.constraint(equalTo: navBar.leadingAnchor, constant: 2),
-            closeButton.bottomAnchor.constraint(equalTo: navBar.bottomAnchor, constant: -1),
+            closeButton.topAnchor.constraint(equalTo: navBarContent.topAnchor, constant: 1),
+            closeButton.leadingAnchor.constraint(equalTo: navBarContent.leadingAnchor, constant: 2),
+            closeButton.bottomAnchor.constraint(equalTo: navBarContent.bottomAnchor, constant: -1),
             closeButton.widthAnchor.constraint(equalToConstant: 44),
             
-            titleLabel.centerYAnchor.constraint(equalTo: navBar.centerYAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: navBar.leadingAnchor, constant: 48),
-            titleLabel.trailingAnchor.constraint(equalTo: navBar.trailingAnchor, constant: -48)
+            titleLabel.centerYAnchor.constraint(equalTo: navBarContent.centerYAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: navBarContent.leadingAnchor, constant: 48),
+            titleLabel.trailingAnchor.constraint(equalTo: navBarContent.trailingAnchor, constant: -48)
             ])
         
         
@@ -226,12 +234,12 @@ open class WebViewController: UIViewController {
             forwardButton.widthAnchor.constraint(equalTo: backButton.widthAnchor),
             forwardButton.heightAnchor.constraint(equalTo: backButton.heightAnchor),
             
-            refreshButton.trailingAnchor.constraint(greaterThanOrEqualTo: forwardButton.leadingAnchor, constant: hPadding),
+            refreshButton.leadingAnchor.constraint(greaterThanOrEqualTo: forwardButton.trailingAnchor, constant: hPadding),
             refreshButton.centerYAnchor.constraint(equalTo: backButton.centerYAnchor),
             refreshButton.widthAnchor.constraint(equalTo: backButton.widthAnchor),
             refreshButton.heightAnchor.constraint(equalTo: backButton.heightAnchor),
+            refreshButton.trailingAnchor.constraint(equalTo: hasMoreOptionsButton ? moreButton.leadingAnchor : toolBarContent.trailingAnchor, constant: -hPadding),
             
-            moreButton.leadingAnchor.constraint(equalTo: refreshButton.trailingAnchor, constant: hPadding),
             moreButton.trailingAnchor.constraint(equalTo: toolBarContent.trailingAnchor, constant: -hPadding),
             moreButton.centerYAnchor.constraint(equalTo: backButton.centerYAnchor),
             moreButton.widthAnchor.constraint(equalTo: backButton.widthAnchor),

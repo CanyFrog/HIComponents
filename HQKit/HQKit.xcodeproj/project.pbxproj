@@ -121,9 +121,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		60247E8120CF9E0700B050A3 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				605335DC20C8F91400F3434E /* WebViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
 		605335D020C8D1CC00F3434E /* View */ = {
 			isa = PBXGroup;
 			children = (
+				604E0AE820CA2F2600F6BF53 /* StackLabel.swift */,
 				8A86236C20B024EC00F8CF73 /* RotaryCircleView.swift */,
 				8A86236A20B0220700F8CF73 /* TipView.swift */,
 				605335D120C8D1EA00F3434E /* ScrollLabel.swift */,
@@ -189,9 +198,8 @@
 			isa = PBXGroup;
 			children = (
 				606E2B4120CE2E730095AA86 /* HQKit.swift */,
-				605335DC20C8F91400F3434E /* WebViewController.swift */,
 				8A52E7DB20ABACE700E93C5C /* ScreenShot.swift */,
-				604E0AE820CA2F2600F6BF53 /* StackLabel.swift */,
+				60247E8120CF9E0700B050A3 /* Controller */,
 				605335D020C8D1CC00F3434E /* View */,
 				8A86236720B01A8200F8CF73 /* Refresh */,
 				8A8B65DB20ABA9AB008975ED /* Extension */,
