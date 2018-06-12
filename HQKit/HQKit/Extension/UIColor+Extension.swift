@@ -1,6 +1,6 @@
 
 //
-//  UIColor+extension.swift
+//  UIColor+Extension.swift
 //  HQKit
 //
 //  Created by Magee on 2018/5/17.

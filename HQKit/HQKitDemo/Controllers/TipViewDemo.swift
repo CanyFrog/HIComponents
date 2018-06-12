@@ -21,7 +21,6 @@ class TipViewDemo: BaseDemo {
     override func viewDidLoad() {
         super.viewDidLoad()
         tip = TipView()
-        view.backgroundColor = UIColor.white
         
         infoBtn = initBtn(title: "Info")
         infoBtn.hq.addEvent({

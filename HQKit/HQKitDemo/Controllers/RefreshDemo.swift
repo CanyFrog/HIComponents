@@ -18,7 +18,6 @@ class RefreshDemo: BaseDemo, UITableViewDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.white
         // Do any additional setup after loading the view.
         
         tableView = UITableView(frame: view.bounds, style: .plain)
