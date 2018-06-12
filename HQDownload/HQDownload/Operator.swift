@@ -9,18 +9,25 @@
 import HQFoundation
 import HQCache
 
-public final class Operator: Operation {
+public typealias StartedClosure = (_ source: URL, _ file: URL, _ progress: Progress) -> Void
+public typealias ProgressClosure = (_ source: URL, _ data: Data, _ progress: Progress) -> Void
+public typealias FinishedClosure = (_ source: URL, _ file: URL, _ progress: Progress, _ error: Error?) -> Void
+
+final class Operator: Operation {
     private let options: OptionsInfo = []
+    private var session: URLSession!
     
-    private weak var injectSession: URLSession?
-    private lazy var innerSession: URLSession = {
-        return URLSession(configuration: .default)
-    }()
-    private var session: URLSession { return injectSession ?? innerSession }
+    private var startedHandlers = [StartedClosure]()
+    private var startedLock = DispatchSemaphore(value: 1)
     
+    private var finishedHandlers = [FinishedClosure]()
+    private var finishedLock = DispatchSemaphore(value: 1)
     
-    
+    private var progressHandler = [ProgressClosure]()
+    private var progressLock = DispatchSemaphore(value: 1)
+
 }
+
 //public final class Downloader: Operation {
 //    // MARK: - Session & Task
 //    

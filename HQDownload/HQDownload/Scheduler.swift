@@ -9,10 +9,10 @@
 import HQFoundation
 
 class Scheduler {
-    let options: OptionsInfo
+    var options: OptionsInfo = []
     let order: OptionItem.TaskOrder = .FIFO
     
-    let queue: OperationQueue
+//    let queue: OperationQueue
     
     init(options: OptionsInfo) {
         self.options = options
