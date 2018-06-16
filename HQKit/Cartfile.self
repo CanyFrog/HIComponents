@@ -1,1 +1,1 @@
-github "CanyFrog/HIComponents" "HQFoundation.2018.5.23"
+github "CanyFrog/HIComponents" "HQFoundation.2018.6.16"
