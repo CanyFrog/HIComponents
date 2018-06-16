@@ -1,5 +1,5 @@
 //
-//  Date+extension.swift
+//  Date+Extension.swift
 //  HQFoundation
 //
 //  Created by Magee Huang on 5/23/18.
