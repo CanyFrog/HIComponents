@@ -26,6 +26,7 @@ extension Namespace where T: Collection {
 
 
 // MARK: - Array
+extension Array: Namespaceable {}
 extension Namespace where T == Array<Any> {
     public func shuffle() -> T {
         var list = instance
