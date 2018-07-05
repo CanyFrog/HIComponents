@@ -13,7 +13,7 @@ public enum OptionItem {
     case cacheDirectory(URL)
 
     /// Maximum cache count, if exceeded, will delete the oldest item, default is UInt.max
-    case maxCacheCount(UInt)
+    case maxCacheCount(Int)
     
     /// Maximum cache time, if exceeded, item will be deleted, default is 30 days
     case maxCacheAge(TimeInterval)
@@ -21,9 +21,14 @@ public enum OptionItem {
     /// ignore cache and download new data
     case forceRefresh
 
-    // MARK: - Download queue options
+    case backgroundSession
+    
+    /// allows use Cellular, default true
+    case allowsCellularAccess
+    
+    // MARK: - Scheduler queue options
     /// Downloader concurrent download task number, defaulr is 6
-    case maxConcurrentTask(UInt)
+    case maxConcurrentTask(Int)
     
     /// Task executed order, Default is first in first out
     public enum TaskOrder: Int, Codable { case FIFO, LIFO }
@@ -83,12 +88,14 @@ func ~~ (lhs: OptionItem, rhs: OptionItem) -> Bool {
     case (.cacheDirectory(_), .cacheDirectory(_)):              return true
     case (.maxCacheCount(_), .maxCacheCount(_)):                return true
     case (.maxCacheAge(_), .maxCacheAge(_)):                    return true
-    case (.maxConcurrentTask(_), .maxConcurrentTask(_)):        return true
-    case (.taskOrder(_), .taskOrder(_)):                        return true
     case (.forceRefresh, .forceRefresh):                        return true
 
-    
-       
+        
+    /// Scheduler queue
+    case (.maxConcurrentTask(_), .maxConcurrentTask(_)):        return true
+    case (.taskOrder(_), .taskOrder(_)):                        return true
+
+        
     /// Operation
     case (.taskInBackground, .taskInBackground):                return true
     case (.fileName(_), .fileName(_)):                          return true
@@ -131,12 +138,30 @@ public extension Collection where Iterator.Element == OptionItem {
             case .cacheDirectory(let directory) = item {
             return directory
         }
-        return URL(fileURLWithPath: "", isDirectory: true)
+        return URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
     }
     
     public var forceRefresh: Bool {
         return contains{ $0 ~~ .forceRefresh }
     }
+    
+    
+    /// Scheduler queue
+    public var maxConcurrentTask: Int {
+        if let item = lastMatchIgnoringAssociatedValue(.maxConcurrentTask(0)),
+            case .maxConcurrentTask(let num) = item {
+            return num
+        }
+        return 5
+    }
+    
+    public var taskOrder: OptionItem.TaskOrder {
+        if let item = lastMatchIgnoringAssociatedValue(.taskOrder(.LIFO)),
+            case .taskOrder(let order) = item {
+            return order
+        }
+        return .LIFO
+    }    
     
     /// Operation
     public var taskInBackground: Bool {

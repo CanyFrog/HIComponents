@@ -8,168 +8,109 @@
 
 import HQFoundation
 
-class Scheduler {
+public class Scheduler {
     var options: OptionsInfo = []
-    let order: OptionItem.TaskOrder = .FIFO
+
+    typealias CallBack = (URL, Event)->Void
+    private lazy var callbackMap = InnerKeyMap<CallBack>()
+    private lazy var callbackLock = DispatchSemaphore(value: 1)
     
-//    let queue: OperationQueue
+    var operatorMap = [URL: Operator]()
+    
+    /// Queue
+    let queue = OperationQueue()
+    
+    public var operatorCount: Int { return queue.operationCount }
+    
+    private weak var lastedOperation: Operation?
+
+    /// Session
+    var session: URLSession!
     
     init(options: OptionsInfo) {
         self.options = options
+        queue.maxConcurrentOperationCount = options.maxConcurrentTask
+        session = URLSession(configuration: .default) // config
+    }
+    
+    deinit {
+        queue.cancelAllOperations()
+        session.invalidateAndCancel()
+        callbackMap.removeAll()
     }
 }
-//public class HQDownloadScheduler: NSObject {
-//    public static let scheduler = HQDownloadScheduler()
-//    
-//    // MARK: - Execution order
-//    public enum ExecutionOrder {
-//        case FIFO // first in first out
-//        case LIFO // last in first out
-//    }
-//
-//    public var executionOrder: ExecutionOrder = .FIFO
-//
-//    // MARK: - Download queue
-//    private var downloadQueue: OperationQueue = {
-//        let queue = OperationQueue()
-//        queue.name = "com.scheduler.download.personal.HQ" + UUID().uuidString
-//        queue.maxConcurrentOperationCount = 6
-//        return queue
-//    }()
-//
-//    /// max concurrent downloaders, default is 6
-//    public var maxConcurrentDownloaders: Int {
-//        set {
-//            downloadQueue.maxConcurrentOperationCount = newValue
-//        }
-//        get {
-//            return downloadQueue.maxConcurrentOperationCount
-//        }
-//    }
-//
-//    public var currentDownloaders: Int {
-//        return downloadQueue.operationCount
-//    }
-//    
-//    private var downloadCache: CacheManager!
-//
-//    private var config: HQDownloadConfig!
-//
-//    // MARK: - Session
-//    public var sessionConfig: URLSessionConfiguration { return downloadSession.configuration }
-//
-//    private var downloadSession: URLSession!
-//
-//    // MARK: - Operation
-//    private weak var lastedOperation: Operation?
-//
-//    public init(config: HQDownloadConfig = HQDownloadConfig(), sessionConfig: URLSessionConfiguration = .default) {
-//        super.init()
-//        self.config = config
-//        sessionConfig.timeoutIntervalForRequest = config.taskTimeout
-//        sessionConfig.timeoutIntervalForResource = config.taskTimeout
-//        downloadSession = URLSession(configuration: sessionConfig, delegate: self, delegateQueue: nil)
-//        downloadCache = HQCacheManager(config.directory)
-//        downloadCache.memoryCache.countLimit = 5
-//    }
-//
-//    deinit {
-//        downloadQueue.cancelAllOperations()
-//        downloadSession?.invalidateAndCancel()
-//        downloadSession = nil
-//    }
-//}
-//
-//
-//// MARK: - Public functions
-//
-//public extension HQDownloadScheduler {
-//    public func download(source: URL, callback: @escaping (URL?, HQDownloader?)->Void) {
-//        downloadCache.exist(forKey: source.absoluteString) {[weak self] (key, exist) in
-//            guard let wself = self else { return }
-//            if exist, let config: HQDownloadConfig = wself.downloadCache.query(objectForKey: key) {
-//                if config.progressPercent >= 1.0 { // download completed
-//                    callback(config.fileUrl, nil)
-//                }
-//                else {
-//                    let downloader = HQDownloader(config: config, session: wself.downloadSession)
-//                    wself.addOperation(downloader, source: source)
-//                    callback(nil, downloader)
-//                }
-//            }
-//            else {
-//                var c = wself.config
-//                c?.sourceUrl = source
-//                let downloader = HQDownloader(config: c!, session: wself.downloadSession)
-//                wself.addOperation(downloader, source: source)
-//                callback(nil, downloader)
-//            }
-//        }
-//    }
-//
-//    public func cancel(source: URL, resumeData: (Data?)->Void) {
-//        if let downloader = operation(url: source) {
-//            downloader.cancel { (data) in
-//                resumeData(data)
-//            }
-//        }
-//        else {
-//            resumeData(nil)
-//        }
-//    }
-//    
-//    /// Once a session is invalidated, new tasks cannot be created in the session, but existing tasks continue until completion.
-//    /// use to change session
-//    public func invalidateAndCancelSession(_ cancelPendingOperations: Bool = true) {
-//        guard self != HQDownloadScheduler.scheduler else { return }
-//        if cancelPendingOperations {
-//            downloadSession?.invalidateAndCancel()
-//        }
-//        else {
-//            downloadSession?.finishTasksAndInvalidate()
-//        }
-//    }
-//
-//    /**
-//     * When the value of this property is NO, the queue actively starts operations that are in the queue and ready to execute. Setting this property to YES prevents the queue from starting any queued operations, but already executing operations continue to execute
-//     */
-//    public func suspended(_ isSuspended: Bool = true) {
-//        downloadQueue.isSuspended = isSuspended
-//    }
-//
-//    public func cancelAllDownloaders() {
-//        downloadQueue.cancelAllOperations()
-//    }
-//}
-//
-//// MARK: - Private functions
-//private extension HQDownloadScheduler {
-//    func addOperation(_ downloader: HQDownloader, source: URL) {
-//        if let prev = operation(url: source) {  prev.cancel() } // If exists, cancel and add new
-//        downloader.finished{ [weak self] (_, error) in
-//            guard let wself = self else { return }
-//            wself.downloadCache.insertOrUpdate(object: downloader.config, forKey: source.absoluteString, inBackThreadCallback: {})
-//        }
-//        downloadQueue.addOperation(downloader)
-//        if executionOrder == .LIFO {
-//            lastedOperation?.addDependency(downloader)
-//            lastedOperation = downloader
-//        }
-//    }
-//
-//    func operation(url: URL) -> HQDownloader? {
-//        return downloadQueue.operations.filter { (operation) -> Bool in
-//            guard let oper = operation as? HQDownloader else { return false }
-//            return oper.request.url! == url && oper.isExecuting
-//        }.first as? HQDownloader
-//    }
-//
-//    func operation(task: URLSessionTask) -> HQDownloader? {
-//        return downloadQueue.operations.filter({ (operation) -> Bool in
-//            if let taskId = (operation as? HQDownloader)?.task?.taskIdentifier {
-//                return taskId == task.taskIdentifier
-//            }
-//            return false
-//        }).first as? HQDownloader
-//    }
-//}
+
+extension Scheduler {
+    public func cancel(url: URL) {
+        guard let op = operatorMap[url] else { return }
+        op.cancel()
+    }
+    
+    @discardableResult
+    public func download(options: OptionsInfo) -> Operator? {
+        guard let url = options.sourceUrl else { return nil }
+        if let oldOp = operatorMap[url] { return oldOp }
+        
+        let op = Operator(options: options, session: session)
+        
+        // convert to self callback
+        op.subscribe(start: { [weak self] (name, size) in
+            self?.execute(url: url, event: .start(name, size))
+        }, progress: { [weak self] (rate) in
+            self?.execute(url: url, event: .progress(rate))
+        }, completed: { [weak self] (url) in
+            self?.execute(url: url, event: .completed(url))
+        }) { [weak self] (error) in
+            self?.execute(url: url, event: .error(error))
+        }
+        
+        // add delegate
+        
+        operatorMap[url] = op
+        queue.addOperation(op)
+        if options.taskOrder == .LIFO {
+            lastedOperation?.addDependency(op)
+            lastedOperation = op
+        }
+        return op
+    }
+    
+    @discardableResult
+    public func subscribe(start: ((URL, String, Int64)->Void)? = nil,
+                       progress: ((URL, Progress)->Void)? = nil,
+                       completed: ((URL, URL)->Void)? = nil,
+                       error: ((URL, DownloadError)->Void)? = nil) -> UInt64 {
+        let callback = { (url: URL, event: Event) in
+            switch event {
+            case .start(let name, let size):
+                start?(url, name, size)
+            case .progress(let rate):
+                progress?(url, rate)
+            case .completed(let file):
+                completed?(url, file)
+            case .error(let err):
+                error?(url, err)
+            default: break
+            }
+        }
+        
+        return Lock.semaphore(callbackLock) { () -> UInt64 in
+            return callbackMap.insert(callback)
+        }
+    }
+    
+    public func unsubscribe(_ key: UInt64) {
+        Lock.semaphore(callbackLock) {
+            callbackMap.remove(key)
+        }
+    }
+}
+
+
+extension Scheduler {
+    func execute(url: URL, event: Event) {
+        Lock.semaphore(callbackLock) {
+            callbackMap.forEach{ $0(url, event) }
+        }
+    }
+}

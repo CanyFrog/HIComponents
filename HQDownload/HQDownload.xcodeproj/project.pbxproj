@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		601225F720BFD2C1008467CB /* Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601225F620BFD2C1008467CB /* Options.swift */; };
 		601225F920BFE197008467CB /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601225F820BFE197008467CB /* Downloader.swift */; };
-		60247E8320CFBD0D00B050A3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60247E8220CFBD0D00B050A3 /* Extensions.swift */; };
+		60247E8320CFBD0D00B050A3 /* Errors&Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60247E8220CFBD0D00B050A3 /* Errors&Utils.swift */; };
 		605CE53E208F1B960014DDB3 /* HQDownload.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8A650AF62069119200C95462 /* HQDownload.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		605CE542208F1BB60014DDB3 /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; };
 		605CE543208F1BB60014DDB3 /* HQSqlite.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -20,12 +20,12 @@
 		605CE549208F20510014DDB3 /* SingleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE548208F20510014DDB3 /* SingleViewController.swift */; };
 		605CE54B208F25160014DDB3 /* MultipleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE54A208F25160014DDB3 /* MultipleViewController.swift */; };
 		605CE54E20902A930014DDB3 /* ContinueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE54D20902A930014DDB3 /* ContinueViewController.swift */; };
-		605E7CB420EB0C5C0004CC05 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E7CB320EB0C5C0004CC05 /* Event.swift */; };
 		605E7CB620EB20350004CC05 /* Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E7CB520EB20350004CC05 /* Delegate.swift */; };
 		605E7CB920EB70D90004CC05 /* InnerKeyMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E7CB820EB70D90004CC05 /* InnerKeyMap.swift */; };
 		609AF3412099652F002C76D4 /* BackgroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609AF3402099652F002C76D4 /* BackgroundViewController.swift */; };
 		60B6E0F7207C83CE00C4C594 /* HQDownloadRequestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */; };
 		60B6E0FC207C95B200C4C594 /* HQDownloaderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0FB207C95B200C4C594 /* HQDownloaderTest.swift */; };
+		60BE176B20EC869E0014459E /* InnerKeyMapTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BE176A20EC869E0014459E /* InnerKeyMapTest.swift */; };
 		60DC2F11208095DA0088A579 /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F0F208095DA0088A579 /* HQCache.framework */; };
 		60DC2F12208095DA0088A579 /* HQFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F10208095DA0088A579 /* HQFoundation.framework */; };
 		60DC2F14208097E80088A579 /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; };
@@ -80,16 +80,16 @@
 /* Begin PBXFileReference section */
 		601225F620BFD2C1008467CB /* Options.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Options.swift; sourceTree = "<group>"; };
 		601225F820BFE197008467CB /* Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
-		60247E8220CFBD0D00B050A3 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		60247E8220CFBD0D00B050A3 /* Errors&Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Errors&Utils.swift"; sourceTree = "<group>"; };
 		605CE548208F20510014DDB3 /* SingleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleViewController.swift; sourceTree = "<group>"; };
 		605CE54A208F25160014DDB3 /* MultipleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleViewController.swift; sourceTree = "<group>"; };
 		605CE54D20902A930014DDB3 /* ContinueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueViewController.swift; sourceTree = "<group>"; };
-		605E7CB320EB0C5C0004CC05 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		605E7CB520EB20350004CC05 /* Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delegate.swift; sourceTree = "<group>"; };
 		605E7CB820EB70D90004CC05 /* InnerKeyMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InnerKeyMap.swift; sourceTree = "<group>"; };
 		609AF3402099652F002C76D4 /* BackgroundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundViewController.swift; sourceTree = "<group>"; };
 		60B6E0F6207C83CE00C4C594 /* HQDownloadRequestTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloadRequestTest.swift; sourceTree = "<group>"; };
 		60B6E0FB207C95B200C4C594 /* HQDownloaderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQDownloaderTest.swift; sourceTree = "<group>"; };
+		60BE176A20EC869E0014459E /* InnerKeyMapTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InnerKeyMapTest.swift; sourceTree = "<group>"; };
 		60DC2F0F208095DA0088A579 /* HQCache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQCache.framework; path = Carthage/Build/iOS/HQCache.framework; sourceTree = "<group>"; };
 		60DC2F10208095DA0088A579 /* HQFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQFoundation.framework; path = Carthage/Build/iOS/HQFoundation.framework; sourceTree = "<group>"; };
 		60DC2F13208097E80088A579 /* HQSqlite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQSqlite.framework; path = Carthage/Build/iOS/HQSqlite.framework; sourceTree = "<group>"; };
@@ -168,16 +168,15 @@
 		8A650AF82069119200C95462 /* HQDownload */ = {
 			isa = PBXGroup;
 			children = (
-				8A650AF92069119200C95462 /* HQDownload.h */,
-				601225F620BFD2C1008467CB /* Options.swift */,
 				601225F820BFE197008467CB /* Downloader.swift */,
 				8A650B4E206BD61800C95462 /* Scheduler.swift */,
 				8A650B4A206A79D000C95462 /* Operator.swift */,
-				8A650AFA2069119200C95462 /* Info.plist */,
-				60247E8220CFBD0D00B050A3 /* Extensions.swift */,
-				605E7CB320EB0C5C0004CC05 /* Event.swift */,
-				605E7CB820EB70D90004CC05 /* InnerKeyMap.swift */,
 				605E7CB520EB20350004CC05 /* Delegate.swift */,
+				601225F620BFD2C1008467CB /* Options.swift */,
+				60247E8220CFBD0D00B050A3 /* Errors&Utils.swift */,
+				605E7CB820EB70D90004CC05 /* InnerKeyMap.swift */,
+				8A650AF92069119200C95462 /* HQDownload.h */,
+				8A650AFA2069119200C95462 /* Info.plist */,
 			);
 			path = HQDownload;
 			sourceTree = "<group>";
@@ -191,6 +190,7 @@
 				60B6E0FB207C95B200C4C594 /* HQDownloaderTest.swift */,
 				60F0AF85207DCD3F00C5F6EE /* HQDownloadSchedulerTest.swift */,
 				8A650B062069119200C95462 /* Info.plist */,
+				60BE176A20EC869E0014459E /* InnerKeyMapTest.swift */,
 			);
 			path = HQDownloadTests;
 			sourceTree = "<group>";
@@ -390,10 +390,9 @@
 			files = (
 				601225F720BFD2C1008467CB /* Options.swift in Sources */,
 				8A650B4B206A79D000C95462 /* Operator.swift in Sources */,
-				60247E8320CFBD0D00B050A3 /* Extensions.swift in Sources */,
+				60247E8320CFBD0D00B050A3 /* Errors&Utils.swift in Sources */,
 				605E7CB620EB20350004CC05 /* Delegate.swift in Sources */,
 				601225F920BFE197008467CB /* Downloader.swift in Sources */,
-				605E7CB420EB0C5C0004CC05 /* Event.swift in Sources */,
 				8A650B4F206BD61800C95462 /* Scheduler.swift in Sources */,
 				605E7CB920EB70D90004CC05 /* InnerKeyMap.swift in Sources */,
 			);
@@ -408,6 +407,7 @@
 				8A650B052069119200C95462 /* HQDownloadTests.swift in Sources */,
 				8AA183CF2081896400FA51B5 /* HQDownloadProgressTest.swift in Sources */,
 				60B6E0FC207C95B200C4C594 /* HQDownloaderTest.swift in Sources */,
+				60BE176B20EC869E0014459E /* InnerKeyMapTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
