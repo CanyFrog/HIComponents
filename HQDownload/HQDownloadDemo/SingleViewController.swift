@@ -12,9 +12,9 @@ import HQDownload
 class SingleViewController: UIViewController {
     var progressLabel = UILabel()
     var imageView = UIImageView()
+    var op: Operator?
     
     let image = URL(string: "https://cdn.pixabay.com/photo/2018/01/31/12/16/architecture-3121009_1280.jpg")!
-    let directory = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,45 +23,40 @@ class SingleViewController: UIViewController {
         
         imageView.contentMode = .scaleAspectFit
         imageView.frame = view.bounds
+//        imageView.backgroundColor = UIColor.cyan
         
-        progressLabel.text = "下载中......"
+        progressLabel.text = "初始化"
         progressLabel.backgroundColor = UIColor.darkGray
         progressLabel.textColor = UIColor.white
-        progressLabel.frame = CGRect(x: 0, y: 64, width: view.frame.width, height: 44)
+        progressLabel.font = UIFont.systemFont(ofSize: 10)
+        progressLabel.frame = CGRect(x: 0, y: 104, width: view.frame.width, height: 44)
         progressLabel.textAlignment = .center
         
         view.addSubview(progressLabel)
         view.addSubview(imageView)
         
-        HQDownloadScheduler.scheduler.download(source: image) { (file, downloader) in
-            if let f = file {
-                DispatchQueue.main.async {
-                    self.progressLabel.text = "缓存图片"
-                    self.imageView.image = UIImage(contentsOfFile: f.path)
-                }
+        op = Operator(options: [.sourceUrl(image), .allowInvalidSSLCert])
+        op?.subscribe(start: { (name, size) in
+            DispatchQueue.main.async {
+                self.progressLabel.text = "Start download: name \(name) size \(size/1024) kb"
             }
-            else if let downloader = downloader {
-                downloader
-                .started { (fiel, total) in
-                print("total \(total)")
-                }
-                .progress { (rece, frac) in
-                    print("received \(rece)")
-                    DispatchQueue.main.async {
-                        self.progressLabel.text = "下载了\(rece/1024)kb, \(frac*100)%"
-                    }
-                }
-                .finished { (file, err) in
-                    print("file \(String(describing: file?.path))")
-                    if let f = file {
-                        DispatchQueue.main.async {
-                            print("render image \(f)")
-                            self.imageView.image = UIImage(contentsOfFile: f.path)
-                        }
-                    }
-                }
+        }, progress: { (progress) in
+            DispatchQueue.main.async {
+                self.progressLabel.text = "Downloading and progress is \(progress.completedUnitCount)/\(progress.totalUnitCount)"
             }
+        }, data: { (data) in
             
+        }, completed: { (file) in
+            DispatchQueue.main.async {
+                self.progressLabel.text = "Completed"
+                self.imageView.image = UIImage(contentsOfFile: file.path)
+            }
+        }) { (err) in
+            DispatchQueue.main.async {
+                self.progressLabel.text = err.description
+            }
         }
+        
+        op?.start()
     }
 }

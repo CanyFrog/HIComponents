@@ -42,6 +42,7 @@ struct InnerKeyMap<T> {
     init() {
     }
     
+    @discardableResult
     mutating func insert(_ element: T) -> UInt64 {
         let key = _nextKey
         _nextKey = Key(rawValue: _nextKey.rawValue &+ 1) // 溢出加 1
@@ -77,6 +78,7 @@ struct InnerKeyMap<T> {
         dict?.removeAll(keepingCapacity: false)
     }
     
+    @discardableResult
     mutating func remove(_ key: UInt64) -> T? {
         let _key = Key(rawValue: key)
         if key_0 == _key {

@@ -10,8 +10,8 @@ import HQFoundation
 import HQCache
 
 public final class Operator: Operation {
-    typealias CallBack = (OperatorEvent)->Void
-    private lazy var callbacks = InnerKeyMap<CallBack>()
+    typealias CallBack = (Event)->Void
+    private lazy var callbackMap = InnerKeyMap<CallBack>()
     private lazy var callbackLock = DispatchSemaphore(value: 1)
     
     /// Configuator
@@ -19,12 +19,18 @@ public final class Operator: Operation {
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
     
     /// Save data to file queue
-    private lazy var queue: DispatchQueue = DispatchQueue(label: "personal.download.OutputStreamQueue")
     private var stream: OutputStream?
+    
+    private var progress: Progress?
     
     /// Session
     private weak var outerSession: URLSession?
-    private lazy var innerSession: URLSession = URLSession(configuration: .default)
+    private lazy var innerSession: URLSession = {
+        let dele = Delegate()
+        dele.operators.hq.addObject(self)
+        let se = URLSession.hq.create(options, delegate: dele)
+        return se
+    }()
     private var session: URLSession { return outerSession ?? innerSession }
     var dataTask: URLSessionDataTask?
     
@@ -45,8 +51,8 @@ public final class Operator: Operation {
     
     public init(options: OptionsInfo, session: URLSession? = nil) {
         super.init()
-        outerSession = session
         self.options = options
+        outerSession = session
     }
     
     public override func start() {
@@ -68,6 +74,8 @@ public final class Operator: Operation {
         
         guard let request = URLRequest.hq.create(options) else {
             // completion
+            execute(.error(.cancel("Init request failure!")))
+            cancel()
             return
         }
         dataTask = session.dataTask(with: request)
@@ -98,136 +106,25 @@ public final class Operator: Operation {
         reset()
     }
     
-    private func done() {
-        _finished = true
-        _executing = false
-        reset()
-    }
-    
-    private func reset() {
-        Lock.semaphore(callbackLock) { callbacks.removeAll() }
-        stream?.remove(from: RunLoop.current, forMode: .defaultRunLoopMode)
-        stream = nil
-        dataTask = nil
-    }
-    
     deinit {
+        Lock.semaphore(callbackLock) { callbackMap.removeAll() }
         if outerSession == nil {
             innerSession.invalidateAndCancel()
         }
     }
 }
 
+
+
+// MARK: - Public functions
 extension Operator {
-    func receive(response: URLResponse) -> URLSession.ResponseDisposition {
-        guard let code = (response as? HTTPURLResponse)?.statusCode,
-            (200..<400).contains(code) else {
-            return .cancel
-        }
-        
-        if code == 304,
-            let request = dataTask?.originalRequest,
-            (session.configuration.urlCache ?? URLCache.shared).cachedResponse(for: request)?.data == nil
-            {
-            //'304 Not Modified' is an exceptional one. It should be treated as cancelled if no cache data
-            //URLSession current behavior will return 200 status code when the server respond 304 and URLCache hit. But this is not a standard behavior and we just add a check
-            return .cancel
-        }
-        
-        let size = response.expectedContentLength
-        let name = options.fileName ?? response.suggestedFilename!
-        openStream(fileName: name)
-        execute(.start((name, size)))
-//        execute(.progress(<#T##Progress#>))
-        return .allow
-    }
-    
-    func receive(data: Data) {
-        if let stream = stream, stream.hasSpaceAvailable {
-            queue.async {
-                stream.write([UInt8](data), maxLength: data.count)
-            }
-            execute(.newData(data))
-//            execute(.progress(<#T##Progress#>))
-        }
-        else {
-            cancel() // If not enough space, cancel task
-//            execute(.error(<#T##Error#>))
-        }
-    }
-    
-    func complete(error: Error?) {
-        guard let err = error else {
-//            execute(.completed(<#T##URL#>))
-            return
-        }
-        
-//        if (err as NSError).code == -999 {
-//            done() // Task cancel, did not retry
-//            if let stream = stream, !stream.hasSpaceAvailable { invokeFinished(HQDownloadError.notEnoughSpace) } // No enough space cancel
-//            else { invokeFinished(HQDownloadError.taskError(err)) }
-//            return
-//        }
-//
-//        if config.autoRetryCount <= 0 {
-//            done()
-//            invokeFinished(HQDownloadError.taskError(err))
-//        }
-//        else {
-//            initializeRequest()
-//            start()
-//            config.autoRetryCount -= 1
-//        }
-    }
-    
-    func receive(challenge: URLAuthenticationChallenge) -> (URLSession.AuthChallengeDisposition, URLCredential?) {
-        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust { // method is trust server
-            if options.allowInvalidSSLCert {
-                // when authenticationMethod is ServerTrust, must be not nil
-                return (.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
-            }
-            // or trust host
-        }
-        
-        if let cred = options.urlCredential, challenge.previousFailureCount == 0 { // previos never failure
-            return (.useCredential, cred)
-        }
-
-        return (.performDefaultHandling, nil)
-    }
-    
-    func cachedResponse() -> Bool {
-        return options.useUrlCache
-    }
-}
-
-
-extension Operator {
-    func openStream(fileName: String) {
-        guard stream == nil else { return }
-        
-        let directory = options.cacheDirectory
-        if !FileManager.default.fileExists(atPath: directory.path) {
-            do {
-                try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true, attributes: nil)
-            }
-            catch {
-                cancel()
-                return
-            }
-        }
-        if let stream = OutputStream(url: directory.appendingPathComponent(fileName), append: true) {
-            stream.schedule(in: RunLoop.current, forMode: .defaultRunLoopMode)
-        }
-        // error
-    }
-    
-    public func listen(start: ((String, Int64)->Void)? = nil,
+    @discardableResult
+    public func subscribe(start: ((String, Int64)->Void)? = nil,
                        progress: ((Progress)->Void)? = nil,
                        data: ((Data)->Void)? = nil,
                        completed: ((URL)->Void)? = nil,
-                       error: ((Error)->Void)? = nil) -> UInt64 {
-        let callback = { (_ event: OperatorEvent) in
+                       error: ((DownloadError)->Void)? = nil) -> UInt64 {
+        let callback = { (_ event: Event) in
             switch event {
             case .start(let value):
                 start?(value.0, value.1)
@@ -243,15 +140,150 @@ extension Operator {
         }
         
         return Lock.semaphore(callbackLock) { () -> UInt64 in
-            return callbacks.insert(callback)
+            return callbackMap.insert(callback)
         }
+    }
+    
+    public func unsubscribe(_ key: UInt64) {
+        Lock.semaphore(callbackLock) {
+            callbackMap.remove(key)
+        }
+        if callbackMap.count == 0 { cancel() }
     }
 }
 
-extension Operator: Executable {
-    public func execute(_ event: OperatorEvent) {
-        Lock.semaphore(callbackLock) {
-            callbacks.forEach { $0(event) }
+extension Operator {
+    private func openStream(fileName: String) {
+        guard stream == nil else { return }
+        
+        let dire = options.cacheDirectory
+//        if !FileManager.default.fileExists(atPath: dire.path) {
+//            do {
+//                try FileManager.default.createDirectory(at: dire, withIntermediateDirectories: true, attributes: nil)
+//            }
+//            catch let err {
+//                execute(.error(.cancel(err.localizedDescription)))
+//                cancel()
+//                return
+//            }
+//        }
+        
+        guard let s = OutputStream(url: dire.appendingPathComponent(fileName), append: true) else {
+            execute(.error(.cancel("Output stream open failure!")))
+            cancel()
+            return
         }
+        stream = s
+        stream?.open()
+    }
+
+    private func execute(_ event: Event) {
+//        Lock.semaphore(callbackLock) {
+            callbackMap.forEach { $0(event) }
+//        }
+    }
+    
+    private func done() {
+        _finished = true
+        _executing = false
+        reset()
+    }
+    
+    private func reset() {
+        stream?.close()
+        stream?.remove(from: RunLoop.current, forMode: .defaultRunLoopMode)
+        stream = nil
+        dataTask = nil
+    }
+}
+
+
+// MARK: - Session Delegate callback
+extension Operator {
+    func receive(response: URLResponse) -> URLSession.ResponseDisposition {
+        let statusCode = (response as? HTTPURLResponse)?.statusCode
+        guard let code = statusCode,
+            (200..<400).contains(code) else {
+                execute(.error(.statusCodeInvalid(statusCode ?? 404)))
+                return .cancel
+        }
+        
+        if code == 304,
+            let request = dataTask?.originalRequest,
+            (session.configuration.urlCache ?? URLCache.shared).cachedResponse(for: request)?.data == nil
+        {
+            // '304 Not Modified' is an exceptional one. It should be treated as cancelled if no cache data
+            // URLSession current behavior will return 200 status code when the server respond 304 and URLCache hit. But this is not a standard behavior and we just add a check
+            execute(.error(.noCache304))
+            return .cancel
+        }
+        
+        let size = response.expectedContentLength
+        
+        var name: String! = options.fileName
+        if name == nil {
+            name = (response.suggestedFilename ?? dataTask?.originalRequest?.url?.lastPathComponent) ?? UUID().uuidString
+            options.append(.fileName(name))
+        }
+        
+        openStream(fileName: name)
+        progress = Progress(totalUnitCount: size)
+        execute(.start(name, size))
+        return .allow
+    }
+    
+    func receive(data: Data) {
+        if let stream = stream, stream.hasSpaceAvailable {
+            stream.write([UInt8](data), maxLength: data.count)
+            progress?.completedUnitCount += Int64(data.count)
+            execute(.newData(data))
+            execute(.progress(progress!))
+        }
+        else {
+            execute(.error(.cancel("Disk no enough space!")))
+            cancel() // If not enough space, cancel task
+        }
+    }
+    
+    func complete(error: Error?) {
+        guard let err = error else {
+            done()
+            execute(.completed(options.cacheDirectory.appendingPathComponent(options.fileName!)))
+            return
+        }
+        
+        // Task cancel, did not retry
+        guard (err as NSError).code != -999 else { return }
+        
+        if options.retryCount <= 0 {
+            execute(.error(.error(err)))
+            done()
+        }
+        else {
+            // retry
+            let count = options.retryCount
+            options = options.removeAllMatchesIgnoringAssociatedValue(.retryCount(0))
+            options.append(.retryCount(count-1))
+        }
+    }
+    
+    func receive(challenge: URLAuthenticationChallenge) -> (URLSession.AuthChallengeDisposition, URLCredential?) {
+        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust { // method is trust server
+            if options.allowInvalidSSLCert {
+                // when authenticationMethod is ServerTrust, must be not nil
+                return (.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
+            }
+            // or trust host
+        }
+        
+        if let cred = options.urlCredential, challenge.previousFailureCount == 0 { // previos never failure
+            return (.useCredential, cred)
+        }
+        
+        return (.performDefaultHandling, nil)
+    }
+    
+    func cachedResponse() -> Bool {
+        return options.useUrlCache
     }
 }
