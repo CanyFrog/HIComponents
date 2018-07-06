@@ -51,8 +51,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         switch indexPath.row {
         case 0:
             navigationController?.pushViewController(SingleViewController(), animated: true)
-//        case 1:
-//            navigationController?.pushViewController(MultipleViewController(), animated: true)
+        case 1:
+            navigationController?.pushViewController(MultipleViewController(), animated: true)
 //        case 3:
 //            navigationController?.pushViewController(ContinueViewController(), animated: true)
 //        case 4:

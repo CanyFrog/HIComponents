@@ -23,7 +23,6 @@ class SingleViewController: UIViewController {
         
         imageView.contentMode = .scaleAspectFit
         imageView.frame = view.bounds
-//        imageView.backgroundColor = UIColor.cyan
         
         progressLabel.text = "初始化"
         progressLabel.backgroundColor = UIColor.darkGray
@@ -35,28 +34,22 @@ class SingleViewController: UIViewController {
         view.addSubview(progressLabel)
         view.addSubview(imageView)
         
-        op = Operator(options: [.sourceUrl(image), .allowInvalidSSLCert])
-        op?.subscribe(start: { (name, size) in
-            DispatchQueue.main.async {
+        op = Operator([.sourceUrl(image), .allowInvalidSSLCert])
+        op?.subscribe(
+            .start({ (_, name, size) in
                 self.progressLabel.text = "Start download: name \(name) size \(size/1024) kb"
-            }
-        }, progress: { (progress) in
-            DispatchQueue.main.async {
-                self.progressLabel.text = "Downloading and progress is \(progress.completedUnitCount)/\(progress.totalUnitCount)"
-            }
-        }, data: { (data) in
-            
-        }, completed: { (file) in
-            DispatchQueue.main.async {
+            }),
+            .progress({ (_, rate) in
+                self.progressLabel.text = "Downloading and progress is \(rate.completedUnitCount)/\(rate.totalUnitCount)"
+            }),
+            .completed({ (_, file) in
                 self.progressLabel.text = "Completed"
                 self.imageView.image = UIImage(contentsOfFile: file.path)
-            }
-        }) { (err) in
-            DispatchQueue.main.async {
+            }),
+            .error({ (_, err) in
                 self.progressLabel.text = err.description
-            }
-        }
-        
+            })
+        )
         op?.start()
     }
 }
