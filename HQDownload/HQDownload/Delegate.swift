@@ -24,6 +24,14 @@ class Delegate: NSObject {
             }
         }
     }
+    
+    func contains(_ url: URL) -> Operator? {
+        operators.compact()
+        let ops = operators.allObjects.filter { (obj) -> Bool in
+            return (obj as? Operator)?.dataTask?.originalRequest?.url == url
+        }
+        return ops.last as? Operator
+    }
 }
 
 extension Delegate: URLSessionDataDelegate {

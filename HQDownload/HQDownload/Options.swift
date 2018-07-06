@@ -7,24 +7,28 @@
 //
 
 public typealias OptionsInfo = [OptionItem]
-public enum OptionItem {
+public enum OptionItem: Codable {
     // MARK: - Cache options
-    /// The directory of files and cached databases, default is Cache directory
+    /// The directory of files and cached databases, default is Cache directory; Default is Cache directory
     case cacheDirectory(URL)
 
-    /// Maximum cache count, if exceeded, will delete the oldest item, default is UInt.max
+    /// Maximum cache count, if exceeded, will delete the oldest item, default is Int.max
     case maxCacheCount(Int)
     
     /// Maximum cache time, if exceeded, item will be deleted, default is 30 days
     case maxCacheAge(TimeInterval)
     
-    /// ignore cache and download new data
+    /// Ignore cache and download new data
     case forceRefresh
 
+    
+    // MARK: - Session options
+    /// Use background session, will continue task when app be terminal
     case backgroundSession
     
-    /// allows use Cellular, default true
-    case allowsCellularAccess
+    /// Allows use cellular download, default false
+    case onlyWifiAccess
+    
     
     // MARK: - Scheduler queue options
     /// Downloader concurrent download task number, defaulr is 6
@@ -57,8 +61,8 @@ public enum OptionItem {
     case retryCount(UInt)
     
     
-    
     // MARK: - Request
+    /// Download source url
     case sourceUrl(URL)
     
     /// Handles cookies stored in NSHTTPCookieStore by setting NSMutableURLRequest.HTTPShouldHandleCookies = YES;
@@ -85,11 +89,17 @@ infix operator ~~ : ItemComparisonPrecedence
 // This operator returns true if two `OptionItem` enum is the same, without considering the associated values.
 func ~~ (lhs: OptionItem, rhs: OptionItem) -> Bool {
     switch (lhs, rhs) {
+    /// Cache
     case (.cacheDirectory(_), .cacheDirectory(_)):              return true
     case (.maxCacheCount(_), .maxCacheCount(_)):                return true
     case (.maxCacheAge(_), .maxCacheAge(_)):                    return true
     case (.forceRefresh, .forceRefresh):                        return true
-
+    
+        
+    /// Session
+    case (.backgroundSession, .backgroundSession):              return true
+    case (.onlyWifiAccess, .onlyWifiAccess):                    return true
+        
         
     /// Scheduler queue
     case (.maxConcurrentTask(_), .maxConcurrentTask(_)):        return true
@@ -133,6 +143,7 @@ extension Collection where Iterator.Element == OptionItem {
 
 let holderUrl = URL(string: "https://httpbin.org/")!
 public extension Collection where Iterator.Element == OptionItem {
+    /// Cache
     public var cacheDirectory: URL {
         if let item = lastMatchIgnoringAssociatedValue(.cacheDirectory(holderUrl)),
             case .cacheDirectory(let directory) = item {
@@ -141,8 +152,34 @@ public extension Collection where Iterator.Element == OptionItem {
         return URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
     }
     
+    public var maxCacheCount: Int {
+        if let item = lastMatchIgnoringAssociatedValue(.maxCacheCount(0)),
+            case .maxCacheCount(let num) = item {
+            return num
+        }
+        return Int.max
+    }
+    
+    public var maxCacheAge: TimeInterval {
+        if let item = lastMatchIgnoringAssociatedValue(.maxCacheAge(0)),
+            case .maxCacheAge(let time) = item {
+            return time
+        }
+        return 30 * 24 * 60 * 60
+    }
+    
     public var forceRefresh: Bool {
         return contains{ $0 ~~ .forceRefresh }
+    }
+    
+    
+    /// Session
+    public var backgroundSession: Bool {
+        return contains{ $0 ~~ .backgroundSession }
+    }
+    
+    public var onlyWifiAccess: Bool {
+        return contains{ $0 ~~ .onlyWifiAccess }
     }
     
     
@@ -160,7 +197,7 @@ public extension Collection where Iterator.Element == OptionItem {
             case .taskOrder(let order) = item {
             return order
         }
-        return .LIFO
+        return .FIFO
     }    
     
     /// Operation
@@ -253,4 +290,50 @@ public extension Collection where Iterator.Element == OptionItem {
     }
 }
 
+/// Only save recover task must infos
+extension OptionItem {
+    enum CodeKeys: String, CodingKey {
+        case cacheDirectory
+        case fileName
+        case completedCount
+        case exceptedCount
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let coder = try decoder.container(keyedBy: CodeKeys.self)
+        
+        switch coder.allKeys.last! {
+        case .cacheDirectory:
+            let directory = try coder.decode(URL.self, forKey: .cacheDirectory)
+            self = .cacheDirectory(directory)
+        case .fileName:
+            let name = try coder.decode(String.self, forKey: .fileName)
+            self = .fileName(name)
+        case .completedCount:
+            let completed = try coder.decode(Int64.self, forKey: .completedCount)
+            self = .completedCount(completed)
+        case .exceptedCount:
+            let total = try coder.decode(Int64.self, forKey: .exceptedCount)
+            self = .exceptedCount(total)
+        }
+        /// Coder is empty, means sqlite is error. Throw
+        throw DownloadError.cacheError
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var coder = encoder.container(keyedBy: CodeKeys.self)
+        switch self {
+        case .cacheDirectory(let dire):
+            try coder.encode(dire, forKey: .cacheDirectory)
+        case .fileName(let name):
+            try coder.encode(name, forKey: .fileName)
+        case .completedCount(let comp):
+            try coder.encode(comp, forKey: .completedCount)
+        case .exceptedCount(let exce):
+            try coder.encode(exce, forKey: .exceptedCount)
+        default:
+            break
+        }
+    }
+}
 

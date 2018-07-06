@@ -9,18 +9,17 @@
 import HQFoundation
 import HQCache
 
-public final class Operator: Operation {
-    typealias CallBack = (Event)->Void
-    private lazy var callbackMap = InnerKeyMap<CallBack>()
-    private lazy var callbackLock = DispatchSemaphore(value: 1)
+public final class Operator: Operation, Eventable {
+    var eventsMap = InnerKeyMap<Eventable.EventWrap>()
+    var eventsLock = DispatchSemaphore(value: 1)
     
     /// Configuator
     private var options: OptionsInfo = [.handleCookies, .useUrlCache]
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
     
     /// Save data to file queue
+    private let source: URL
     private var stream: OutputStream?
-    
     private var progress: Progress?
     
     /// Session
@@ -34,7 +33,7 @@ public final class Operator: Operation {
     private var session: URLSession { return outerSession ?? innerSession }
     var dataTask: URLSessionDataTask?
     
-    // MARK: - Opertion properties
+    /// Opertion properties
     public override var isConcurrent: Bool { return true }
     public override var isAsynchronous: Bool { return true }
     public override var isExecuting: Bool { return _executing }
@@ -49,10 +48,15 @@ public final class Operator: Operation {
         didSet { didChangeValue(forKey: "isFinished") }
     }
     
-    public init(options: OptionsInfo, session: URLSession? = nil) {
+    public init(_ infos: OptionsInfo, session: URLSession? = nil) {
+        source = infos.sourceUrl!
         super.init()
-        self.options = options
+        options += infos
         outerSession = session
+    }
+    
+    public convenience init(url: URL) {
+        self.init([.sourceUrl(url)])
     }
     
     public override func start() {
@@ -74,7 +78,7 @@ public final class Operator: Operation {
         
         guard let request = URLRequest.hq.create(options) else {
             // completion
-            execute(.error(.cancel("Init request failure!")))
+            trigger(source, .error(.cancel("Init request failure!")))
             cancel()
             return
         }
@@ -107,48 +111,11 @@ public final class Operator: Operation {
     }
     
     deinit {
-        Lock.semaphore(callbackLock) { callbackMap.removeAll() }
+        reset()
+        eventsMap.removeAll()
         if outerSession == nil {
             innerSession.invalidateAndCancel()
         }
-    }
-}
-
-
-
-// MARK: - Public functions
-extension Operator {
-    @discardableResult
-    public func subscribe(start: ((String, Int64)->Void)? = nil,
-                       progress: ((Progress)->Void)? = nil,
-                       data: ((Data)->Void)? = nil,
-                       completed: ((URL)->Void)? = nil,
-                       error: ((DownloadError)->Void)? = nil) -> UInt64 {
-        let callback = { (_ event: Event) in
-            switch event {
-            case .start(let value):
-                start?(value.0, value.1)
-            case .progress(let rate):
-                progress?(rate)
-            case .newData(let d):
-                data?(d)
-            case .completed(let url):
-                completed?(url)
-            case .error(let err):
-                error?(err)
-            }
-        }
-        
-        return Lock.semaphore(callbackLock) { () -> UInt64 in
-            return callbackMap.insert(callback)
-        }
-    }
-    
-    public func unsubscribe(_ key: UInt64) {
-        Lock.semaphore(callbackLock) {
-            callbackMap.remove(key)
-        }
-        if callbackMap.count == 0 { cancel() }
     }
 }
 
@@ -157,30 +124,24 @@ extension Operator {
         guard stream == nil else { return }
         
         let dire = options.cacheDirectory
-//        if !FileManager.default.fileExists(atPath: dire.path) {
-//            do {
-//                try FileManager.default.createDirectory(at: dire, withIntermediateDirectories: true, attributes: nil)
-//            }
-//            catch let err {
-//                execute(.error(.cancel(err.localizedDescription)))
-//                cancel()
-//                return
-//            }
-//        }
+        if !FileManager.default.fileExists(atPath: dire.path) {
+            do {
+                try FileManager.default.createDirectory(at: dire, withIntermediateDirectories: true, attributes: nil)
+            }
+            catch let err {
+                trigger(source, .error(.cancel(err.localizedDescription)))
+                cancel()
+                return
+            }
+        }
         
         guard let s = OutputStream(url: dire.appendingPathComponent(fileName), append: true) else {
-            execute(.error(.cancel("Output stream open failure!")))
+            trigger(source, .error(.cancel("Output stream open failure!")))
             cancel()
             return
         }
         stream = s
         stream?.open()
-    }
-
-    private func execute(_ event: Event) {
-//        Lock.semaphore(callbackLock) {
-            callbackMap.forEach { $0(event) }
-//        }
     }
     
     private func done() {
@@ -204,7 +165,7 @@ extension Operator {
         let statusCode = (response as? HTTPURLResponse)?.statusCode
         guard let code = statusCode,
             (200..<400).contains(code) else {
-                execute(.error(.statusCodeInvalid(statusCode ?? 404)))
+                trigger(source, .error(.statusCodeInvalid(statusCode ?? 404)))
                 return .cancel
         }
         
@@ -214,7 +175,7 @@ extension Operator {
         {
             // '304 Not Modified' is an exceptional one. It should be treated as cancelled if no cache data
             // URLSession current behavior will return 200 status code when the server respond 304 and URLCache hit. But this is not a standard behavior and we just add a check
-            execute(.error(.noCache304))
+            trigger(source, .error(.noCache304))
             return .cancel
         }
         
@@ -228,7 +189,7 @@ extension Operator {
         
         openStream(fileName: name)
         progress = Progress(totalUnitCount: size)
-        execute(.start(name, size))
+        trigger(source, .start(name, size))
         return .allow
     }
     
@@ -236,19 +197,19 @@ extension Operator {
         if let stream = stream, stream.hasSpaceAvailable {
             stream.write([UInt8](data), maxLength: data.count)
             progress?.completedUnitCount += Int64(data.count)
-            execute(.newData(data))
-            execute(.progress(progress!))
+            trigger(source, .data(data))
+            trigger(source, .progress(progress!))
         }
         else {
-            execute(.error(.cancel("Disk no enough space!")))
-            cancel() // If not enough space, cancel task
+            trigger(source, .error(.cancel("Disk no enough space!")))
+            cancel()
         }
     }
     
     func complete(error: Error?) {
         guard let err = error else {
             done()
-            execute(.completed(options.cacheDirectory.appendingPathComponent(options.fileName!)))
+            trigger(source, .completed(options.cacheDirectory.appendingPathComponent(options.fileName!)))
             return
         }
         
@@ -256,11 +217,12 @@ extension Operator {
         guard (err as NSError).code != -999 else { return }
         
         if options.retryCount <= 0 {
-            execute(.error(.error(err)))
+            trigger(source, .error(.error(err)))
             done()
         }
         else {
-            // retry
+            // TODO: retry
+            
             let count = options.retryCount
             options = options.removeAllMatchesIgnoringAssociatedValue(.retryCount(0))
             options.append(.retryCount(count-1))
@@ -273,7 +235,7 @@ extension Operator {
                 // when authenticationMethod is ServerTrust, must be not nil
                 return (.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
             }
-            // or trust host
+            // TODO: allow trust host
         }
         
         if let cred = options.urlCredential, challenge.previousFailureCount == 0 { // previos never failure
