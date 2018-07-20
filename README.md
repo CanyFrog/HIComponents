@@ -1,6 +1,6 @@
 # HIComponents
 
-[![Build Status](https://travis-ci.org/CanyFrog/HIComponents.svg?branch=master)](https://travis-ci.org/CanyFrog/HIComponents) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![License](https://img.shields.io/cocoapods/l/HIComponents.svg?style=flat)](https://raw.githubusercontent.com/CanyFrog/HIComponents/master/License)
+[![Build Status](https://travis-ci.org/CanyFrog/HIComponents.svg?branch=master)](https://travis-ci.org/CanyFrog/HIComponents) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![License](https://img.shields.io/cocoapods/l/HIComponents.svg?style=flat)](https://github.com/CanyFrog/HIComponents/blob/master/LICENSE)
 
 -------
 
