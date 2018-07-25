@@ -2,8 +2,8 @@
 //  UIDevice+Extension.swift
 //  HQFoundation
 //
-//  Created by Magee Huang on 6/11/18.
-//  Copyright © 2018 HQ.Personal.modules. All rights reserved.
+//  Created by HonQi on 6/11/18.
+//  Copyright © 2018 HonQi Indie. All rights reserved.
 //
 
 import Foundation

@@ -2,8 +2,8 @@
 //  KeyChain.swift
 //  HQFoundation
 //
-//  Created by Qi on 2018/5/8.
-//  Copyright © 2018年 HQ.Personal.modules. All rights reserved.
+//  Created by HonQi on 2018/5/8.
+//  Copyright © 2018年 HonQi Indie. All rights reserved.
 //
 
 import Security

@@ -2,8 +2,8 @@
 //  Mapping.swift
 //  HQSqlite
 //
-//  Created by Magee Huang on 3/30/18.
-//  Copyright © 2018 HQ.Personal.modules. All rights reserved.
+//  Created by HonQi on 3/30/18.
+//  Copyright © 2018 HonQi Indie. All rights reserved.
 //
 // Study and mock from SQLite https://github.com/stephencelis/SQLite.swift
 

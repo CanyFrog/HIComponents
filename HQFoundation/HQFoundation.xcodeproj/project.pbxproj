@@ -3,12 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		601BA75D2071F77500C62A11 /* HQFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 601BA7532071F77500C62A11 /* HQFoundation.framework */; };
-		601BA7622071F77500C62A11 /* HQFoundationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA7612071F77500C62A11 /* HQFoundationTests.swift */; };
+		601BA7622071F77500C62A11 /* FoundationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA7612071F77500C62A11 /* FoundationTests.swift */; };
 		601BA7642071F77600C62A11 /* HQFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 601BA7562071F77500C62A11 /* HQFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		601BA76F2071F79A00C62A11 /* Lock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA76E2071F79A00C62A11 /* Lock.swift */; };
 		601BA7732071FAB100C62A11 /* Timer+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA7722071FAB100C62A11 /* Timer+extension.swift */; };
@@ -38,7 +38,7 @@
 		601BA7562071F77500C62A11 /* HQFoundation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HQFoundation.h; sourceTree = "<group>"; };
 		601BA7572071F77500C62A11 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		601BA75C2071F77500C62A11 /* HQFoundationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HQFoundationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		601BA7612071F77500C62A11 /* HQFoundationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQFoundationTests.swift; sourceTree = "<group>"; };
+		601BA7612071F77500C62A11 /* FoundationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationTests.swift; sourceTree = "<group>"; };
 		601BA7632071F77600C62A11 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		601BA76E2071F79A00C62A11 /* Lock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lock.swift; sourceTree = "<group>"; };
 		601BA7722071FAB100C62A11 /* Timer+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Timer+extension.swift"; sourceTree = "<group>"; };
@@ -109,7 +109,7 @@
 		601BA7602071F77500C62A11 /* HQFoundationTests */ = {
 			isa = PBXGroup;
 			children = (
-				601BA7612071F77500C62A11 /* HQFoundationTests.swift */,
+				601BA7612071F77500C62A11 /* FoundationTests.swift */,
 				601BA7632071F77600C62A11 /* Info.plist */,
 			);
 			path = HQFoundationTests;
@@ -203,7 +203,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
 				LastUpgradeCheck = 0930;
-				ORGANIZATIONNAME = HQ.Personal.modules;
+				ORGANIZATIONNAME = "HonQi Indie";
 				TargetAttributes = {
 					601BA7522071F77500C62A11 = {
 						CreatedOnToolsVersion = 9.2;
@@ -217,7 +217,7 @@
 				};
 			};
 			buildConfigurationList = 601BA74D2071F77500C62A11 /* Build configuration list for PBXProject "HQFoundation" */;
-			compatibilityVersion = "Xcode 8.0";
+			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -274,7 +274,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				601BA7622071F77500C62A11 /* HQFoundationTests.swift in Sources */,
+				601BA7622071F77500C62A11 /* FoundationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,7 +399,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -420,8 +421,12 @@
 				INFOPLIST_FILE = HQFoundation/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = sqlite.personal.HQ.HQFoundation;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = me.HonQi.Foundation;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -444,8 +449,12 @@
 				INFOPLIST_FILE = HQFoundation/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = sqlite.personal.HQ.HQFoundation;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = me.HonQi.Foundation;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.0;
@@ -460,8 +469,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4GWS96ARLN;
 				INFOPLIST_FILE = HQFoundationTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = sqlite.personal.HQ.HQFoundationTests;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = me.HonQi.FoundationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -475,8 +488,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4GWS96ARLN;
 				INFOPLIST_FILE = HQFoundationTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = sqlite.personal.HQ.HQFoundationTests;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = me.HonQi.FoundationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

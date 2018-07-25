@@ -182,7 +182,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
 				LastUpgradeCheck = 0930;
-				ORGANIZATIONNAME = com.personal.HQ;
+				ORGANIZATIONNAME = "HonQi Indie";
 				TargetAttributes = {
 					8A650ACB206869CD00C95462 = {
 						CreatedOnToolsVersion = 9.2;
@@ -419,7 +419,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = HQ.HQCache;
+				PRODUCT_BUNDLE_IDENTIFIER = me.HonQi.Cache;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -447,7 +447,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = HQ.HQCache;
+				PRODUCT_BUNDLE_IDENTIFIER = me.HonQi.Cache;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.0;
@@ -463,7 +463,7 @@
 				DEVELOPMENT_TEAM = 4EXDER2SUV;
 				INFOPLIST_FILE = HQCacheTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = HQ.HQCacheTests;
+				PRODUCT_BUNDLE_IDENTIFIER = me.HonQi.HQCacheTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -478,7 +478,7 @@
 				DEVELOPMENT_TEAM = 4EXDER2SUV;
 				INFOPLIST_FILE = HQCacheTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = HQ.HQCacheTests;
+				PRODUCT_BUNDLE_IDENTIFIER = me.HonQi.HQCacheTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

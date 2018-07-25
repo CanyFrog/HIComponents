@@ -2,8 +2,8 @@
 //  HQRouter.h
 //  HQRouter
 //
-//  Created by Magee Huang on 5/11/18.
-//  Copyright © 2018 HQ.components.router. All rights reserved.
+//  Created by HonQi on 5/11/18.
+//  Copyright © 2018 HonQi Indie. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
