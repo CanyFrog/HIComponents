@@ -2,8 +2,8 @@
 //  DiskCache.swift
 //  HQCache
 //
-//  Created by Magee Huang on 3/26/18.
-//  Copyright © 2018 com.personal.HQ. All rights reserved.
+//  Created by HonQi on 3/26/18.
+//  Copyright © 2018 HonQi Indie. All rights reserved.
 //
 
 import HQFoundation
@@ -56,9 +56,9 @@ public class DiskCache: CacheInBackProtocol {
     internal var dataPath: URL { return cachePath.appendingPathComponent("data", isDirectory: true) }
     internal var trashPath: URL { return cachePath.appendingPathComponent("trash", isDirectory: true) }
     
-    internal var backgroundTrashQueue = DispatchQueue(label: "com.trash.disk.cache.personal.HQ", qos: .utility, attributes: .concurrent)
+    internal var backgroundTrashQueue = DispatchQueue(label: "queue.trash.disk.cache.me.HonQi", qos: .utility, attributes: .concurrent)
     internal var taskLock = DispatchSemaphore(value: 1)
-    internal var taskQueue = DispatchQueue(label: "com.disk.cache.personal.HQ", qos: .default, attributes: .concurrent)
+    internal var taskQueue = DispatchQueue(label: "queue.data.disk.cache.me.HonQi", qos: .default, attributes: .concurrent)
     
     // MARK: - Sqlite
     internal var connect: Connection?

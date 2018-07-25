@@ -2,8 +2,8 @@
 //  SqliteStatementTest.swift
 //  HQSqliteTests
 //
-//  Created by qihuang on 2018/4/1.
-//  Copyright © 2018年 HQ.Personal.modules. All rights reserved.
+//  Created by HonQi on 2018/4/1.
+//  Copyright © 2018年 HonQi Indie. All rights reserved.
 //
 
 import XCTest

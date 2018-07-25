@@ -2,8 +2,8 @@
 //  MemoryCache.swift
 //  HQCache
 //
-//  Created by qihuang on 2018/3/26.
-//  Copyright © 2018年 com.personal.HQ. All rights reserved.
+//  Created by HonQi on 2018/3/26.
+//  Copyright © 2018年 HonQi Indie. All rights reserved.
 //
 
 import HQFoundation
@@ -57,7 +57,7 @@ public final class MemoryCache: CacheProtocol {
     
     // MARK: - Private property
     private var cacheMap = CacheLinkMap()
-    private let queue = DispatchQueue(label: "com.memory.cache.personal.HQ", qos: .default, attributes: DispatchQueue.Attributes.concurrent)
+    private let queue = DispatchQueue(label: "queue.memory.cache.me.HonQi", qos: .default, attributes: DispatchQueue.Attributes.concurrent)
     private let mutex = Lock.Mutex()
     
     // MARk: - Life cycle

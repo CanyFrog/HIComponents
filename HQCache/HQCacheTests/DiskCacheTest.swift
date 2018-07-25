@@ -2,8 +2,8 @@
 //  DiskCacheTest.swift
 //  HQCacheTests
 //
-//  Created by qihuang on 2018/4/5.
-//  Copyright © 2018年 com.personal.HQ. All rights reserved.
+//  Created by HonQi on 2018/4/5.
+//  Copyright © 2018年 HonQi Indie. All rights reserved.
 //
 
 import XCTest

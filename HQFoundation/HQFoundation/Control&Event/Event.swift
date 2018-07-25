@@ -2,8 +2,8 @@
 //  Event.swift
 //  HQFoundation
 //
-//  Created by Qi on 2018/4/19.
-//  Copyright © 2018年 HQ.Personal.modules. All rights reserved.
+//  Created by HonQi on 2018/4/19.
+//  Copyright © 2018年 HonQi Indie. All rights reserved.
 //
 
 private var EventClosureKey: UInt8 = 0

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		602D547C206CC67400CE9AE0 /* Statement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602D547B206CC67400CE9AE0 /* Statement.swift */; };
 		602D547E206DDED800CE9AE0 /* Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602D547D206DDED800CE9AE0 /* Mapping.swift */; };
-		604A7D6620734EE50060A869 /* Util.swift in Headers */ = {isa = PBXBuildFile; fileRef = 609FF12F206CC2A0004092B1 /* Util.swift */; };
+		604A7D6620734EE50060A869 /* Utils.swift in Headers */ = {isa = PBXBuildFile; fileRef = 609FF12F206CC2A0004092B1 /* Utils.swift */; };
 		604A7D6720734EE80060A869 /* Connection.swift in Headers */ = {isa = PBXBuildFile; fileRef = 609FF12B206CC1B6004092B1 /* Connection.swift */; };
 		604A7D6820734EEB0060A869 /* SqliteError.swift in Headers */ = {isa = PBXBuildFile; fileRef = 609FF131206CC312004092B1 /* SqliteError.swift */; };
 		604A7D6920734EED0060A869 /* Statement.swift in Headers */ = {isa = PBXBuildFile; fileRef = 602D547B206CC67400CE9AE0 /* Statement.swift */; };
@@ -18,7 +18,7 @@
 		609FF120206CC185004092B1 /* SqliteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609FF11F206CC185004092B1 /* SqliteTests.swift */; };
 		609FF122206CC185004092B1 /* HQSqlite.h in Headers */ = {isa = PBXBuildFile; fileRef = 609FF114206CC185004092B1 /* HQSqlite.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		609FF12C206CC1B6004092B1 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609FF12B206CC1B6004092B1 /* Connection.swift */; };
-		609FF130206CC2A0004092B1 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609FF12F206CC2A0004092B1 /* Util.swift */; };
+		609FF130206CC2A0004092B1 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609FF12F206CC2A0004092B1 /* Utils.swift */; };
 		609FF132206CC312004092B1 /* SqliteError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609FF131206CC312004092B1 /* SqliteError.swift */; };
 		8A77B6ED20706DE200E5CA66 /* SqliteConnectionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A77B6EC20706DE200E5CA66 /* SqliteConnectionTest.swift */; };
 		8A77B6EF2070A79800E5CA66 /* SqliteStatementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A77B6EE2070A79800E5CA66 /* SqliteStatementTest.swift */; };
@@ -45,7 +45,7 @@
 		609FF11F206CC185004092B1 /* SqliteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SqliteTests.swift; sourceTree = "<group>"; };
 		609FF121206CC185004092B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		609FF12B206CC1B6004092B1 /* Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
-		609FF12F206CC2A0004092B1 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		609FF12F206CC2A0004092B1 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		609FF131206CC312004092B1 /* SqliteError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SqliteError.swift; sourceTree = "<group>"; };
 		8A77B6EC20706DE200E5CA66 /* SqliteConnectionTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SqliteConnectionTest.swift; sourceTree = "<group>"; };
 		8A77B6EE2070A79800E5CA66 /* SqliteStatementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SqliteStatementTest.swift; sourceTree = "<group>"; };
@@ -94,7 +94,7 @@
 			children = (
 				609FF114206CC185004092B1 /* HQSqlite.h */,
 				609FF115206CC185004092B1 /* Info.plist */,
-				609FF12F206CC2A0004092B1 /* Util.swift */,
+				609FF12F206CC2A0004092B1 /* Utils.swift */,
 				609FF12B206CC1B6004092B1 /* Connection.swift */,
 				609FF131206CC312004092B1 /* SqliteError.swift */,
 				602D547B206CC67400CE9AE0 /* Statement.swift */,
@@ -123,7 +123,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				609FF122206CC185004092B1 /* HQSqlite.h in Headers */,
-				604A7D6620734EE50060A869 /* Util.swift in Headers */,
+				604A7D6620734EE50060A869 /* Utils.swift in Headers */,
 				604A7D6A20734EF00060A869 /* Mapping.swift in Headers */,
 				604A7D6920734EED0060A869 /* Statement.swift in Headers */,
 				604A7D6720734EE80060A869 /* Connection.swift in Headers */,
@@ -178,7 +178,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
 				LastUpgradeCheck = 0930;
-				ORGANIZATIONNAME = HQ.Personal.modules;
+				ORGANIZATIONNAME = "HonQi Indie";
 				TargetAttributes = {
 					609FF110206CC185004092B1 = {
 						CreatedOnToolsVersion = 9.2;
@@ -232,7 +232,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				609FF132206CC312004092B1 /* SqliteError.swift in Sources */,
-				609FF130206CC2A0004092B1 /* Util.swift in Sources */,
+				609FF130206CC2A0004092B1 /* Utils.swift in Sources */,
 				602D547E206DDED800CE9AE0 /* Mapping.swift in Sources */,
 				602D547C206CC67400CE9AE0 /* Statement.swift in Sources */,
 				609FF12C206CC1B6004092B1 /* Connection.swift in Sources */,
@@ -393,7 +393,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = sqlite.personal.HQ.HQSqlite;
+				PRODUCT_BUNDLE_IDENTIFIER = me.HonQi.Sqlite;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -417,7 +417,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = sqlite.personal.HQ.HQSqlite;
+				PRODUCT_BUNDLE_IDENTIFIER = me.HonQi.Sqlite;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.0;
@@ -433,7 +433,7 @@
 				DEVELOPMENT_TEAM = 4GWS96ARLN;
 				INFOPLIST_FILE = HQSqliteTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = sqlite.personal.HQ.HQSqliteTests;
+				PRODUCT_BUNDLE_IDENTIFIER = me.HonQi.SqliteTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -448,7 +448,7 @@
 				DEVELOPMENT_TEAM = 4GWS96ARLN;
 				INFOPLIST_FILE = HQSqliteTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = sqlite.personal.HQ.HQSqliteTests;
+				PRODUCT_BUNDLE_IDENTIFIER = me.HonQi.SqliteTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

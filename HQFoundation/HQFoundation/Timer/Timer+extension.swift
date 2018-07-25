@@ -1,17 +1,9 @@
 //
-//  Timer+extension.swift
-//  HQFoundation
-//
-//  Created by Magee Huang on 4/2/18.
-//  Copyright © 2018 HQ.Personal.modules. All rights reserved.
-//
-
-//
 //  Timer+Extension.swift
 //  HCComponents
 //
-//  Created by huangcong on 2017/4/29.
-//  Copyright © 2017年 Person Inc. All rights reserved.
+//  Created by HonQi on 2017/4/29.
+//  Copyright © 2017年 HonQi Indie. All rights reserved.
 //
 // MARK: -- CFRunloop   source: https://github.com/radex/SwiftyTimer/blob/master/Sources/SwiftyTimer.swift
 

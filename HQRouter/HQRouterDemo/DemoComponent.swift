@@ -2,8 +2,8 @@
 //  DemoComponent.swift
 //  HQRouterDemo
 //
-//  Created by Magee Huang on 5/17/18.
-//  Copyright © 2018 HQ.components.router. All rights reserved.
+//  Created by HonQi on 5/17/18.
+//  Copyright © 2018 HonQi Indie. All rights reserved.
 //
 
 import HQRouter

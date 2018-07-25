@@ -2,8 +2,8 @@
 //  ViewController.swift
 //  HQRouterDemo
 //
-//  Created by Magee on 2018/5/15.
-//  Copyright © 2018年 HQ.components.router. All rights reserved.
+//  Created by HonQi on 2018/5/15.
+//  Copyright © 2018年 HonQi Indie. All rights reserved.
 //
 
 import UIKit
