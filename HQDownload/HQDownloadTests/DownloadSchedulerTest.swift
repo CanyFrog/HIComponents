@@ -1,9 +1,9 @@
 ////
-////  HQDownloadSchedulerTest.swift
-////  HQDownloadTests
+////  DownloadSchedulerTest.swift
+////  DownloadTests
 ////
-////  Created by Magee Huang on 4/11/18.
-////  Copyright © 2018 com.personal.HQ. All rights reserved.
+////  Created by HonQi on 4/11/18.
+////  Copyright © 2018 HonQi Indie. All rights reserved.
 ////
 //
 //import XCTest

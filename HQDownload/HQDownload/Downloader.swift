@@ -2,8 +2,8 @@
 //  Downloader.swift
 //  HQDownload
 //
-//  Created by Magee Huang on 5/31/18.
-//  Copyright © 2018 com.personal.HQ. All rights reserved.
+//  Created by HonQi on 5/31/18.
+//  Copyright © 2018 HonQi Indie. All rights reserved.
 //
 
 import HQFoundation
