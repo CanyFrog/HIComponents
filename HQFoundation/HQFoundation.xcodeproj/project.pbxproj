@@ -42,7 +42,6 @@
 		601BA7632071F77600C62A11 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		601BA76E2071F79A00C62A11 /* Lock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lock.swift; sourceTree = "<group>"; };
 		601BA7722071FAB100C62A11 /* Timer+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Timer+extension.swift"; sourceTree = "<group>"; };
-		601BA7742071FCD100C62A11 /* Runloop.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Runloop.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		601EF95320B5262700155668 /* Formatter+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Formatter+Extension.swift"; sourceTree = "<group>"; };
 		601EF95520B5289B00155668 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		606E2B4520CE4B520095AA86 /* UIDevice+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Extension.swift"; sourceTree = "<group>"; };
@@ -132,7 +131,6 @@
 			children = (
 				601BA7722071FAB100C62A11 /* Timer+extension.swift */,
 				60F9101120A983AC0072AB55 /* Timeinterval+extension.swift */,
-				601BA7742071FCD100C62A11 /* Runloop.playground */,
 			);
 			path = Timer;
 			sourceTree = "<group>";

@@ -24,18 +24,19 @@ import HQSqlite
                 /...
 */
 
-public class DiskCache: CacheInBackProtocol {
+public class DiskCache {
 
     // MARK: - Public
-    public var name: String = "DiskCache"
+    public var name: String = "Disk.Cache.me.HonQi"
 
+    /// Default Int.max
     public var countLimit: Int = Int.max
 
+    /// Default Int.max
     public var costLimit: Int = Int.max
 
-    public var ageLimit: TimeInterval = TimeInterval(INTMAX_MAX)
-
-    public var autoTrimInterval: TimeInterval = 15
+    /// Default is 7 days
+    public var ageLimit: TimeInterval = 7 * 24 * 60 * 60
 
     /// The minimum free disk space (in bytes) which the cache should kept
     public var freeDiskSpaceLimit: Int = 0
@@ -85,14 +86,14 @@ public class DiskCache: CacheInBackProtocol {
 // MARK: - Query & Check
 extension DiskCache {
     
-    public func query<T: Codable>(objectForKey key: String) -> T? {
+    public func object<T: Codable>(forKey key: String) -> T? {
         guard !key.isEmpty, let data = queryDataFromSqlite(key) else { return nil }
         return T.unSerialize(data)
     }
     
-    public func query<T: Codable>(objectForKey key: String, inBackThreadCallback callback: @escaping (String, T?) -> Void) {
+    public func object<T: Codable>(forKey key: String, callback: @escaping (String, T?) -> Void) {
         taskQueue.async { [weak self] in
-            let value: T? = self?.query(objectForKey: key)
+            let value: T? = self?.object(forKey: key)
             callback(key, value)
         }
     }
@@ -101,7 +102,7 @@ extension DiskCache {
     /// query cache file path, use for big file, such as video & audio and so on
     ///
     /// - Returns: file path
-    public func query(filePathForKey key: String) -> String? {
+    public func file(forKey key: String) -> String? {
         guard !key.isEmpty else { return nil }
         let _ = taskLock.wait(timeout: .distantFuture)
         defer { taskLock.signal() }
@@ -113,51 +114,32 @@ extension DiskCache {
         return filename
     }
     
-    public func query(filePathForKey key: String, inBackThreadCallback callback: @escaping (String, String?) -> Void) {
+    public func file(forKey key: String, callback: @escaping (String, String?) -> Void) {
         taskQueue.async { [weak self] in
-            let filename = self?.query(filePathForKey: key)
+            let filename = self?.file(forKey: key)
             callback(key, filename)
         }
     }
     
     
     /// Check
-    public func exist(forKey key: String) -> Bool {
+    public func contains(_ key: String) -> Bool {
         guard !key.isEmpty else { return false }
         return Lock.semaphore(taskLock, closure: { () -> Bool in
             return self.dbQuery(key) != nil
         })
     }
     
-    public func exist(forKey key: String, inBackThreadCallback callback: @escaping (String, Bool) -> Void) {
-        taskQueue.async { [weak self] in
-            callback(key, self?.exist(forKey: key) ?? false)
-        }
-    }
     
-    
-    public func getTotalCount() -> Int {
+    public func totalCount() -> Int {
         return Lock.semaphore(taskLock, closure: { () -> Int in
             return self.dbQueryTotalItemCount()
         })
     }
     
-    public func getTotalCount(inBackThread closure: @escaping (Int) -> Void) {
-        taskQueue.async { [weak self] in
-            closure(self?.getTotalCount() ?? 0)
-        }
-    }
-    
-    
-    public func getTotalCost() -> Int {
+    public func totalCost() -> Int {
         return Lock.semaphore(taskLock) { () -> Int in
             return self.dbQueryTotalItemSize()
-        }
-    }
-    
-    public func getTotalCost(inBackThread closure: @escaping (Int) -> Void) {
-        taskQueue.async { [weak self] in
-            closure(self?.getTotalCost() ?? 0)
         }
     }
 }
@@ -165,7 +147,7 @@ extension DiskCache {
 // MARK: - Insert
 extension DiskCache {
     
-    public func insertOrUpdate(originFile path: URL, size: Int = 0, forKey key: String) {
+    public func setFile(_ path: URL, forKey key: String, size: Int = 0) {
         let fileM = FileManager.default
         guard fileM.fileExists(atPath: path.path) && !key.isEmpty else { return }
 
@@ -178,16 +160,8 @@ extension DiskCache {
         } catch {
         }
     }
-
-    public func insertOrUpdate(originFile path: URL, size: Int = 0, forKey key: String, inBackThreadCallback callback: @escaping () -> Void) {
-        taskQueue.async { [weak self] in
-            self?.insertOrUpdate(originFile: path, size: size, forKey: key)
-            callback()
-        }
-    }
     
-    
-    public func insertOrUpdate<T: Codable>(object obj: T, forKey key: String) {
+    public func setObject<T: Codable>(_ obj: T, forKey key: String) {
         guard !key.isEmpty else { return }
 
         guard let value = obj.serialize(), value.count > 0 else { return }
@@ -208,13 +182,6 @@ extension DiskCache {
             }
         }
     }
-    
-    public func insertOrUpdate<T: Codable>(object obj: T, forKey key: String, inBackThreadCallback callback: @escaping () -> Void) {
-        taskQueue.async { [weak self] in
-            self?.insertOrUpdate(object: obj, forKey: key)
-            callback()
-        }
-    }
 }
 
 
@@ -222,20 +189,20 @@ extension DiskCache {
 // MARK: - Delete
 extension DiskCache {
 
-    public func delete(objectForKey key: String) {
+    public func removeObject(forKey key: String) {
         guard !key.isEmpty else { return }
         Lock.semaphore(taskLock) {
             self.dbDelete(key)
         }
     }
-    public func delete(objectForKey key: String, inBackThreadCallback callback: @escaping (String) -> Void) {
+    public func removeObject(forKey key: String, completed: @escaping (String) -> Void) {
         taskQueue.async { [weak self] in
-            self?.delete(objectForKey: key)
-            callback(key)
+            self?.removeObject(forKey: key)
+            completed(key)
         }
     }
 
-    public func deleteAllCache() {
+    public func removeAllObjects() {
         Lock.semaphore(taskLock) {
             self.stmtDict.removeAll()
             // FIXME: BUG IN CLIENT OF libsqlite3.dylib: database integrity compromised by API violation: vnode unlinked while in use:
@@ -249,14 +216,7 @@ extension DiskCache {
         }
     }
     
-    public func deleteAllCache(inBackThread callback: @escaping () -> Void) {
-        taskQueue.async { [weak self] in
-            self?.deleteAllCache()
-            callback()
-        }
-    }
-
-    public func deleteAllCache(withProgressClosure progress: @escaping (Int, Int, Bool) -> Void) {
+    public func removeAllObjects(progress: @escaping (Int, Int, Bool) -> Void) {
         let _ = taskLock.wait(timeout: .distantFuture)
         defer { taskLock.signal() }
         
@@ -293,13 +253,13 @@ extension DiskCache {
     }
 
     
-    public func deleteCache(exceedToCount count: Int) {
+    public func removeObjects(toCountLessThan count: Int) {
         let _ = taskLock.wait(timeout: .distantFuture)
         defer { taskLock.signal() }
         
         if count > Int.max { return }
         if count <= 0 {
-            deleteAllCache()
+            removeAllObjects()
             return
         }
         
@@ -327,21 +287,13 @@ extension DiskCache {
         } while total > count && !items.isEmpty && isSuc
     }
     
-    public func deleteCache(exceedToCount count: Int, inBackThread complete: @escaping () -> Void) {
-        taskQueue.async { [weak self] in
-            self?.deleteCache(exceedToCount: count)
-            complete()
-        }
-    }
-
-    
-    public func deleteCache(exceedToCost cost: Int) {
+    public func removeObjects(toCostLessThan cost: Int) {
         let _ = taskLock.wait(timeout: .distantFuture)
         defer { taskLock.signal() }
         
         if cost >= Int.max { return }
         if cost <= 0 {
-            deleteAllCache()
+            removeAllObjects()
             return
         }
         
@@ -368,18 +320,11 @@ extension DiskCache {
             }
         } while total > cost && !items.isEmpty && isSuc
     }
-    
-    public func deleteCache(exceedToCost cost: Int, inBackThread complete: @escaping () -> Void) {
-        taskQueue.async { [weak self] in
-            self?.deleteCache(exceedToCost: cost)
-            complete()
-        }
-    }
 
     
-    public func deleteCache(exceedToAge age: TimeInterval) {
+    public func removeObjects(toAgeMoreThan age: TimeInterval) {
         if age < 0 {
-            deleteAllCache()
+            removeAllObjects()
             return
         }
         
@@ -393,14 +338,8 @@ extension DiskCache {
         }
     }
     
-    public func deleteCache(exceedToAge age: TimeInterval, inBackThread complete: @escaping () -> Void) {
-        taskQueue.async { [weak self] in
-            self?.deleteCache(exceedToAge: age)
-            complete()
-        }
-    }
     
-    public func deleteCache(toFreeSpace space: Int) {
+    public func removeObjects(toFreeSpace space: Int) {
         if space <= 0 { return }
         
         let totalBytes = Lock.semaphore(taskLock) { () -> Int in
@@ -414,14 +353,7 @@ extension DiskCache {
         if needDelete <= 0 { return } // now free space larger than target
         
         let costLimit = totalBytes - needDelete // need hold item'size
-        deleteCache(exceedToCost: max(0, costLimit))
-    }
-    
-    public func deleteCache(toFreeSpace space: Int, inBackThread complete: @escaping () -> Void) {
-        taskQueue.async { [weak self] in
-            self?.deleteCache(toFreeSpace: space)
-            complete()
-        }
+        removeObjects(toCostLessThan: max(0, costLimit))
     }
 }
 
@@ -441,20 +373,20 @@ private extension DiskCache {
     }
     
     func clearCacheTiming() {
-        DispatchQueue.global(qos: .utility).asyncAfter(deadline: DispatchTime.now() + autoTrimInterval) {[weak self] in
+        DispatchQueue.global(qos: .utility).asyncAfter(deadline: DispatchTime.now()) {[weak self] in
             guard let wself = self else { return }
             wself.clearInBackground()
-            wself.clearCacheTiming()
+//            wself.clearCacheTiming()
         }
     }
     
     func clearInBackground() {
         taskQueue.async { [weak self] in
             guard let wself = self else { return }
-            wself.deleteCache(exceedToAge: wself.ageLimit)
-            wself.deleteCache(exceedToCost: wself.costLimit)
-            wself.deleteCache(exceedToCount: wself.countLimit)
-            wself.deleteCache(toFreeSpace: wself.freeDiskSpaceLimit)
+            wself.removeObjects(toAgeMoreThan: wself.ageLimit)
+            wself.removeObjects(toCostLessThan: wself.costLimit)
+            wself.removeObjects(toCountLessThan: wself.countLimit)
+            wself.removeObjects(toFreeSpace: wself.freeDiskSpaceLimit)
         }
     }
 }
