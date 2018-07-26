@@ -149,7 +149,7 @@ public extension Collection where Iterator.Element == OptionItem {
             case .cacheDirectory(let directory) = item {
             return directory
         }
-        return URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
+        return URL(fileURLWithPath: NSTemporaryDirectory())
     }
     
     public var maxCacheCount: Int {
