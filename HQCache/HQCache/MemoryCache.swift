@@ -8,16 +8,19 @@
 
 import HQFoundation
 
-public final class MemoryCache: CacheProtocol {
+public class MemoryCache {
+
+    /// Default is 100
+    public var countLimit: Int = 100
     
-    // MARK: - Public property
-    public var countLimit: Int = Int.max
+    /// Default is 20M
+    public var totalCostLimit: Int = 20 * 1024 * 1024
     
-    public var costLimit: Int = Int.max
+    /// Default is 180s
+    public var ageLimit: TimeInterval = 180
     
-    public var ageLimit: TimeInterval = TimeInterval(INTMAX_MAX)
-    
-    public var autoTrimInterval: TimeInterval = 5.0
+    /// Default is 3s
+    public var autoTrimInterval: TimeInterval = 3.0
     
     public var autoEmptyCacheOnMemoryWarning = true
     
@@ -56,7 +59,7 @@ public final class MemoryCache: CacheProtocol {
     }
     
     // MARK: - Private property
-    private var cacheMap = CacheLinkMap()
+    private var cacheMap = CacheList()
     private let queue = DispatchQueue(label: "queue.memory.cache.me.HonQi", qos: .default, attributes: DispatchQueue.Attributes.concurrent)
     private let mutex = Lock.Mutex()
     
@@ -70,7 +73,7 @@ public final class MemoryCache: CacheProtocol {
     deinit {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationDidReceiveMemoryWarning, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
-        deleteAllCache()
+        removeAllObjects()
     }
     
 }
@@ -78,14 +81,14 @@ public final class MemoryCache: CacheProtocol {
 
 // MARK: - Query and Check
 extension MemoryCache {
-    public func exist(forKey key: String) -> Bool {
+    public func contains(_ key: String) -> Bool {
         mutex.lock()
         let contains = cacheMap.dict.keys.contains(key)
         mutex.unlock()
         return contains
     }
     
-    public func query<T>(objectForKey key: String) -> T? {
+    public func object<T>(forKey key: String) -> T? {
         mutex.lock()
         defer { mutex.unlock() }
         guard let node = cacheMap.dict[key] else { return nil }
@@ -94,26 +97,26 @@ extension MemoryCache {
         return node.value as? T
     }
     
-    public func getTotalCount() -> Int {
+    public func totalCount() -> Int {
         mutex.lock()
         let count = cacheMap.totalCount
         mutex.unlock()
         return count
     }
     
-    public func getTotalCost() -> Int {
+    public func totalCost() -> Int {
         mutex.lock()
         let cost = cacheMap.totalCost
         mutex.unlock()
         return cost
     }
-    
 }
 
 
 // MARK: - Insert & update
 extension MemoryCache {
-    public func insertOrUpdate<T>(object obj: T, forKey key: String, cost: Int = 0) {
+    /// Default 0 cost
+    public func setObject<T>(_ obj: T, forKey key: String, cost: Int = 0) {
         mutex.lock()
         let now = CACurrentMediaTime()
         if let node = cacheMap.dict[key] {
@@ -125,7 +128,7 @@ extension MemoryCache {
             cacheMap.toHead(node: node)
         }
         else {
-            let node = CacheLinkNode()
+            let node = CacheNode()
             node.cost = cost
             node.value = obj
             node.time = now
@@ -134,11 +137,11 @@ extension MemoryCache {
         }
         mutex.unlock()
         
-        if getTotalCount() > countLimit {
+        if totalCount() > countLimit {
             clearCacheCondition(cond: cacheMap.totalCount > countLimit)
         }
-        if getTotalCost() > costLimit {
-            clearCacheCondition(cond: cacheMap.totalCost > costLimit)
+        if totalCost() > totalCostLimit {
+            clearCacheCondition(cond: cacheMap.totalCost > totalCostLimit)
         }
     }
 }
@@ -146,7 +149,7 @@ extension MemoryCache {
 
 // MARK: - Delete
 extension MemoryCache {
-    public func delete(objectForKey key: String) {
+    public func removeObject(forKey key: String) {
         mutex.lock()
         guard let node = cacheMap.dict[key] else {
             mutex.unlock()
@@ -164,35 +167,35 @@ extension MemoryCache {
         }
     }
     
-    public func deleteAllCache() {
+    public func removeAllObjects() {
         mutex.lock()
         cacheMap.removeAll()
         mutex.unlock()
     }
     
-    public func deleteCache(exceedToCost cost: Int) {
+    public func removeObjects(toCostLessThan cost: Int) {
         if cost <= 0 {
-            deleteAllCache()
+            removeAllObjects()
             return
         }
-        if getTotalCost() <= cost { return }
+        if totalCost() <= cost { return }
         
         clearCacheCondition(cond: cacheMap.totalCost > cost)
     }
     
-    public func deleteCache(exceedToCount count: Int) {
+    public func removeObjects(toCountLessThan count: Int) {
         if count <= 0 {
-            deleteAllCache()
+            removeAllObjects()
             return
         }
-        if getTotalCount() <= count { return }
+        if totalCount() <= count { return }
         
         clearCacheCondition(cond: cacheMap.totalCount > count)
     }
     
-    public func deleteCache(exceedToAge age: TimeInterval) {
+    public func removeObjects(toAgeMoreThan age: TimeInterval) {
         if age <= 0 {
-            deleteAllCache()
+            removeAllObjects()
             return
         }
         
@@ -216,7 +219,7 @@ private extension MemoryCache {
     
     func clearCacheCondition(cond: @autoclosure () -> Bool) {
         var finish = false
-        var holders = [CacheLinkNode]()
+        var holders = [CacheNode]()
         
         while !finish {
             if mutex.tryLock() == 0 { // lock success
@@ -257,51 +260,49 @@ private extension MemoryCache {
     func clearInBackground() {
         queue.async { [weak self] in
             guard let wself = self else { return }
-            wself.deleteCache(exceedToAge: wself.ageLimit)
-            wself.deleteCache(exceedToCost: wself.costLimit)
-            wself.deleteCache(exceedToCount: wself.countLimit)
+            wself.removeObjects(toAgeMoreThan: wself.ageLimit)
+            wself.removeObjects(toCostLessThan: wself.totalCostLimit)
+            wself.removeObjects(toCountLessThan: wself.countLimit)
         }
     }
     
     @objc func didReceiveMemoryWarning() {
         if let did = didReceiveMemoryWarningClosure { did(self) }
-        if autoEmptyCacheOnMemoryWarning { deleteAllCache() }
+        if autoEmptyCacheOnMemoryWarning { removeAllObjects() }
     }
     
     @objc func AppDidEnterBackground() {
         if let did = didEnterBackgroundClosure { did(self) }
-        if autoEmptyCacheWhenEnteringBackground { deleteAllCache() }
+        if autoEmptyCacheWhenEnteringBackground { removeAllObjects() }
     }
 }
 
 
 // MARK: - Data Struct -- Link table
-fileprivate class CacheLinkNode {
-    weak var prev: CacheLinkNode?
-    weak var next: CacheLinkNode?
+fileprivate class CacheNode: Equatable {
+    weak var prev: CacheNode?
+    weak var next: CacheNode?
     var key: String!
     var value: Any!
     var cost: Int = 0
     var time: TimeInterval!
-}
-
-extension CacheLinkNode: Equatable {
-    static func ==(lhs: CacheLinkNode, rhs: CacheLinkNode) -> Bool {
+    
+    static func ==(lhs: CacheNode, rhs: CacheNode) -> Bool {
         return lhs.key == rhs.key
     }
 }
 
-fileprivate struct CacheLinkMap {
-    var dict = Dictionary<String, CacheLinkNode>()
+fileprivate struct CacheList {
+    var dict = Dictionary<String, CacheNode>()
     var totalCost: Int = 0
     var totalCount: Int = 0
-    var head: CacheLinkNode?
-    var tail: CacheLinkNode?
+    var head: CacheNode?
+    var tail: CacheNode?
     
     var releaseOnMainThread = false
     var releaseAsynchronously = true
     
-    mutating func insert(node: CacheLinkNode) {
+    mutating func insert(node: CacheNode) {
         dict[node.key] = node
         totalCost += node.cost
         totalCount += 1
@@ -316,7 +317,7 @@ fileprivate struct CacheLinkMap {
         }
     }
     
-    mutating func toHead(node: CacheLinkNode) {
+    mutating func toHead(node: CacheNode) {
         guard let h = head, h != node else { return }
         if tail! == node {
             tail = node.prev
@@ -333,7 +334,7 @@ fileprivate struct CacheLinkMap {
         head = node
     }
     
-    mutating func remove(node: CacheLinkNode) {
+    mutating func remove(node: CacheNode) {
         dict.removeValue(forKey: node.key)
         totalCost -= node.cost
         totalCount -= 1
@@ -343,7 +344,7 @@ fileprivate struct CacheLinkMap {
         if tail! == node { tail = node.prev }
     }
     
-    mutating func removeTail() -> CacheLinkNode? {
+    mutating func removeTail() -> CacheNode? {
         guard let t = tail else { return nil }
         remove(node: t)
         return t
