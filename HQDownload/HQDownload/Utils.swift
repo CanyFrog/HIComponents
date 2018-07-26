@@ -150,6 +150,9 @@ extension Namespace where T == URLRequest {
         else if let start = rangeStart {
             request.setValue("bytes=\(start)-", forHTTPHeaderField: "Range")
         }
+        else if let end = rangeEnd {
+            request.setValue("bytes=0-\(end)", forHTTPHeaderField: "Range")
+        }
         return request
     }
 }

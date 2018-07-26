@@ -19,26 +19,50 @@ public class Downloader: Eventable {
     
     private let scheduler: Scheduler
     
-    private let backScheduler: Scheduler
+//    private let backScheduler: Scheduler
     
     init(_ infos: OptionsInfo) {
-        options = infos
-        
-        // If no cache directory, Use default setting
-//        if infos.contains{ $0 ~~ .cacheDirectory(URL(string: "")) } {
-//            
-//        }
+        var directory: URL! = nil
+        if let item = infos.lastMatchIgnoringAssociatedValue(.cacheDirectory(holderUrl)),
+            case .cacheDirectory(let dire) = item {
+            directory = dire
+            options = infos
+        }
+        else {
+            let path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
+            directory = URL(fileURLWithPath: path).appendingPathComponent("Download", isDirectory: true)
+            options = infos + [.cacheDirectory(directory)]
+        }
+
         cache = CacheManager(options.cacheDirectory)
         scheduler = Scheduler(options)
-        backScheduler = Scheduler(options)
+//        backScheduler = Scheduler(options)
+        
+        scheduler.subscribe(
+            .start({ [weak self] (source, name, size) in
+                self?.trigger(source, .start(name, size))
+            }),
+            .progress({ [weak self] (source, rate) in
+                self?.trigger(source, .progress(rate))
+            }),
+            .data({ [weak self] (source, data) in
+                self?.trigger(source, .data(data))
+            }),
+            .completed({ [weak self] (source, file) in
+                self?.trigger(source, .completed(file))
+            }),
+            .error({ [weak self] (source, err) in
+                self?.trigger(source, .error(err))
+            })
+        )
     }
 }
 
 
 extension Downloader {
     public func start(url: URL) {
-        //        let options = data // decode
-        //        download(options: <#T##OptionsInfo#>)
+//        let options = data // decode
+//        download(options: <#T##OptionsInfo#>)
     }
     
     public func pause(source: String) -> Data? {
@@ -66,26 +90,22 @@ extension Downloader {
         
     }
     
-    @discardableResult
-    public func download(source: URL) -> Operator? {
-        return download(infos: [.sourceUrl(source)])
+    public func download(source: URL) {
+        download(infos: [.sourceUrl(source)])
     }
     
-    @discardableResult
-    public func download(source: String) -> Operator? {
+    public func download(source: String) {
         guard let url = URL(string: source) else {
             assertionFailure("Source string: \(source) is empty or can not convert to URL!")
-            return nil
+            return
         }
         return download(source: url)
     }
     
-    @discardableResult
-    public func download(infos: OptionsInfo) -> Operator? {
-        // TODO: judge cache
+    public func download(infos: OptionsInfo) {
         guard let url = infos.sourceUrl else {
             assertionFailure("Source URL can not be empty!")
-            return nil
+            return
         }
         
         var items = infos
@@ -95,18 +115,18 @@ extension Downloader {
             let total = cacheInfo.exceptedCount {
             if completed > total {
                 trigger(url, .completed(cacheInfo.cacheDirectory.appendingPathComponent(cacheInfo.fileName!)))
-                return nil
+                return
             }
             else {
                 items = cacheInfo + infos
             }
         }
-        if items.backgroundSession {
-            // TODO: back taks identifier
-            return backScheduler.download(info: items)
-        }
-        else {
-            return scheduler.download(info: items)
-        }
+//        if items.backgroundSession {
+//            // TODO: back taks identifier
+//            backScheduler.download(info: items)
+//        }
+//        else {
+            scheduler.download(info: items)
+//        }
     }
 }

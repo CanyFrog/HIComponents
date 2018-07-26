@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		600173FB210998E700509CDD /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F0F208095DA0088A579 /* HQCache.framework */; };
+		600173FC210998E700509CDD /* HQFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F10208095DA0088A579 /* HQFoundation.framework */; };
+		600173FD210998E700509CDD /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; };
+		600173FF210999F100509CDD /* HQSqlite.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		60017400210999F100509CDD /* HQCache.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 60DC2F0F208095DA0088A579 /* HQCache.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		60017401210999F100509CDD /* HQFoundation.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 60DC2F10208095DA0088A579 /* HQFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6001740321099F7C00509CDD /* OperatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6001740221099F7C00509CDD /* OperatorTest.swift */; };
 		601225F720BFD2C1008467CB /* Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601225F620BFD2C1008467CB /* Options.swift */; };
 		601225F920BFE197008467CB /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601225F820BFE197008467CB /* Downloader.swift */; };
 		60247E8320CFBD0D00B050A3 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60247E8220CFBD0D00B050A3 /* Utils.swift */; };
@@ -60,6 +67,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		600173FE210999DC00509CDD /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				600173FF210999F100509CDD /* HQSqlite.framework in CopyFiles */,
+				60017400210999F100509CDD /* HQCache.framework in CopyFiles */,
+				60017401210999F100509CDD /* HQFoundation.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		605CE541208F1B960014DDB3 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -77,6 +96,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6001740221099F7C00509CDD /* OperatorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorTest.swift; sourceTree = "<group>"; };
 		601225F620BFD2C1008467CB /* Options.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Options.swift; sourceTree = "<group>"; };
 		601225F820BFE197008467CB /* Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
 		60247E8220CFBD0D00B050A3 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -125,6 +145,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				600173FB210998E700509CDD /* HQCache.framework in Frameworks */,
+				600173FC210998E700509CDD /* HQFoundation.framework in Frameworks */,
+				600173FD210998E700509CDD /* HQSqlite.framework in Frameworks */,
 				8A650B002069119200C95462 /* HQDownload.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -181,12 +204,13 @@
 		8A650B032069119200C95462 /* HQDownloadTests */ = {
 			isa = PBXGroup;
 			children = (
-				8A650B042069119200C95462 /* DownloadTests.swift */,
 				60B6E0F6207C83CE00C4C594 /* DownloadRequestTest.swift */,
 				8AA183CE2081896400FA51B5 /* DownloadProgressTest.swift */,
 				60B6E0FB207C95B200C4C594 /* DownloaderTest.swift */,
 				60F0AF85207DCD3F00C5F6EE /* DownloadSchedulerTest.swift */,
 				8A650B062069119200C95462 /* Info.plist */,
+				8A650B042069119200C95462 /* DownloadTests.swift */,
+				6001740221099F7C00509CDD /* OperatorTest.swift */,
 				60BE176A20EC869E0014459E /* InnerKeyMapTest.swift */,
 			);
 			path = HQDownloadTests;
@@ -237,6 +261,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8A650B0A2069119200C95462 /* Build configuration list for PBXNativeTarget "HQDownload" */;
 			buildPhases = (
+				600173FA21096A4F00509CDD /* ShellScript */,
 				8A650AF12069119200C95462 /* Sources */,
 				8A650AF22069119200C95462 /* Frameworks */,
 				8A650AF32069119200C95462 /* Headers */,
@@ -259,6 +284,7 @@
 				8A650AFB2069119200C95462 /* Sources */,
 				8A650AFC2069119200C95462 /* Frameworks */,
 				8A650AFD2069119200C95462 /* Resources */,
+				600173FE210999DC00509CDD /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -362,6 +388,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		600173FA21096A4F00509CDD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = ../update_self.sh;
+		};
 		8ABF2B8220785BE6001EDDA5 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -403,6 +442,7 @@
 				8A650B052069119200C95462 /* DownloadTests.swift in Sources */,
 				8AA183CF2081896400FA51B5 /* DownloadProgressTest.swift in Sources */,
 				60B6E0FC207C95B200C4C594 /* DownloaderTest.swift in Sources */,
+				6001740321099F7C00509CDD /* OperatorTest.swift in Sources */,
 				60BE176B20EC869E0014459E /* InnerKeyMapTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -633,6 +673,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4EXDER2SUV;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = HQDownloadTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.HonQi.DownloadTest;
@@ -648,6 +692,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4EXDER2SUV;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = HQDownloadTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.HonQi.DownloadTest;
