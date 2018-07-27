@@ -9,19 +9,30 @@
 import HQFoundation
 import HQCache
 
+struct Item {
+    enum State { case wait, download, failure, completed }
+    var name: String
+    var completed: Int64
+    var excepted: Int64
+    var state: State = .wait
+    
+}
+
+typealias Items = [String: Item]
+
 public class Downloader: Eventable {
     var eventsMap = InnerKeyMap<Eventable.EventWrap>()
     var eventsLock = DispatchSemaphore(value: 1)
     
     private let options: OptionsInfo
     
-    private let cache: CacheManager
+    private let cache: Cache
     
     private let scheduler: Scheduler
     
 //    private let backScheduler: Scheduler
     
-    init(_ infos: OptionsInfo) {
+    public init(_ infos: OptionsInfo) {
         var directory: URL! = nil
         if let item = infos.lastMatchIgnoringAssociatedValue(.cacheDirectory(holderUrl)),
             case .cacheDirectory(let dire) = item {
@@ -34,7 +45,7 @@ public class Downloader: Eventable {
             options = infos + [.cacheDirectory(directory)]
         }
 
-        cache = CacheManager(options.cacheDirectory)
+        cache = Cache(options.cacheDirectory)
         scheduler = Scheduler(options)
 //        backScheduler = Scheduler(options)
         
@@ -60,17 +71,17 @@ public class Downloader: Eventable {
 
 
 extension Downloader {
-    public func start(url: URL) {
+    public func start(source: URL) {
 //        let options = data // decode
 //        download(options: <#T##OptionsInfo#>)
     }
     
-    public func pause(source: String) -> Data? {
+    public func pause(source: URL) {
         /// return resume data
-        return nil
+        
     }
     
-    public func cancel() {
+    public func cancel(source: URL) {
         // remove task and delete options
     }
     
@@ -99,7 +110,7 @@ extension Downloader {
             assertionFailure("Source string: \(source) is empty or can not convert to URL!")
             return
         }
-        return download(source: url)
+        download(source: url)
     }
     
     public func download(infos: OptionsInfo) {
@@ -110,7 +121,7 @@ extension Downloader {
         
         var items = infos
         
-        if let cacheInfo: OptionsInfo = cache.query(objectForKey: url.absoluteString),
+        if let cacheInfo: OptionsInfo = cache.object(forKey: url.absoluteString),
             let completed = cacheInfo.completedCount,
             let total = cacheInfo.exceptedCount {
             if completed > total {

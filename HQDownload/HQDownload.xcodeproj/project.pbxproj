@@ -32,6 +32,7 @@
 		60B6E0F7207C83CE00C4C594 /* DownloadRequestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F6207C83CE00C4C594 /* DownloadRequestTest.swift */; };
 		60B6E0FC207C95B200C4C594 /* DownloaderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0FB207C95B200C4C594 /* DownloaderTest.swift */; };
 		60BE176B20EC869E0014459E /* InnerKeyMapTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BE176A20EC869E0014459E /* InnerKeyMapTest.swift */; };
+		60CB0462210AB6A10090AB0D /* MultipleCacheViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CB0461210AB6A10090AB0D /* MultipleCacheViewController.swift */; };
 		60DC2F11208095DA0088A579 /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F0F208095DA0088A579 /* HQCache.framework */; };
 		60DC2F12208095DA0088A579 /* HQFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F10208095DA0088A579 /* HQFoundation.framework */; };
 		60DC2F14208097E80088A579 /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; };
@@ -108,6 +109,7 @@
 		60B6E0F6207C83CE00C4C594 /* DownloadRequestTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadRequestTest.swift; sourceTree = "<group>"; };
 		60B6E0FB207C95B200C4C594 /* DownloaderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloaderTest.swift; sourceTree = "<group>"; };
 		60BE176A20EC869E0014459E /* InnerKeyMapTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InnerKeyMapTest.swift; sourceTree = "<group>"; };
+		60CB0461210AB6A10090AB0D /* MultipleCacheViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleCacheViewController.swift; sourceTree = "<group>"; };
 		60DC2F0F208095DA0088A579 /* HQCache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQCache.framework; path = Carthage/Build/iOS/HQCache.framework; sourceTree = "<group>"; };
 		60DC2F10208095DA0088A579 /* HQFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQFoundation.framework; path = Carthage/Build/iOS/HQFoundation.framework; sourceTree = "<group>"; };
 		60DC2F13208097E80088A579 /* HQSqlite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQSqlite.framework; path = Carthage/Build/iOS/HQSqlite.framework; sourceTree = "<group>"; };
@@ -233,6 +235,7 @@
 				8AC9161720896BC700A9CEA1 /* ViewController.swift */,
 				605CE548208F20510014DDB3 /* SingleViewController.swift */,
 				605CE54A208F25160014DDB3 /* MultipleViewController.swift */,
+				60CB0461210AB6A10090AB0D /* MultipleCacheViewController.swift */,
 				605CE54D20902A930014DDB3 /* ContinueViewController.swift */,
 				609AF3402099652F002C76D4 /* BackgroundViewController.swift */,
 				8AC9161920896BC700A9CEA1 /* Main.storyboard */,
@@ -457,6 +460,7 @@
 				605CE549208F20510014DDB3 /* SingleViewController.swift in Sources */,
 				605CE54B208F25160014DDB3 /* MultipleViewController.swift in Sources */,
 				8AC9161620896BC700A9CEA1 /* AppDelegate.swift in Sources */,
+				60CB0462210AB6A10090AB0D /* MultipleCacheViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

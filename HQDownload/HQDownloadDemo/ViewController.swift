@@ -11,6 +11,7 @@ import UIKit
 enum Options: String {
     case single = "单个文件下载"
     case multiple = "多个文件下载"
+    case multipleCache = "多文件缓存下载"
     case big = "大文件分段下载"
     case `continue` = "断点续传"
     case background = "后台下载"
@@ -53,6 +54,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             navigationController?.pushViewController(SingleViewController(), animated: true)
         case 1:
             navigationController?.pushViewController(MultipleViewController(), animated: true)
+        case 2:
+            navigationController?.pushViewController(MultipleCacheViewController(), animated: true)
 //        case 3:
 //            navigationController?.pushViewController(ContinueViewController(), animated: true)
 //        case 4:
