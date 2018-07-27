@@ -33,7 +33,6 @@ public enum DownloadError: Error, CustomStringConvertible {
 }
 
 
-
 // MARK: - Event
 protocol Eventable: class {
     typealias EventWrap = (URL, EventClosure.Event) -> Void
