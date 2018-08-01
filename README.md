@@ -1,31 +1,34 @@
-# HIComponents
+<h1 align="center">HIComponents</h1>
+<p align="center"> iOS 开发模块集合 </p>
 
-[![Build Status](https://travis-ci.org/CanyFrog/HIComponents.svg?branch=master)](https://travis-ci.org/CanyFrog/HIComponents) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![License](https://img.shields.io/cocoapods/l/HIComponents.svg?style=flat)](https://github.com/CanyFrog/HIComponents/blob/master/LICENSE)
+<p align="center">
+<a href="https://travis-ci.org/HonQii/HIComponents"><img src="https://travis-ci.org/HonQii/HIComponents.svg"></a>
+<a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat"></a>
+<a href="https://raw.githubusercontent.com/HonQii/HIComponents/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg?style=flat"></a>
+</p>
 
--------
-
-Personally organized components commonly used in iOS development!
+## [Documentation](https://honqii.github.io/HIComponents/#/)
+Detailed documentation
 
 ## Modules
-* [x] [Foundation]()
-* [x] [Kit]()
-* [x] [Sqlite]()
-* [x] [Router]()
-* [ ] [Download]()
+* [x] Foundation
 
-## Foundation
-Foundation module containing the basic method and class.
+    > Common useful classes, methods, and extensions
 
-## Kit
-Kit module containing UI widget.
+* [x] Kit
+    
+    > Common UI widget
+    
+* [x] Sqlite
+    
+    > Wrappers for operations with sqlite
 
-## Sqlite
-Basic Sqlite connection module.
-
-## Router
-Module routing class.
-
-## Download
-File resource download module
+* [x] Router
+    
+    > Routing class
+    
+* [x] Download
+    
+    > Downloader with features such as caching, progress callbacks, etc.
 
 

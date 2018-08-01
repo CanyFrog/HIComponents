@@ -1,3 +1,0 @@
-# HIComponents documents
-
-## Demo
