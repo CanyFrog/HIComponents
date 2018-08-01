@@ -8,6 +8,7 @@
 
 import HQFoundation
 
+// TODO: Adding callback multiple times causes an error
 // MARK: - Error
 public enum DownloadError: Error, CustomStringConvertible {
     case statusCodeInvalid(Int)

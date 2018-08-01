@@ -316,8 +316,6 @@ extension OptionItem {
             let total = try coder.decode(Int64.self, forKey: .exceptedCount)
             self = .exceptedCount(total)
         }
-        /// Coder is empty, means sqlite is error. Throw
-        throw DownloadError.cacheError
     }
 
     public func encode(to encoder: Encoder) throws {

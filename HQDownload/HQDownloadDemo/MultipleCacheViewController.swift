@@ -12,7 +12,7 @@ import HQDownload
 class MultipleCacheViewController: UIViewController, UICollectionViewDataSource {
 
     var collectionView: UICollectionView!
-    var downloader = Downloader([])
+    var downloader = Downloader.default
     let source = [
         "https://cdn.pixabay.com/photo/2015/06/16/16/46/meadow-811339_1280.jpg",
         "https://cdn.pixabay.com/photo/2018/01/12/10/19/fantasy-3077928_1280.jpg",
@@ -50,8 +50,8 @@ extension MultipleCacheViewController {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CollectionViewCell
         let url = URL(string: source[indexPath.row])!
-        downloader.download(source: url)?.subscribe(url: url, .completed({ (_, file) in
-            cell.setImage(file: file)
+        downloader.download(source: url)?.subscribe(url: url, .completed({ [weak cell] (source, file) in
+            cell?.setImage(file: file)
         }))
         return cell
     }
