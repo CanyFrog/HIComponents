@@ -9,8 +9,8 @@
 import HQFoundation
 import HQCache
 
-struct Item: Codable {
-    enum State: Codable, Int { case wait, download, failure, completed }
+class Item: Codable {
+    enum State: Int, Codable { case wait, download, failure, completed }
     var name: String = ""
     var completed: Int64 = 0
     var excepted: Int64 = 0
@@ -62,34 +62,19 @@ public class Downloader: Eventable {
 
 
 extension Downloader {
-    public func start(source: URL) {
-//        let options = data // decode
-//        download(options: <#T##OptionsInfo#>)
-    }
-    
     public func pause(source: URL) {
         /// return resume data
-        
+        scheduler.cancel(url: source)
+        let item = items[source]
+        item?.state = .wait
+        cache.setObject(item!.toOptions(), forKey: source.absoluteString)
     }
     
     public func cancel(source: URL) {
         // remove task and delete options
-    }
-    
-    public func allTasks() {
-        
-    }
-    
-    public func failureTasks() {
-        
-    }
-    
-    public func completedTasks() {
-        
-    }
-    
-    public func progressTasks() {
-        
+        scheduler.cancel(url: source)
+        items.removeValue(forKey: source)
+        cache.removeObject(forKey: source.absoluteString)
     }
     
     public func download(source: URL) -> Downloader? {
@@ -110,8 +95,7 @@ extension Downloader {
             return nil
         }
         
-        var options = infos
-        
+        var itemInfos = infos
         if let cacheInfo: OptionsInfo = cache.object(forKey: url.absoluteString),
             let completed = cacheInfo.completedCount,
             let total = cacheInfo.exceptedCount {
@@ -120,7 +104,7 @@ extension Downloader {
                 return self
             }
             else {
-                options = cacheInfo + infos
+                itemInfos = cacheInfo + infos
             }
         }
         
@@ -137,7 +121,7 @@ extension Downloader {
 //            backScheduler.download(info: items)
 //        }
 //        else {
-            scheduler.download(info: options)
+            scheduler.download(info: itemInfos)
 //        }
         
         return self
@@ -151,32 +135,33 @@ extension Downloader {
             .start({ [weak self] (source, name, size) in
                 self?.trigger(source, .start(name, size))
                 
-                var item = self?.items[source]
+                let item = self?.items[source]
                 item?.name = name
                 item?.excepted = size
                 item?.completed = 0
                 item?.state = .download
-                self?.items[source] = item
             }),
             .progress({ [weak self] (source, rate) in
                 self?.trigger(source, .progress(rate))
                 
-                var item = self?.items[source]
+                let item = self?.items[source]
                 item?.completed = rate.completedUnitCount
-                self?.items[source] = item
+                
+                if rate.fractionCompleted >= 1.0 && item != nil {
+                    item?.state = .completed
+                    self?.cache.setObject(item!.toOptions(), forKey: source.absoluteString)
+                }
             }),
             .data({ [weak self] (source, data) in
                 self?.trigger(source, .data(data))
             }),
             .completed({ [weak self] (source, file) in
                 self?.trigger(source, .completed(file))
-                if let item = self?.items[source] {
-                    self?.cache.setObject(item.toOptions(), forKey: source.absoluteString)
-                }
             }),
             .error({ [weak self] (source, err) in
                 self?.trigger(source, .error(err))
                 if let item = self?.items[source] {
+                    item.state = .failure
                     self?.cache.setObject(item.toOptions(), forKey: source.absoluteString)
                 }
             })
