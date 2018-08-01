@@ -9,63 +9,54 @@
 import HQFoundation
 import HQCache
 
-struct Item {
-    enum State { case wait, download, failure, completed }
-    var name: String
-    var completed: Int64
-    var excepted: Int64
+struct Item: Codable {
+    enum State: Codable, Int { case wait, download, failure, completed }
+    var name: String = ""
+    var completed: Int64 = 0
+    var excepted: Int64 = 0
     var state: State = .wait
     
+    func toOptions() -> OptionsInfo {
+        return [.fileName(name), .completedCount(completed), .exceptedCount(excepted)]
+    }
 }
 
-typealias Items = [String: Item]
+typealias Items = [URL: Item]
 
 public class Downloader: Eventable {
+    static public let `default` = Downloader([.cacheDirectory(URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!).appendingPathComponent("me.HonQi.Downloader", isDirectory: true))])
+    
     var eventsMap = InnerKeyMap<Eventable.EventWrap>()
     var eventsLock = DispatchSemaphore(value: 1)
     
+    private let name: String
+    private var items: Items
     private let options: OptionsInfo
-    
     private let cache: Cache
-    
     private let scheduler: Scheduler
     
 //    private let backScheduler: Scheduler
     
     public init(_ infos: OptionsInfo) {
-        var directory: URL! = nil
-        if let item = infos.lastMatchIgnoringAssociatedValue(.cacheDirectory(holderUrl)),
-            case .cacheDirectory(let dire) = item {
-            directory = dire
-            options = infos
+        guard let item = infos.lastMatchIgnoringAssociatedValue(.cacheDirectory(holderUrl)),
+            case .cacheDirectory(let directory) = item else {
+            fatalError("Must be setting data storage directory!")
         }
-        else {
-            let path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
-            directory = URL(fileURLWithPath: path).appendingPathComponent("Download", isDirectory: true)
-            options = infos + [.cacheDirectory(directory)]
-        }
+        
+        options = infos
+        name = directory.lastPathComponent
 
         cache = Cache(options.cacheDirectory)
+        items = cache.object(forKey: name) ?? Items()
         scheduler = Scheduler(options)
-//        backScheduler = Scheduler(options)
+        schedulerSubscribe(scheduler)
         
-        scheduler.subscribe(
-            .start({ [weak self] (source, name, size) in
-                self?.trigger(source, .start(name, size))
-            }),
-            .progress({ [weak self] (source, rate) in
-                self?.trigger(source, .progress(rate))
-            }),
-            .data({ [weak self] (source, data) in
-                self?.trigger(source, .data(data))
-            }),
-            .completed({ [weak self] (source, file) in
-                self?.trigger(source, .completed(file))
-            }),
-            .error({ [weak self] (source, err) in
-                self?.trigger(source, .error(err))
-            })
-        )
+//        backScheduler = Scheduler(options)
+    }
+    
+    deinit {
+        cache.setObject(items, forKey: name)
+        eventsMap.removeAll()
     }
 }
 
@@ -101,43 +92,94 @@ extension Downloader {
         
     }
     
-    public func download(source: URL) {
-        download(infos: [.sourceUrl(source)])
+    public func download(source: URL) -> Downloader? {
+        return download(infos: [.sourceUrl(source)])
     }
     
-    public func download(source: String) {
+    public func download(source: String) -> Downloader? {
         guard let url = URL(string: source) else {
             assertionFailure("Source string: \(source) is empty or can not convert to URL!")
-            return
+            return nil
         }
-        download(source: url)
+        return download(source: url)
     }
     
-    public func download(infos: OptionsInfo) {
+    public func download(infos: OptionsInfo) -> Downloader? {
         guard let url = infos.sourceUrl else {
             assertionFailure("Source URL can not be empty!")
-            return
+            return nil
         }
         
-        var items = infos
+        var options = infos
         
         if let cacheInfo: OptionsInfo = cache.object(forKey: url.absoluteString),
             let completed = cacheInfo.completedCount,
             let total = cacheInfo.exceptedCount {
-            if completed > total {
-                trigger(url, .completed(cacheInfo.cacheDirectory.appendingPathComponent(cacheInfo.fileName!)))
-                return
+            if completed >= total {
+                trigger(url, .completed(options.cacheDirectory.appendingPathComponent(cacheInfo.fileName!)))
+                return self
             }
             else {
-                items = cacheInfo + infos
+                options = cacheInfo + infos
             }
         }
+        
+        var item = items[url]
+        if item == nil {
+            item = Item()
+        }
+        item?.state = .wait
+        items[url] = item
+        
+        
 //        if items.backgroundSession {
 //            // TODO: back taks identifier
 //            backScheduler.download(info: items)
 //        }
 //        else {
-            scheduler.download(info: items)
+            scheduler.download(info: options)
 //        }
+        
+        return self
+    }
+}
+
+
+extension Downloader {
+    private func schedulerSubscribe(_ scheduler: Scheduler){
+        scheduler.subscribe(
+            .start({ [weak self] (source, name, size) in
+                self?.trigger(source, .start(name, size))
+                
+                var item = self?.items[source]
+                item?.name = name
+                item?.excepted = size
+                item?.completed = 0
+                item?.state = .download
+                self?.items[source] = item
+            }),
+            .progress({ [weak self] (source, rate) in
+                self?.trigger(source, .progress(rate))
+                
+                var item = self?.items[source]
+                item?.completed = rate.completedUnitCount
+                self?.items[source] = item
+            }),
+            .data({ [weak self] (source, data) in
+                self?.trigger(source, .data(data))
+            }),
+            .completed({ [weak self] (source, file) in
+                self?.trigger(source, .completed(file))
+                if let item = self?.items[source] {
+                    self?.cache.setObject(item.toOptions(), forKey: source.absoluteString)
+                }
+            }),
+            .error({ [weak self] (source, err) in
+                self?.trigger(source, .error(err))
+                if let item = self?.items[source] {
+                    self?.cache.setObject(item.toOptions(), forKey: source.absoluteString)
+                }
+            })
+        )
     }
 }
