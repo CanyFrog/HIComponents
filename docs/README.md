@@ -1,4 +1,4 @@
 # HIComponents
 
-## Getting started
+## Getting Started
 
