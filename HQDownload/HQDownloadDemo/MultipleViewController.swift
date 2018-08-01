@@ -51,12 +51,17 @@ extension MultipleViewController {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CollectionViewCell
-        scheduler.download(info: [.sourceUrl(URL(string: source[indexPath.row])!)])?.subscribe(
-            .completed({ [weak self] (_, file) in
-                let c = self?.collectionView.cellForItem(at: indexPath) as? CollectionViewCell
-                c?.setImage(file: file)
-            })
-        )
+        
+        let url = URL(string: source[indexPath.row])!
+        scheduler.download(info: [.sourceUrl(url)])?.subscribe(url: url, .completed({ (_, file) in
+            cell.setImage(file: file)
+        }))
+//        scheduler.download(info: [.sourceUrl(URL(string: source[indexPath.row])!)])?.subscribe(
+//            .completed({ [weak self] (_, file) in
+//                let c = self?.collectionView.cellForItem(at: indexPath) as? CollectionViewCell
+//                c?.setImage(file: file)
+//            })
+//        )
         return cell
     }
 }

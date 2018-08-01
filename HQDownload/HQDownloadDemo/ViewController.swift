@@ -20,7 +20,7 @@ enum Options: String {
 class ViewController: UIViewController {
     var tableView: UITableView!
     
-    let options: [Options] = [.single, .multiple, .big, .continue, .background]
+    let options: [Options] = [.single, .multiple, .multipleCache, .big, .continue, .background]
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -57,6 +57,18 @@ extension Eventable {
         }
     }
     
+    @discardableResult
+    public func subscribe(url: URL, _ events: EventClosure ...) -> UInt64 {
+        let wrap: EventWrap = { (source, event) in
+            guard source == url else { return }
+            events.forEach { $0.trigger(url: source, event: event) }
+        }
+        
+        return Lock.semaphore(eventsLock) { () -> UInt64 in
+            return eventsMap.insert(wrap)
+        }
+    }
+    
     public func unsubscribe(_ key: UInt64) {
         Lock.semaphore(eventsLock) {
             eventsMap.remove(key)

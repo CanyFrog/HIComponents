@@ -39,12 +39,6 @@ class MultipleCacheViewController: UIViewController, UICollectionViewDataSource 
         collectionView?.dataSource = self
         
         view.addSubview(collectionView)
-        downloader.subscribe(.completed({ [weak self] (url, file) in
-            let str = url.absoluteString
-            let idx = self?.source.index(of: str)
-            let cell = self?.collectionView.cellForItem(at: IndexPath(row: idx!, section: 0)) as? CollectionViewCell
-            cell?.setImage(file: file)
-        }))
     }
 }
 
@@ -55,7 +49,10 @@ extension MultipleCacheViewController {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CollectionViewCell
-        downloader.download(source: source[indexPath.row])
+        let url = URL(string: source[indexPath.row])!
+        downloader.download(source: url)?.subscribe(url: url, .completed({ (_, file) in
+            cell.setImage(file: file)
+        }))
         return cell
     }
 }
