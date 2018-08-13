@@ -1,11 +1,10 @@
 //
-//  Timer+Extension.swift
+//  Timer+Honqi.swift
 //  HCComponents
 //
 //  Created by HonQi on 2017/4/29.
 //  Copyright © 2017年 HonQi Indie. All rights reserved.
 //
-// MARK: -- CFRunloop   source: https://github.com/radex/SwiftyTimer/blob/master/Sources/SwiftyTimer.swift
 
 /// Desciption see Runloop.playground
 
