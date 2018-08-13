@@ -32,20 +32,16 @@
 		605CE54E20902A930014DDB3 /* ContinueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE54D20902A930014DDB3 /* ContinueViewController.swift */; };
 		605E7CB620EB20350004CC05 /* Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E7CB520EB20350004CC05 /* Delegate.swift */; };
 		609AF3412099652F002C76D4 /* BackgroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609AF3402099652F002C76D4 /* BackgroundViewController.swift */; };
-		60B6E0F7207C83CE00C4C594 /* DownloadRequestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0F6207C83CE00C4C594 /* DownloadRequestTest.swift */; };
-		60B6E0FC207C95B200C4C594 /* DownloaderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6E0FB207C95B200C4C594 /* DownloaderTest.swift */; };
 		60BE176B20EC869E0014459E /* InnerKeyMapTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BE176A20EC869E0014459E /* InnerKeyMapTest.swift */; };
 		60CB0462210AB6A10090AB0D /* MultipleCacheViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CB0461210AB6A10090AB0D /* MultipleCacheViewController.swift */; };
 		60DC2F11208095DA0088A579 /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F0F208095DA0088A579 /* HQCache.framework */; };
 		60DC2F12208095DA0088A579 /* HQFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F10208095DA0088A579 /* HQFoundation.framework */; };
 		60DC2F14208097E80088A579 /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; };
-		60F0AF86207DCD3F00C5F6EE /* DownloadSchedulerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F0AF85207DCD3F00C5F6EE /* DownloadSchedulerTest.swift */; };
 		8A650B002069119200C95462 /* HQDownload.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A650AF62069119200C95462 /* HQDownload.framework */; };
 		8A650B052069119200C95462 /* DownloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B042069119200C95462 /* DownloadTests.swift */; };
 		8A650B072069119200C95462 /* HQDownload.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A650AF92069119200C95462 /* HQDownload.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8A650B4B206A79D000C95462 /* Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4A206A79D000C95462 /* Operator.swift */; };
 		8A650B4F206BD61800C95462 /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4E206BD61800C95462 /* Scheduler.swift */; };
-		8AA183CF2081896400FA51B5 /* DownloadProgressTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA183CE2081896400FA51B5 /* DownloadProgressTest.swift */; };
 		8AC9161620896BC700A9CEA1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9161520896BC700A9CEA1 /* AppDelegate.swift */; };
 		8AC9161820896BC700A9CEA1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9161720896BC700A9CEA1 /* ViewController.swift */; };
 		8AC9161B20896BC700A9CEA1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8AC9161920896BC700A9CEA1 /* Main.storyboard */; };
@@ -112,14 +108,11 @@
 		605CE54D20902A930014DDB3 /* ContinueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueViewController.swift; sourceTree = "<group>"; };
 		605E7CB520EB20350004CC05 /* Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delegate.swift; sourceTree = "<group>"; };
 		609AF3402099652F002C76D4 /* BackgroundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundViewController.swift; sourceTree = "<group>"; };
-		60B6E0F6207C83CE00C4C594 /* DownloadRequestTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadRequestTest.swift; sourceTree = "<group>"; };
-		60B6E0FB207C95B200C4C594 /* DownloaderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloaderTest.swift; sourceTree = "<group>"; };
 		60BE176A20EC869E0014459E /* InnerKeyMapTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InnerKeyMapTest.swift; sourceTree = "<group>"; };
 		60CB0461210AB6A10090AB0D /* MultipleCacheViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleCacheViewController.swift; sourceTree = "<group>"; };
 		60DC2F0F208095DA0088A579 /* HQCache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQCache.framework; path = Carthage/Build/iOS/HQCache.framework; sourceTree = "<group>"; };
 		60DC2F10208095DA0088A579 /* HQFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQFoundation.framework; path = Carthage/Build/iOS/HQFoundation.framework; sourceTree = "<group>"; };
 		60DC2F13208097E80088A579 /* HQSqlite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQSqlite.framework; path = Carthage/Build/iOS/HQSqlite.framework; sourceTree = "<group>"; };
-		60F0AF85207DCD3F00C5F6EE /* DownloadSchedulerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadSchedulerTest.swift; sourceTree = "<group>"; };
 		8A650AF62069119200C95462 /* HQDownload.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HQDownload.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A650AF92069119200C95462 /* HQDownload.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HQDownload.h; sourceTree = "<group>"; };
 		8A650AFA2069119200C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -128,7 +121,6 @@
 		8A650B062069119200C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8A650B4A206A79D000C95462 /* Operator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operator.swift; sourceTree = "<group>"; };
 		8A650B4E206BD61800C95462 /* Scheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
-		8AA183CE2081896400FA51B5 /* DownloadProgressTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProgressTest.swift; sourceTree = "<group>"; };
 		8AC9161320896BC700A9CEA1 /* HQDownloadDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HQDownloadDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AC9161520896BC700A9CEA1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8AC9161720896BC700A9CEA1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -223,10 +215,6 @@
 		8A650B032069119200C95462 /* HQDownloadTests */ = {
 			isa = PBXGroup;
 			children = (
-				60B6E0F6207C83CE00C4C594 /* DownloadRequestTest.swift */,
-				8AA183CE2081896400FA51B5 /* DownloadProgressTest.swift */,
-				60B6E0FB207C95B200C4C594 /* DownloaderTest.swift */,
-				60F0AF85207DCD3F00C5F6EE /* DownloadSchedulerTest.swift */,
 				8A650B062069119200C95462 /* Info.plist */,
 				6001740221099F7C00509CDD /* OperatorTest.swift */,
 				60BE176A20EC869E0014459E /* InnerKeyMapTest.swift */,
@@ -460,11 +448,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60F0AF86207DCD3F00C5F6EE /* DownloadSchedulerTest.swift in Sources */,
-				60B6E0F7207C83CE00C4C594 /* DownloadRequestTest.swift in Sources */,
 				8A650B052069119200C95462 /* DownloadTests.swift in Sources */,
-				8AA183CF2081896400FA51B5 /* DownloadProgressTest.swift in Sources */,
-				60B6E0FC207C95B200C4C594 /* DownloaderTest.swift in Sources */,
 				6001740321099F7C00509CDD /* OperatorTest.swift in Sources */,
 				60BE176B20EC869E0014459E /* InnerKeyMapTest.swift in Sources */,
 			);
