@@ -16,7 +16,10 @@
 		6001740321099F7C00509CDD /* OperatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6001740221099F7C00509CDD /* OperatorTest.swift */; };
 		601225F720BFD2C1008467CB /* Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601225F620BFD2C1008467CB /* Options.swift */; };
 		601225F920BFE197008467CB /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601225F820BFE197008467CB /* Downloader.swift */; };
-		60247E8320CFBD0D00B050A3 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60247E8220CFBD0D00B050A3 /* Utils.swift */; };
+		60247E8320CFBD0D00B050A3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60247E8220CFBD0D00B050A3 /* Extensions.swift */; };
+		6036970621211D140064A61C /* DownloadError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6036970521211D140064A61C /* DownloadError.swift */; };
+		6036970821211DC70064A61C /* Eventable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6036970721211DC70064A61C /* Eventable.swift */; };
+		6036970A21211E310064A61C /* InnerKeyMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6036970921211E310064A61C /* InnerKeyMap.swift */; };
 		605CE53E208F1B960014DDB3 /* HQDownload.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8A650AF62069119200C95462 /* HQDownload.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		605CE542208F1BB60014DDB3 /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; };
 		605CE543208F1BB60014DDB3 /* HQSqlite.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -100,7 +103,10 @@
 		6001740221099F7C00509CDD /* OperatorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorTest.swift; sourceTree = "<group>"; };
 		601225F620BFD2C1008467CB /* Options.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Options.swift; sourceTree = "<group>"; };
 		601225F820BFE197008467CB /* Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
-		60247E8220CFBD0D00B050A3 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		60247E8220CFBD0D00B050A3 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		6036970521211D140064A61C /* DownloadError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadError.swift; sourceTree = "<group>"; };
+		6036970721211DC70064A61C /* Eventable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eventable.swift; sourceTree = "<group>"; };
+		6036970921211E310064A61C /* InnerKeyMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InnerKeyMap.swift; sourceTree = "<group>"; };
 		605CE548208F20510014DDB3 /* SingleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleViewController.swift; sourceTree = "<group>"; };
 		605CE54A208F25160014DDB3 /* MultipleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleViewController.swift; sourceTree = "<group>"; };
 		605CE54D20902A930014DDB3 /* ContinueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueViewController.swift; sourceTree = "<group>"; };
@@ -167,6 +173,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6036970421211CB60064A61C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				8A650AF92069119200C95462 /* HQDownload.h */,
+				8A650AFA2069119200C95462 /* Info.plist */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		8A650AEC2069119200C95462 = {
 			isa = PBXGroup;
 			children = (
@@ -196,9 +211,11 @@
 				8A650B4A206A79D000C95462 /* Operator.swift */,
 				605E7CB520EB20350004CC05 /* Delegate.swift */,
 				601225F620BFD2C1008467CB /* Options.swift */,
-				60247E8220CFBD0D00B050A3 /* Utils.swift */,
-				8A650AF92069119200C95462 /* HQDownload.h */,
-				8A650AFA2069119200C95462 /* Info.plist */,
+				6036970521211D140064A61C /* DownloadError.swift */,
+				60247E8220CFBD0D00B050A3 /* Extensions.swift */,
+				6036970921211E310064A61C /* InnerKeyMap.swift */,
+				6036970721211DC70064A61C /* Eventable.swift */,
+				6036970421211CB60064A61C /* Supporting Files */,
 			);
 			path = HQDownload;
 			sourceTree = "<group>";
@@ -211,9 +228,9 @@
 				60B6E0FB207C95B200C4C594 /* DownloaderTest.swift */,
 				60F0AF85207DCD3F00C5F6EE /* DownloadSchedulerTest.swift */,
 				8A650B062069119200C95462 /* Info.plist */,
-				8A650B042069119200C95462 /* DownloadTests.swift */,
 				6001740221099F7C00509CDD /* OperatorTest.swift */,
 				60BE176A20EC869E0014459E /* InnerKeyMapTest.swift */,
+				8A650B042069119200C95462 /* DownloadTests.swift */,
 			);
 			path = HQDownloadTests;
 			sourceTree = "<group>";
@@ -427,11 +444,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6036970821211DC70064A61C /* Eventable.swift in Sources */,
 				601225F720BFD2C1008467CB /* Options.swift in Sources */,
+				6036970621211D140064A61C /* DownloadError.swift in Sources */,
 				8A650B4B206A79D000C95462 /* Operator.swift in Sources */,
-				60247E8320CFBD0D00B050A3 /* Utils.swift in Sources */,
+				60247E8320CFBD0D00B050A3 /* Extensions.swift in Sources */,
 				605E7CB620EB20350004CC05 /* Delegate.swift in Sources */,
 				601225F920BFE197008467CB /* Downloader.swift in Sources */,
+				6036970A21211E310064A61C /* InnerKeyMap.swift in Sources */,
 				8A650B4F206BD61800C95462 /* Scheduler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -631,7 +651,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = HQDownload/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/HQDownload/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -659,7 +679,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = HQDownload/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/HQDownload/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
