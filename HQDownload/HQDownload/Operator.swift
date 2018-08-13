@@ -32,6 +32,7 @@ public final class Operator: Operation, Eventable {
     private var session: URLSession { return outerSession ?? innerSession }
     var dataTask: URLSessionDataTask?
     
+    
     /// Opertion properties
     public override var isConcurrent: Bool { return true }
     public override var isAsynchronous: Bool { return true }
@@ -62,7 +63,11 @@ public final class Operator: Operation, Eventable {
         objc_sync_enter(self)
         defer { objc_sync_exit(self) }
         
-        guard !isCancelled else { _finished = true; return }
+        guard !isCancelled else {
+            trigger(source, .error(.cancel("Operator state is cancelled!")))
+            _finished = true
+            return
+        }
         
         // Register background task
         let app = UIApplication.shared
@@ -77,7 +82,7 @@ public final class Operator: Operation, Eventable {
         
         guard let request = URLRequest.hq.create(options) else {
             // completion
-            trigger(source, .error(.cancel("Init request failure!")))
+            trigger(source, .error(.cancel("Source : \(source) init request failure!")))
             cancel()
             return
         }
@@ -100,17 +105,17 @@ public final class Operator: Operation, Eventable {
         
         if isFinished { return }
         super.cancel()
+        closeStream()
         
         if let task = dataTask {
             task.cancel()
             if isExecuting { _executing = false }
             if !isFinished { _finished = true }
         }
-        reset()
     }
     
     deinit {
-        reset()
+        closeStream()
         eventsMap.removeAll()
         if outerSession == nil {
             innerSession.invalidateAndCancel()
@@ -146,14 +151,13 @@ extension Operator {
     private func done() {
         _finished = true
         _executing = false
-        reset()
+        closeStream()
     }
     
-    private func reset() {
+    private func closeStream() {
         stream?.close()
         stream?.remove(from: RunLoop.current, forMode: .defaultRunLoopMode)
         stream = nil
-        dataTask = nil
     }
 }
 
@@ -213,7 +217,10 @@ extension Operator {
         }
         
         // Task cancel, did not retry
-        guard (err as NSError).code != -999 else { return }
+        guard (err as NSError).code != -999 else {
+            trigger(source, .error(.cancel("Task is cancelled!")))
+            return
+        }
         
         if options.retryCount <= 0 {
             trigger(source, .error(.error(err)))

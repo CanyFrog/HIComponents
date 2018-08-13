@@ -10,7 +10,6 @@ import HQFoundation
 
 class Delegate: NSObject {
     var operators = NSPointerArray.weakObjects()
-    
     var isEmpty: Bool {
         operators.compact()
         return operators.count <= 0

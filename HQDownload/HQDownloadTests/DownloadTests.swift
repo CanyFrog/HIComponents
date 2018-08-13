@@ -17,6 +17,11 @@ class DownloadTest: XCTestCase {
         return testDirectory.appendingPathComponent("\(UUID().uuidString).json")
     }
     
+    override func tearDown() {
+        super.tearDown()
+        try? FileManager.default.removeItem(at: testDirectory)
+    }
+    
     func async(_ timeout: TimeInterval = 15, _ execute: (@escaping ()->Void) -> Void) {
         var exception: XCTestExpectation? = self.expectation(description: "Excetation async task executed")
         execute({
