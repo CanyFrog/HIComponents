@@ -12,16 +12,15 @@
 		605335D420C8D34400F3434E /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605335D320C8D34400F3434E /* GradientView.swift */; };
 		605335DD20C8F91400F3434E /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605335DC20C8F91400F3434E /* WebViewController.swift */; };
 		606E2B4020CE21EF0095AA86 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 606E2B3F20CE21EF0095AA86 /* Assets.xcassets */; };
-		606E2B4220CE2E730095AA86 /* HQKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E2B4120CE2E730095AA86 /* HQKit.swift */; };
 		606E2B4420CE3A140095AA86 /* WebViewDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E2B4320CE3A140095AA86 /* WebViewDemo.swift */; };
 		60B098C120B3B98300013A0B /* RefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B098C020B3B98300013A0B /* RefreshView.swift */; };
-		60B098C320B4035100013A0B /* UIScrollView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B098C220B4035100013A0B /* UIScrollView+Extension.swift */; };
-		8A47702820B1B298002E4A17 /* UIWindow+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A47702720B1B298002E4A17 /* UIWindow+Extension.swift */; };
-		8A47703220B1C2B0002E4A17 /* UINavigationBar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A47703120B1C2B0002E4A17 /* UINavigationBar+Extension.swift */; };
+		60B098C320B4035100013A0B /* UIScrollView+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B098C220B4035100013A0B /* UIScrollView+HonQi.swift */; };
+		8A47702820B1B298002E4A17 /* UIWindow+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A47702720B1B298002E4A17 /* UIWindow+HonQi.swift */; };
+		8A47703220B1C2B0002E4A17 /* UINavigationBar+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A47703120B1C2B0002E4A17 /* UINavigationBar+HonQi.swift */; };
 		8A52E7DC20ABACE700E93C5C /* ScreenShot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A52E7DB20ABACE700E93C5C /* ScreenShot.swift */; };
-		8A5CD8B920AD00260053EE51 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5CD8B820AD00260053EE51 /* UIView+Extension.swift */; };
-		8A5CD8BB20AD01B40053EE51 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5CD8BA20AD01B40053EE51 /* UIColor+Extension.swift */; };
-		8A5CD8BD20AD03210053EE51 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5CD8BC20AD03210053EE51 /* UIImage+Extension.swift */; };
+		8A5CD8B920AD00260053EE51 /* UIView+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5CD8B820AD00260053EE51 /* UIView+HonQi.swift */; };
+		8A5CD8BB20AD01B40053EE51 /* UIColor+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5CD8BA20AD01B40053EE51 /* UIColor+HonQi.swift */; };
+		8A5CD8BD20AD03210053EE51 /* UIImage+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5CD8BC20AD03210053EE51 /* UIImage+HonQi.swift */; };
 		8A86235720B0197F00F8CF73 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A86235620B0197F00F8CF73 /* AppDelegate.swift */; };
 		8A86235920B0197F00F8CF73 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A86235820B0197F00F8CF73 /* ViewController.swift */; };
 		8A86235C20B0197F00F8CF73 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A86235A20B0197F00F8CF73 /* Main.storyboard */; };
@@ -37,7 +36,7 @@
 		8A86237A20B0335000F8CF73 /* HQKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A8B65D020ABA98D008975ED /* HQKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8A86237E20B0336300F8CF73 /* HQFoundation.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A8B65E020ABAA39008975ED /* HQFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8A8B65D520ABA98D008975ED /* HQKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A8B65D320ABA98D008975ED /* HQKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8A8B65DD20ABA9C0008975ED /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8B65DC20ABA9C0008975ED /* UIViewController+Extension.swift */; };
+		8A8B65DD20ABA9C0008975ED /* UIViewController+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8B65DC20ABA9C0008975ED /* UIViewController+HonQi.swift */; };
 		8A8B65E120ABAA39008975ED /* HQFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A8B65E020ABAA39008975ED /* HQFoundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -71,16 +70,15 @@
 		605335D320C8D34400F3434E /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		605335DC20C8F91400F3434E /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		606E2B3F20CE21EF0095AA86 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		606E2B4120CE2E730095AA86 /* HQKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HQKit.swift; sourceTree = "<group>"; };
 		606E2B4320CE3A140095AA86 /* WebViewDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewDemo.swift; sourceTree = "<group>"; };
 		60B098C020B3B98300013A0B /* RefreshView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshView.swift; sourceTree = "<group>"; };
-		60B098C220B4035100013A0B /* UIScrollView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Extension.swift"; sourceTree = "<group>"; };
-		8A47702720B1B298002E4A17 /* UIWindow+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Extension.swift"; sourceTree = "<group>"; };
-		8A47703120B1C2B0002E4A17 /* UINavigationBar+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationBar+Extension.swift"; sourceTree = "<group>"; };
+		60B098C220B4035100013A0B /* UIScrollView+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+HonQi.swift"; sourceTree = "<group>"; };
+		8A47702720B1B298002E4A17 /* UIWindow+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+HonQi.swift"; sourceTree = "<group>"; };
+		8A47703120B1C2B0002E4A17 /* UINavigationBar+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationBar+HonQi.swift"; sourceTree = "<group>"; };
 		8A52E7DB20ABACE700E93C5C /* ScreenShot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenShot.swift; sourceTree = "<group>"; };
-		8A5CD8B820AD00260053EE51 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
-		8A5CD8BA20AD01B40053EE51 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
-		8A5CD8BC20AD03210053EE51 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		8A5CD8B820AD00260053EE51 /* UIView+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+HonQi.swift"; sourceTree = "<group>"; };
+		8A5CD8BA20AD01B40053EE51 /* UIColor+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HonQi.swift"; sourceTree = "<group>"; };
+		8A5CD8BC20AD03210053EE51 /* UIImage+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+HonQi.swift"; sourceTree = "<group>"; };
 		8A86235420B0197F00F8CF73 /* HQKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HQKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A86235620B0197F00F8CF73 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8A86235820B0197F00F8CF73 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -97,7 +95,7 @@
 		8A8B65D020ABA98D008975ED /* HQKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HQKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A8B65D320ABA98D008975ED /* HQKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HQKit.h; sourceTree = "<group>"; };
 		8A8B65D420ABA98D008975ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8A8B65DC20ABA9C0008975ED /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
+		8A8B65DC20ABA9C0008975ED /* UIViewController+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+HonQi.swift"; sourceTree = "<group>"; };
 		8A8B65E020ABAA39008975ED /* HQFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQFoundation.framework; path = Carthage/Build/iOS/HQFoundation.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -139,6 +137,25 @@
 				605335D320C8D34400F3434E /* GradientView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		7AAED04D2121B03300D4B169 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				8A8B65D320ABA98D008975ED /* HQKit.h */,
+				8A8B65D420ABA98D008975ED /* Info.plist */,
+				606E2B3F20CE21EF0095AA86 /* Assets.xcassets */,
+			);
+			name = "Supporting Files";
+			path = "New Group";
+			sourceTree = "<group>";
+		};
+		7AAED04E2121B13000D4B169 /* Feature */ = {
+			isa = PBXGroup;
+			children = (
+				8A52E7DB20ABACE700E93C5C /* ScreenShot.swift */,
+			);
+			path = Feature;
 			sourceTree = "<group>";
 		};
 		8A86235520B0197F00F8CF73 /* HQKitDemo */ = {
@@ -197,15 +214,12 @@
 		8A8B65D220ABA98D008975ED /* HQKit */ = {
 			isa = PBXGroup;
 			children = (
-				606E2B4120CE2E730095AA86 /* HQKit.swift */,
-				8A52E7DB20ABACE700E93C5C /* ScreenShot.swift */,
+				7AAED04E2121B13000D4B169 /* Feature */,
 				60247E8120CF9E0700B050A3 /* Controller */,
 				605335D020C8D1CC00F3434E /* View */,
 				8A86236720B01A8200F8CF73 /* Refresh */,
 				8A8B65DB20ABA9AB008975ED /* Extension */,
-				8A8B65D320ABA98D008975ED /* HQKit.h */,
-				8A8B65D420ABA98D008975ED /* Info.plist */,
-				606E2B3F20CE21EF0095AA86 /* Assets.xcassets */,
+				7AAED04D2121B03300D4B169 /* Supporting Files */,
 			);
 			path = HQKit;
 			sourceTree = "<group>";
@@ -213,13 +227,13 @@
 		8A8B65DB20ABA9AB008975ED /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				8A8B65DC20ABA9C0008975ED /* UIViewController+Extension.swift */,
-				8A5CD8B820AD00260053EE51 /* UIView+Extension.swift */,
-				8A5CD8BA20AD01B40053EE51 /* UIColor+Extension.swift */,
-				8A5CD8BC20AD03210053EE51 /* UIImage+Extension.swift */,
-				8A47702720B1B298002E4A17 /* UIWindow+Extension.swift */,
-				8A47703120B1C2B0002E4A17 /* UINavigationBar+Extension.swift */,
-				60B098C220B4035100013A0B /* UIScrollView+Extension.swift */,
+				8A8B65DC20ABA9C0008975ED /* UIViewController+HonQi.swift */,
+				8A5CD8B820AD00260053EE51 /* UIView+HonQi.swift */,
+				8A5CD8BA20AD01B40053EE51 /* UIColor+HonQi.swift */,
+				8A5CD8BC20AD03210053EE51 /* UIImage+HonQi.swift */,
+				8A47702720B1B298002E4A17 /* UIWindow+HonQi.swift */,
+				8A47703120B1C2B0002E4A17 /* UINavigationBar+HonQi.swift */,
+				60B098C220B4035100013A0B /* UIScrollView+HonQi.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -396,17 +410,16 @@
 				604E0AE920CA2F2600F6BF53 /* StackLabel.swift in Sources */,
 				60B098C120B3B98300013A0B /* RefreshView.swift in Sources */,
 				8A86236B20B0220700F8CF73 /* TipView.swift in Sources */,
-				8A5CD8BD20AD03210053EE51 /* UIImage+Extension.swift in Sources */,
+				8A5CD8BD20AD03210053EE51 /* UIImage+HonQi.swift in Sources */,
 				605335D420C8D34400F3434E /* GradientView.swift in Sources */,
-				8A5CD8B920AD00260053EE51 /* UIView+Extension.swift in Sources */,
-				8A8B65DD20ABA9C0008975ED /* UIViewController+Extension.swift in Sources */,
+				8A5CD8B920AD00260053EE51 /* UIView+HonQi.swift in Sources */,
+				8A8B65DD20ABA9C0008975ED /* UIViewController+HonQi.swift in Sources */,
 				8A86236920B01AA500F8CF73 /* Refreshable.swift in Sources */,
-				8A47702820B1B298002E4A17 /* UIWindow+Extension.swift in Sources */,
-				60B098C320B4035100013A0B /* UIScrollView+Extension.swift in Sources */,
+				8A47702820B1B298002E4A17 /* UIWindow+HonQi.swift in Sources */,
+				60B098C320B4035100013A0B /* UIScrollView+HonQi.swift in Sources */,
 				8A52E7DC20ABACE700E93C5C /* ScreenShot.swift in Sources */,
-				8A47703220B1C2B0002E4A17 /* UINavigationBar+Extension.swift in Sources */,
-				606E2B4220CE2E730095AA86 /* HQKit.swift in Sources */,
-				8A5CD8BB20AD01B40053EE51 /* UIColor+Extension.swift in Sources */,
+				8A47703220B1C2B0002E4A17 /* UINavigationBar+HonQi.swift in Sources */,
+				8A5CD8BB20AD01B40053EE51 /* UIColor+HonQi.swift in Sources */,
 				605335DD20C8F91400F3434E /* WebViewController.swift in Sources */,
 				8A86236D20B024EC00F8CF73 /* RotaryCircleView.swift in Sources */,
 			);
@@ -625,7 +638,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = HQKit/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/HQKit/New Group/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -656,7 +669,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = HQKit/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/HQKit/New Group/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

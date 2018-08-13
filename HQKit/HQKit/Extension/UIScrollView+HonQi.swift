@@ -1,5 +1,5 @@
 //
-//  UIScrollView+Extension.swift
+//  UIScrollView+HonQi.swift
 //  HQKit
 //
 //  Created by HonQi on 5/22/18.
