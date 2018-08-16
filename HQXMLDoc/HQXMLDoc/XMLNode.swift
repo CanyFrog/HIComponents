@@ -38,15 +38,27 @@ public class XMLNode {
         return arr
     }()
     
-    public lazy var parent = { XMLNode(nodePtr: self.nodePtr.pointee.parent, doc: self.doc!) }
-    public lazy var prevSibling = { XMLNode(nodePtr: self.nodePtr.pointee.prev, doc: self.doc!) }
-    public lazy var nextSibling = { XMLNode(nodePtr: self.nodePtr.pointee.next, doc: self.doc!) }
+    public lazy var parent: XMLNode? = {
+        guard let d = self.doc, let p = self.nodePtr.pointee.parent else { return nil }
+        return XMLNode(nodePtr: p, doc: d)
+    }()
+    
+    public lazy var prevSibling: XMLNode? = {
+        guard let d = self.doc, let p = self.nodePtr.pointee.prev else { return nil }
+        return XMLNode(nodePtr: p, doc: d)
+    }()
+    
+    public lazy var nextSibling: XMLNode? = {
+        guard let d = self.doc, let n = self.nodePtr.pointee.next else { return nil }
+        return XMLNode(nodePtr: n, doc: d)
+    }()
+    
     public lazy var isBlank = self.content.count == 0
+    
     public lazy var content: String = {
         guard let c = xmlNodeGetContent(self.nodePtr) else { return "" }
         defer { xmlFree(c) }; return String(cString: c)
     }()
-    
     
     init(nodePtr: xmlNodePtr, doc: XMLDocument) {
         self.nodePtr = nodePtr
