@@ -9,7 +9,7 @@
 import libxml2
 
 public class XMLDocument {
-    lazy var rootNode = XMLNode(nodePtr: xmlDocGetRootElement(self.docPtr), doc: self)
+    public lazy var rootNode = XMLNode(nodePtr: xmlDocGetRootElement(self.docPtr), doc: self)
     
     var docPtr: xmlDocPtr
     
