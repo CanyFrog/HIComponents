@@ -57,7 +57,7 @@ public class XMLDocument {
 }
 
 extension XMLDocument: XMLQuery {
-    func xpath(_ xpath: String) -> [XMLNode]? {
+    public func xpath(_ xpath: String) -> [XMLNode]? {
         return rootNode.xpath(xpath)
     }
 }

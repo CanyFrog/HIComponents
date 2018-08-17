@@ -93,7 +93,7 @@ public class XMLNode {
 
 
 extension XMLNode: XMLQuery {
-    func xpath(_ xpath: String) -> [XMLNode]? {
+    public func xpath(_ xpath: String) -> [XMLNode]? {
         if xpath.isEmpty { return nil }
         
         let data = xpath.data(using: .utf8)
