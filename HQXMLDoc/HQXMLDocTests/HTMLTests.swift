@@ -18,8 +18,7 @@ class HTMLTests: XCTestCase {
         
         let file = Bundle(for: HTMLTests.self).path(forResource: "w3", ofType: "html")
         XCTAssertNotNil(file)
-        
-        xmlDoc = try! XMLDocument(html: Data(contentsOf: URL(fileURLWithPath: file!)))
+        xmlDoc = try! XMLDocument(html: Data(contentsOf: URL(fileURLWithPath: file!)), encoding: .utf8)
         XCTAssertNotNil(xmlDoc)
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
