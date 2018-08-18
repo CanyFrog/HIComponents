@@ -10,10 +10,10 @@
 		605AC1422125226700BA5D60 /* HQXMLDoc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 605AC1382125226700BA5D60 /* HQXMLDoc.framework */; };
 		605AC1472125226700BA5D60 /* XMLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605AC1462125226700BA5D60 /* XMLTests.swift */; };
 		605AC1492125226700BA5D60 /* HQXMLDoc.h in Headers */ = {isa = PBXBuildFile; fileRef = 605AC13B2125226700BA5D60 /* HQXMLDoc.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		605AC1542125228F00BA5D60 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605AC1532125228F00BA5D60 /* Utils.swift */; };
+		605AC1542125228F00BA5D60 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605AC1532125228F00BA5D60 /* Error.swift */; };
 		605AC157212522CE00BA5D60 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 605AC156212522CE00BA5D60 /* libxml2.2.tbd */; };
-		605AC159212522E000BA5D60 /* XMLNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605AC158212522E000BA5D60 /* XMLNode.swift */; };
-		605AC15B2125235D00BA5D60 /* XMLDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605AC15A2125235D00BA5D60 /* XMLDocument.swift */; };
+		605AC159212522E000BA5D60 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605AC158212522E000BA5D60 /* Node.swift */; };
+		605AC15B2125235D00BA5D60 /* DOC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605AC15A2125235D00BA5D60 /* DOC.swift */; };
 		605AC15D212526A600BA5D60 /* xml-20081126.xml in Resources */ = {isa = PBXBuildFile; fileRef = 605AC15C212526A600BA5D60 /* xml-20081126.xml */; };
 		605AC15F2125300200BA5D60 /* HTMLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605AC15E2125300200BA5D60 /* HTMLTests.swift */; };
 		605AC1612125316200BA5D60 /* w3.html in Resources */ = {isa = PBXBuildFile; fileRef = 605AC1602125316200BA5D60 /* w3.html */; };
@@ -36,10 +36,10 @@
 		605AC1412125226700BA5D60 /* HQXMLDocTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HQXMLDocTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		605AC1462125226700BA5D60 /* XMLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLTests.swift; sourceTree = "<group>"; };
 		605AC1482125226700BA5D60 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		605AC1532125228F00BA5D60 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		605AC1532125228F00BA5D60 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		605AC156212522CE00BA5D60 /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
-		605AC158212522E000BA5D60 /* XMLNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLNode.swift; sourceTree = "<group>"; };
-		605AC15A2125235D00BA5D60 /* XMLDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLDocument.swift; sourceTree = "<group>"; };
+		605AC158212522E000BA5D60 /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
+		605AC15A2125235D00BA5D60 /* DOC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DOC.swift; sourceTree = "<group>"; };
 		605AC15C212526A600BA5D60 /* xml-20081126.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "xml-20081126.xml"; sourceTree = "<group>"; };
 		605AC15E2125300200BA5D60 /* HTMLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLTests.swift; sourceTree = "<group>"; };
 		605AC1602125316200BA5D60 /* w3.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = w3.html; sourceTree = "<group>"; };
@@ -87,9 +87,9 @@
 		605AC13A2125226700BA5D60 /* HQXMLDoc */ = {
 			isa = PBXGroup;
 			children = (
-				605AC15A2125235D00BA5D60 /* XMLDocument.swift */,
-				605AC158212522E000BA5D60 /* XMLNode.swift */,
-				605AC1532125228F00BA5D60 /* Utils.swift */,
+				605AC15A2125235D00BA5D60 /* DOC.swift */,
+				605AC158212522E000BA5D60 /* Node.swift */,
+				605AC1532125228F00BA5D60 /* Error.swift */,
 				605AC1522125226C00BA5D60 /* Supporting Files */,
 			);
 			path = HQXMLDoc;
@@ -235,9 +235,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				605AC15B2125235D00BA5D60 /* XMLDocument.swift in Sources */,
-				605AC1542125228F00BA5D60 /* Utils.swift in Sources */,
-				605AC159212522E000BA5D60 /* XMLNode.swift in Sources */,
+				605AC15B2125235D00BA5D60 /* DOC.swift in Sources */,
+				605AC1542125228F00BA5D60 /* Error.swift in Sources */,
+				605AC159212522E000BA5D60 /* Node.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
