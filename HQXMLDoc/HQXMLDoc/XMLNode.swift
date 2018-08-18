@@ -60,6 +60,11 @@ public class XMLNode {
         defer { xmlFree(c) }; return String(cString: c)
     }()
     
+    public lazy var path: String = {
+        guard let x = xmlGetNodePath(self.nodePtr) else { return "" }
+        defer { xmlFree(x) }; return String(cString: x)
+    }()
+    
     init(nodePtr: xmlNodePtr, doc: XMLDocument) {
         self.nodePtr = nodePtr
         self.doc = doc
