@@ -9,7 +9,7 @@
 import libxml2
 
 public class Node {
-    var nodePtr: xmlNodePtr!
+    let nodePtr: xmlNodePtr
     
     /// common
     public var name: String { return String(cString: nodePtr.pointee.name) }
@@ -51,9 +51,7 @@ public class Node {
         var arr = [Node]()
         var child = nodePtr.pointee.children
         while let c = child, xmlNodeIsText(c) == 0 {
-            if let n = Node(nodePtr: c) {
-                arr.append(n)
-            }
+            arr.append(Node(nodePtr: c))
             child = c.pointee.next
         }
         return arr
@@ -99,39 +97,22 @@ public class Node {
     public var isTextNode: Bool { return nodePtr.pointee.type == xmlElementType(rawValue: 3) }
     
     
-    init?(nodePtr: xmlNodePtr!) {
-        guard let ptr = nodePtr else { return }
-        self.nodePtr = ptr
+    init(nodePtr: xmlNodePtr) {
+        self.nodePtr = nodePtr
     }
-    
+
     deinit {
-        xmlFreeNode(nodePtr)
+//        xmlFreeNode(nodePtr)
     }
 }
 
 extension Node {
     public func xpath(_ path: String) -> [Node]? {
-        guard let data = path.data(using: .utf8, allowLossyConversion: false) else { return nil }
-
         guard let context = xmlXPathNewContext(nodePtr.pointee.doc) else { return nil }
         defer { xmlXPathFreeContext(context) }
         context.pointee.node = nodePtr
         
-        // Due to a bug in libxml2, namespaces may not appear in `xmlNode->ns`.
-        // As a workaround, `xmlNode->nsDef` is recursed to explicitly register namespaces.
-        var node = nodePtr
-        while let p = node?.pointee.parent {
-            var ns = node?.pointee.nsDef
-            while let n = ns  {
-                if let pf = n.pointee.prefix { xmlXPathRegisterNs(context, pf, n.pointee.href) }
-                ns = n.pointee.next
-            }
-            node = p
-        }
-        
-        let cDatas = data.withUnsafeBytes { return [xmlChar](UnsafeBufferPointer(start: $0, count: data.count)) }
-        
-        guard let xpathPtr = xmlXPathEvalExpression(cDatas, context) else { return nil }
+        guard let xpathPtr = xmlXPathEvalExpression(path, context) else { return nil }
         defer { xmlXPathFreeObject(xpathPtr) }
 
         guard let val = xpathPtr.pointee.nodesetval,
@@ -139,8 +120,8 @@ extension Node {
         
         var nodes = [Node]()
         for idx in 0 ..< Int(val.pointee.nodeNr) {
-            if let ptr = tab[idx], let n = Node(nodePtr: ptr) {
-                nodes.append(n)
+            if let ptr = tab[idx] {
+                nodes.append(Node(nodePtr: ptr))
             }
         }
         return nodes
