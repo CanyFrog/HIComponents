@@ -9,7 +9,7 @@
 import libxml2
 
 public class Node {
-    let nodePtr: xmlNodePtr
+    var nodePtr: xmlNodePtr!
     
     /// common
     public var name: String { return String(cString: nodePtr.pointee.name) }
@@ -50,8 +50,8 @@ public class Node {
     public var children: [Node] {
         var arr = [Node]()
         var child = nodePtr.pointee.children
-        while let c = child, xmlNodeIsText(c) == 0 {
-            arr.append(Node(nodePtr: c))
+        while let c = child, xmlNodeIsText(c) == 0, let n = Node(nodePtr: c) {
+            arr.append(n)
             child = c.pointee.next
         }
         return arr
@@ -97,8 +97,9 @@ public class Node {
     public var isTextNode: Bool { return nodePtr.pointee.type == xmlElementType(rawValue: 3) }
     
     
-    init(nodePtr: xmlNodePtr) {
-        self.nodePtr = nodePtr
+    init?(nodePtr: xmlNodePtr?) {
+        guard let ptr = nodePtr else { return nil }
+        self.nodePtr = ptr
     }
 
     deinit {
@@ -120,8 +121,8 @@ extension Node {
         
         var nodes = [Node]()
         for idx in 0 ..< Int(val.pointee.nodeNr) {
-            if let ptr = tab[idx] {
-                nodes.append(Node(nodePtr: ptr))
+            if let n = Node(nodePtr: tab[idx]) {
+                nodes.append(n)
             }
         }
         return nodes
