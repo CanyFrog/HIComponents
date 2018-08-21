@@ -78,7 +78,7 @@ public class DOC {
         
         docPtr = ptr
         guard let root = xmlDocGetRootElement(ptr) else { throw DocError.missingRootNode }
-        rootNode = Node(nodePtr: root)
+        rootNode = Node(nodePtr: root)!
     }
     
     deinit {
