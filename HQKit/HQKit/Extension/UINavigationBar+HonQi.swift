@@ -20,77 +20,24 @@ extension Namespace where T: UINavigationBar {
             instance.backIndicatorTransitionMaskImage = image
         }
     }
-    
-    public var leftBarButtonItem: UIBarButtonItem? {
-        get { return instance.topItem?.leftBarButtonItem }
-        set { instance.topItem?.leftBarButtonItem = leftBarButtonItem }
-    }
-    
-    public var leftBarButtonItems: [UIBarButtonItem]? {
-        get { return instance.topItem?.leftBarButtonItems }
-        set { instance.topItem?.setLeftBarButtonItems(leftBarButtonItems, animated: true) }
-    }
-    
-    public var rightBarButtonItem: UIBarButtonItem? {
-        get { return instance.topItem?.rightBarButtonItem }
-        set { instance.topItem?.rightBarButtonItem = rightBarButtonItem }
-    }
-    
-    public var rightBarButtonItems: [UIBarButtonItem]? {
-        get { return instance.topItem?.rightBarButtonItems }
-        set { instance.topItem?.setLeftBarButtonItems(rightBarButtonItems, animated: true) }
-    }
-    
-    public func layoutSubviews() {
-        instance.layoutSubviews()
-        if #available(iOS 11.0, *) {
-            instance.subviews.forEach { (subV) in
-                if NSStringFromClass(subV.classForCoder).contains("ContentView") {
-                    subV.layoutMargins = UIEdgeInsetsMake(0, 8, 0, 8)
-                    subV.subviews.forEach { if let stack = $0 as? UIStackView { stack.distribution = .equalCentering }}
-                }
-            }
-        }
-    }
 }
 
-open class NavigationBar: UINavigationBar {
-    public var itemMargin: CGFloat?
+var NavigationBarMargin: UInt8 = 001
+extension UINavigationBar {
+    /// Adjust iOS 11.0 ~ Bar margin; default is 8px
+    public var hq_itemMargin: CGFloat? {
+        get { return hq.associatedObject(key: &NavigationBarMargin)}
+        set {
+            hq.setAssociateObject(key: &NavigationBarMargin, value: hq_itemMargin, policy: objc_AssociationPolicy.OBJC_ASSOCIATION_ASSIGN)
+            setNeedsLayout()
+        }
+    }
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        customLayout()
-    }
-    
-    func customLayout() {
-        
-    }
-}
-
-private var HeightKey: UInt8 = 111
-private var MarginKey: UInt8 = 112
-extension UIBarButtonItem {
-    var height: CGFloat? {
-        set { hq.setAssociateObject(key: &HeightKey, value: height, policy: .OBJC_ASSOCIATION_ASSIGN) }
-        get { return hq.associatedObject(key: &HeightKey) }
-    }
-    
-    var margin: CGFloat? {
-        set { hq.setAssociateObject(key: &MarginKey, value: margin, policy: .OBJC_ASSOCIATION_ASSIGN) }
-        get { return hq.associatedObject(key: &MarginKey) }
+        if #available(iOS 11.0, *) {
+            let margin = hq_itemMargin ?? 0
+            subviews.forEach{ if NSStringFromClass($0.classForCoder).contains("ContentView") { $0.layoutMargins = UIEdgeInsets(top: 0, left: margin, bottom: 0, right: margin) } }
+        }
     }
 }
-
-extension Namespace where T: UIBarButtonItem {
-    public var height: CGFloat? {
-        set { instance.height = height }
-        get { return instance.height }
-    }
-    
-    public var margin: CGFloat? {
-        set { instance.margin = margin }
-        get { return instance.margin }
-    }
-}
-
-
