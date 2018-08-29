@@ -10,31 +10,19 @@ import HQFoundation
 
 extension Namespace where T: UIScrollView {
     public var inset: UIEdgeInsets {
-        get {
-            if #available(iOS 11.0, *) {
-                return instance.adjustedContentInset
-            }
-            return instance.contentInset
-        }
+        if #available(iOS 11.0, *) { return instance.adjustedContentInset }
+        return instance.contentInset
     }
     
-    public var offsetY: CGFloat {
-        get { return instance.contentOffset.y }
-        set { instance.contentOffset.y = newValue }
-    }
+    public var offsetY: CGFloat { return instance.contentOffset.y }
+    public func set(offsetY: CGFloat) { instance.contentOffset.y = offsetY }
     
-    public var offsetX: CGFloat {
-        get { return instance.contentOffset.x }
-        set { instance.contentOffset.x = newValue }
-    }
+    public var offsetX: CGFloat { return instance.contentOffset.x }
+    public func set(offsetX: CGFloat) { instance.contentOffset.x = offsetX }
     
-    public var contentWidth: CGFloat {
-        get { return instance.contentSize.width }
-        set { instance.contentSize.width = newValue }
-    }
+    public var contentWidth: CGFloat { return instance.contentSize.width }
+    public func set(contentWidth: CGFloat) { instance.contentSize.width = contentWidth }
     
-    public var contentHeight: CGFloat {
-        get { return instance.contentSize.height }
-        set { instance.contentSize.height = newValue }
-    }
+    public var contentHeight: CGFloat { return instance.contentSize.height }
+    public func set(contentHeight: CGFloat) { instance.contentSize.height = contentHeight }
 }
