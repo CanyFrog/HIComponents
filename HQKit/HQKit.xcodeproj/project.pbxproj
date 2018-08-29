@@ -15,6 +15,7 @@
 		606E2B4420CE3A140095AA86 /* WebViewDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E2B4320CE3A140095AA86 /* WebViewDemo.swift */; };
 		60B098C120B3B98300013A0B /* RefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B098C020B3B98300013A0B /* RefreshView.swift */; };
 		60B098C320B4035100013A0B /* UIScrollView+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B098C220B4035100013A0B /* UIScrollView+HonQi.swift */; };
+		60B9009A213640F6001EB2C1 /* NavigationDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B90099213640F6001EB2C1 /* NavigationDemo.swift */; };
 		8A47702820B1B298002E4A17 /* UIWindow+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A47702720B1B298002E4A17 /* UIWindow+HonQi.swift */; };
 		8A47703220B1C2B0002E4A17 /* UINavigationBar+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A47703120B1C2B0002E4A17 /* UINavigationBar+HonQi.swift */; };
 		8A52E7DC20ABACE700E93C5C /* ScreenShot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A52E7DB20ABACE700E93C5C /* ScreenShot.swift */; };
@@ -73,6 +74,7 @@
 		606E2B4320CE3A140095AA86 /* WebViewDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewDemo.swift; sourceTree = "<group>"; };
 		60B098C020B3B98300013A0B /* RefreshView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshView.swift; sourceTree = "<group>"; };
 		60B098C220B4035100013A0B /* UIScrollView+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+HonQi.swift"; sourceTree = "<group>"; };
+		60B90099213640F6001EB2C1 /* NavigationDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationDemo.swift; sourceTree = "<group>"; };
 		8A47702720B1B298002E4A17 /* UIWindow+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+HonQi.swift"; sourceTree = "<group>"; };
 		8A47703120B1C2B0002E4A17 /* UINavigationBar+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationBar+HonQi.swift"; sourceTree = "<group>"; };
 		8A52E7DB20ABACE700E93C5C /* ScreenShot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenShot.swift; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 				8A86237120B02B0C00F8CF73 /* RotaryCircleDemo.swift */,
 				8A86237320B02B1F00F8CF73 /* RefreshDemo.swift */,
 				606E2B4320CE3A140095AA86 /* WebViewDemo.swift */,
+				60B90099213640F6001EB2C1 /* NavigationDemo.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -397,6 +400,7 @@
 				8A86237020B0294800F8CF73 /* TipViewDemo.swift in Sources */,
 				8A86237220B02B0C00F8CF73 /* RotaryCircleDemo.swift in Sources */,
 				8A86235920B0197F00F8CF73 /* ViewController.swift in Sources */,
+				60B9009A213640F6001EB2C1 /* NavigationDemo.swift in Sources */,
 				8A86237420B02B1F00F8CF73 /* RefreshDemo.swift in Sources */,
 				8A86235720B0197F00F8CF73 /* AppDelegate.swift in Sources */,
 			);
