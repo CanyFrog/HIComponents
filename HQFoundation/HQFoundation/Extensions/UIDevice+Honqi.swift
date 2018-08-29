@@ -1,5 +1,5 @@
 //
-//  UIDevice+Extension.swift
+//  UIDevice+Honqi.swift
 //  HQFoundation
 //
 //  Created by HonQi on 6/11/18.
