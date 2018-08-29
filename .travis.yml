@@ -30,6 +30,6 @@ deploy:
   file: $FRAMEWORK_ZIP
   skip_cleanup: true
   on:
-    repo: CanyFrog/HIComponents
+    repo: HonQii/HIComponents
     tags: true
 
