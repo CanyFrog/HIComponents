@@ -1,5 +1,5 @@
 //
-//  Formatter+Extension.swift
+//  Formatter+Honqi.swift
 //  HQFoundation
 //
 //  Created by HonQi on 5/23/18.

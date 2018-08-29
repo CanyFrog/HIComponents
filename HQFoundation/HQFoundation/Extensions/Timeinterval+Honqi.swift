@@ -1,5 +1,5 @@
 //
-//  TimeInterval+extension.swift
+//  TimeInterval+Honqi.swift
 //  HQFoundation
 //
 //  Created by HonQi on 5/14/18.
