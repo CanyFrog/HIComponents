@@ -12,7 +12,7 @@ show_msg() {
 }
 
 check_and_save_cartfile() {
-    if [ ! -f "./Cartfile" ] && [ ! -f "./Cartfile.self" ] # both not exists
+    if [ ! -f "./Cartfile" ] && [ ! -f "./Cartfile.same" ] # both not exists
     then
         show_msg "No external dependencies need to be added!"
         exit 0
@@ -22,8 +22,8 @@ check_and_save_cartfile() {
         CARTFILE=`cat ./Cartfile`
     fi
 
-    if [ -f "./Cartfile.self" ]; then
-        CARTSELF="./Cartfile.self"
+    if [ -f "./Cartfile.same" ]; then
+        CARTSELF="./Cartfile.same"
     fi
 
     if [ -f "./Cartfile.resolved" ]; then

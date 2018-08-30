@@ -17,7 +17,7 @@ before_install:
 install:
   - cd $FRAMEWORK_NAME
 script:
-  - ../update_self.sh & chmod +x ../update_self.sh
+  - ../carthage.sh & chmod +x ../carthage.sh
   - echo "Run test"
 
 before_deploy:
