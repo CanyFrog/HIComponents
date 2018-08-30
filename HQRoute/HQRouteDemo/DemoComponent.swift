@@ -6,7 +6,7 @@
 //  Copyright © 2018 HonQi Indie. All rights reserved.
 //
 
-import HQRouter
+import HQRoute
 
 struct DemoDataProvider: DataProvider {
     enum FuncNames: String {

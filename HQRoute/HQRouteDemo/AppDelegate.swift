@@ -1,20 +1,20 @@
 //
 //  AppDelegate.swift
-//  HQRouterDemo
+//  HQRouteDemo
 //
-//  Created by HonQi on 2018/5/15.
-//  Copyright © 2018年 HonQi Indie. All rights reserved.
+//  Created by Magee Huang on 8/30/18.
+//  Copyright © 2018 HonQi Indie. All rights reserved.
 //
 
 import UIKit
-import HQRouter
+import HQRoute
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
     var window: UIWindow?
     var router: Router?
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         RouterConfigs.default.register(name: "demo-component") { _ in
             return DemoComponent(dataProvider: DemoDataProvider())
@@ -23,10 +23,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         let nav = UINavigationController()
         router = Router(uri: "demo://demo-component?title=home", navigator: nav)
-//        router = Router(uri: "demo", navigator: nav)
+        //        router = Router(uri: "demo", navigator: nav)
         window?.rootViewController = nav
         window?.makeKeyAndVisible()
-//        router?.open(url: "demo://demo-component?title=home;bgColor=white",mode: .push, animated: true)
+        //        router?.open(url: "demo://demo-component?title=home;bgColor=white",mode: .push, animated: true)
         return true
     }
 

@@ -1,13 +1,13 @@
 //
-//  HQRouterTests.swift
-//  HQRouterTests
+//  HQRouteTests.swift
+//  HQRouteTests
 //
-//  Created by HonQi on 5/17/18.
+//  Created by Magee Huang on 8/30/18.
 //  Copyright © 2018 HonQi Indie. All rights reserved.
 //
 
 import XCTest
-import HQRouter
+@testable import HQRoute
 
 class HQRouterConfigsTests: XCTestCase {
     class TestDataProvider: DataProvider {
@@ -55,7 +55,7 @@ class HQRouterConfigsTests: XCTestCase {
 
 
 class HQRouterTests: XCTestCase {
-
+    
     func testRouterInit() {
         let uri = "test://home?key=value"
         let nav = UINavigationController()
