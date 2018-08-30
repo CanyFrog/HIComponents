@@ -1,0 +1,16 @@
+PODS:
+  - HQFoundation (2018.6.16)
+
+DEPENDENCIES:
+  - HQFoundation (from `../HQFoundation.podspec`)
+
+EXTERNAL SOURCES:
+  HQFoundation:
+    :path: "../HQFoundation.podspec"
+
+SPEC CHECKSUMS:
+  HQFoundation: ab4a6de36b353401632156d85bd077b0afcf63f2
+
+PODFILE CHECKSUM: a310834d5ae9cb692aa75cfb207405c6e002ac0f
+
+COCOAPODS: 1.5.3
