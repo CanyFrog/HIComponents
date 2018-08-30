@@ -14,6 +14,7 @@ open class WebViewController: UIViewController {
     
     /// Public
     open weak var navigationDelegate: WKNavigationDelegate?
+    public var backColor: UIColor = UIColor.hq.info
     
     open var hasToolBar: Bool = true
     open var hasMoreOptionsButton: Bool = true
@@ -22,6 +23,8 @@ open class WebViewController: UIViewController {
     
     public private(set) var webView: WKWebView!
     public private(set) var contentView: UIView = UIView.hq.autoLayout()
+    
+    
     
     var request: URLRequest?
     
@@ -79,7 +82,7 @@ open class WebViewController: UIViewController {
     func initializeViews() {
         /// View contains to navbar and content view
         view.addSubview({
-          navBar.backgroundColor = UIColor.hq.info
+          navBar.backgroundColor = backColor
             return navBar
         }())
         
@@ -127,7 +130,7 @@ open class WebViewController: UIViewController {
         
         contentView.addSubview({
             toolBar.isHidden = !self.hasToolBar
-            toolBar.backgroundColor = UIColor.hq.info
+            toolBar.backgroundColor = backColor
             return toolBar
             }())
         

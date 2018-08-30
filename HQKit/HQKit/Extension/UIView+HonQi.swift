@@ -1,5 +1,5 @@
 //
-//  UIView+Extension.swift
+//  UIView+HonQi.swift
 //  HQKit
 //
 //  Created by HonQi on 2018/5/17.
@@ -63,55 +63,35 @@ extension Namespace where T: UIView {
         return instance.topAnchor
     }
     
-    public var left: CGFloat {
-        get { return instance.frame.origin.x }
-        set { instance.frame.origin.x = newValue }
-    }
+    public var left: CGFloat { return instance.frame.origin.x }
+    public func set(left: CGFloat) { instance.frame.origin.x = left }
     
-    public var top: CGFloat {
-        get { return instance.frame.origin.y }
-        set { instance.frame.origin.y = newValue }
-    }
+    public var top: CGFloat { return instance.frame.origin.y }
+    public func set(top: CGFloat) { instance.frame.origin.y = top }
     
-    public var width: CGFloat {
-        get { return instance.frame.size.width }
-        set { instance.frame.size.width = newValue }
-    }
+    public var width: CGFloat { return instance.frame.size.width }
+    public func set(width: CGFloat) { instance.frame.size.width = width }
     
-    public var height: CGFloat {
-        get { return instance.frame.size.height }
-        set { instance.frame.size.height = newValue }
-    }
+    public var height: CGFloat { return instance.frame.size.height }
+    public func set(height: CGFloat) { instance.frame.size.height = height }
     
-    public var right: CGFloat {
-        get { return instance.hq.left + instance.hq.width }
-        set { instance.frame.origin.x = newValue - instance.hq.width }
-    }
+    public var right: CGFloat { return left + width }
+    public func set(right: CGFloat) { instance.frame.origin.x = right - width }
     
-    public var bottom: CGFloat {
-        get { return instance.hq.top + instance.hq.height }
-        set { instance.frame.origin.y = newValue - instance.hq.height }
-    }
+    public var bottom: CGFloat { return instance.hq.top + instance.hq.height }
+    public func set(bottom: CGFloat) { instance.frame.origin.y = bottom - height }
     
-    public var origin: CGPoint {
-        get { return instance.frame.origin }
-        set { instance.frame.origin = newValue }
-    }
+    public var origin: CGPoint { return instance.frame.origin }
+    public func set(origin: CGPoint) { instance.frame.origin = origin }
     
-    public var size: CGSize {
-        get { return instance.frame.size }
-        set { instance.frame.size = newValue }
-    }
+    public var size: CGSize { return instance.frame.size }
+    public func set(size: CGSize) { instance.frame.size = size }
     
-    public var centerX: CGFloat {
-        get { return instance.center.x }
-        set { instance.center.x = newValue }
-    }
+    public var centerX: CGFloat { return instance.center.x }
+    public func set(centerX: CGFloat) { instance.center.x = centerX }
     
-    public var centerY: CGFloat {
-        get { return instance.center.y }
-        set { instance.center.y = newValue }
-    }
+    public var centerY: CGFloat { return instance.center.y }
+    public func set(centerY: CGFloat) { instance.center.y = centerY }
     
     public static func autoLayout() -> T {
         let v = T(frame: .zero)

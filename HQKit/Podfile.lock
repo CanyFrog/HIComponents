@@ -1,0 +1,16 @@
+PODS:
+  - HQFoundation (2018.8.30)
+
+DEPENDENCIES:
+  - HQFoundation (~> 2018.0)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - HQFoundation
+
+SPEC CHECKSUMS:
+  HQFoundation: aeffbdf71b67bf0acd0d4588e7e5f77b33670c56
+
+PODFILE CHECKSUM: 6fce6035fdb7785f9bcbecfc2e9f248e2a1b19ab
+
+COCOAPODS: 1.5.3
