@@ -17,6 +17,8 @@
 		8AD5F0CD2075B94E001C9C6F /* HQFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AD5F0CC2075B94E001C9C6F /* HQFoundation.framework */; };
 		8AD5F0CF2075BA3E001C9C6F /* MemoryCacheTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD5F0CE2075BA3E001C9C6F /* MemoryCacheTest.swift */; };
 		8AD9FA3E2075DBB8007224E9 /* DiskCacheTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD9FA3D2075DBB8007224E9 /* DiskCacheTest.swift */; };
+		9C376DDA871E4D711E34BA7B /* Pods_HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA0F6D022481554FE8072D76 /* Pods_HQCache.framework */; };
+		D6F9784957C520DC10588B98 /* Pods_HQCacheTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EEEAC129E8D0B05BDCF42DB /* Pods_HQCacheTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,9 +32,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1EEEAC129E8D0B05BDCF42DB /* Pods_HQCacheTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HQCacheTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6043654420688D74001605FC /* DiskCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskCache.swift; sourceTree = "<group>"; };
 		604A7D91207361C80060A869 /* HQSqlite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQSqlite.framework; path = Carthage/Build/iOS/HQSqlite.framework; sourceTree = "<group>"; };
 		604A7D96207371D90060A869 /* DiskCache+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DiskCache+Extension.swift"; sourceTree = "<group>"; };
+		6E0E3F1059CE6349C6D73658 /* Pods-HQCacheTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HQCacheTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HQCacheTests/Pods-HQCacheTests.release.xcconfig"; sourceTree = "<group>"; };
+		7094902778AD5D005BF3ED50 /* Pods-HQCache.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HQCache.release.xcconfig"; path = "Pods/Target Support Files/Pods-HQCache/Pods-HQCache.release.xcconfig"; sourceTree = "<group>"; };
 		8A650ACC206869CD00C95462 /* HQCache.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HQCache.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A650ACF206869CD00C95462 /* HQCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HQCache.h; sourceTree = "<group>"; };
 		8A650AD0206869CD00C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -43,6 +48,9 @@
 		8AD5F0CC2075B94E001C9C6F /* HQFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQFoundation.framework; path = Carthage/Build/iOS/HQFoundation.framework; sourceTree = "<group>"; };
 		8AD5F0CE2075BA3E001C9C6F /* MemoryCacheTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryCacheTest.swift; sourceTree = "<group>"; };
 		8AD9FA3D2075DBB8007224E9 /* DiskCacheTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskCacheTest.swift; sourceTree = "<group>"; };
+		A2B85769AEFDFC92CB35CC9B /* Pods-HQCacheTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HQCacheTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HQCacheTests/Pods-HQCacheTests.debug.xcconfig"; sourceTree = "<group>"; };
+		EA0F6D022481554FE8072D76 /* Pods_HQCache.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HQCache.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F18CBAA341C7FE07ED4F19B0 /* Pods-HQCache.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HQCache.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HQCache/Pods-HQCache.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +60,7 @@
 			files = (
 				8AD5F0CD2075B94E001C9C6F /* HQFoundation.framework in Frameworks */,
 				604A7D92207361C80060A869 /* HQSqlite.framework in Frameworks */,
+				9C376DDA871E4D711E34BA7B /* Pods_HQCache.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,12 +69,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				8A650AD6206869CD00C95462 /* HQCache.framework in Frameworks */,
+				D6F9784957C520DC10588B98 /* Pods_HQCacheTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		60BE4A3E2137A731000134B7 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				8A650AD0206869CD00C95462 /* Info.plist */,
+				8A650ACF206869CD00C95462 /* HQCache.h */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		8A650AC2206869CD00C95462 = {
 			isa = PBXGroup;
 			children = (
@@ -73,6 +92,7 @@
 				8A650AD9206869CD00C95462 /* HQCacheTests */,
 				8A650ACD206869CD00C95462 /* Products */,
 				8A77B70420725D1B00E5CA66 /* Frameworks */,
+				8FCB6E9F895EB096B3550D0C /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -88,12 +108,11 @@
 		8A650ACE206869CD00C95462 /* HQCache */ = {
 			isa = PBXGroup;
 			children = (
-				8A650ACF206869CD00C95462 /* HQCache.h */,
+				60BE4A3E2137A731000134B7 /* Supporting Files */,
 				8AD5F0C62075AE18001C9C6F /* CacheManager.swift */,
 				8A650AE820686A4300C95462 /* MemoryCache.swift */,
 				6043654420688D74001605FC /* DiskCache.swift */,
 				604A7D96207371D90060A869 /* DiskCache+Extension.swift */,
-				8A650AD0206869CD00C95462 /* Info.plist */,
 			);
 			path = HQCache;
 			sourceTree = "<group>";
@@ -113,8 +132,21 @@
 			children = (
 				8AD5F0CC2075B94E001C9C6F /* HQFoundation.framework */,
 				604A7D91207361C80060A869 /* HQSqlite.framework */,
+				EA0F6D022481554FE8072D76 /* Pods_HQCache.framework */,
+				1EEEAC129E8D0B05BDCF42DB /* Pods_HQCacheTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8FCB6E9F895EB096B3550D0C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F18CBAA341C7FE07ED4F19B0 /* Pods-HQCache.debug.xcconfig */,
+				7094902778AD5D005BF3ED50 /* Pods-HQCache.release.xcconfig */,
+				A2B85769AEFDFC92CB35CC9B /* Pods-HQCacheTests.debug.xcconfig */,
+				6E0E3F1059CE6349C6D73658 /* Pods-HQCacheTests.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,12 +167,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8A650AE0206869CD00C95462 /* Build configuration list for PBXNativeTarget "HQCache" */;
 			buildPhases = (
-				600174082109B47C00509CDD /* ShellScript */,
+				94EC54C7F66A44E044979495 /* [CP] Check Pods Manifest.lock */,
 				8A650AC7206869CD00C95462 /* Sources */,
 				8A650AC8206869CD00C95462 /* Frameworks */,
 				8A650AC9206869CD00C95462 /* Headers */,
-				8A650ACA206869CD00C95462 /* Resources */,
-				604A7D93207361CE0060A869 /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -155,9 +185,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8A650AE3206869CD00C95462 /* Build configuration list for PBXNativeTarget "HQCacheTests" */;
 			buildPhases = (
+				EB892F74FD66877297575C56 /* [CP] Check Pods Manifest.lock */,
 				8A650AD1206869CD00C95462 /* Sources */,
 				8A650AD2206869CD00C95462 /* Frameworks */,
-				8A650AD3206869CD00C95462 /* Resources */,
+				298B3F28E8ED23CCC654F5FB /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -208,52 +239,62 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXResourcesBuildPhase section */
-		8A650ACA206869CD00C95462 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		8A650AD3206869CD00C95462 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
 /* Begin PBXShellScriptBuildPhase section */
-		600174082109B47C00509CDD /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = ../update_self.sh;
-		};
-		604A7D93207361CE0060A869 /* Run Script */ = {
+		298B3F28E8ED23CCC654F5FB /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/HQSqlite.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/HQFoundation.framework",
+				"${SRCROOT}/Pods/Target Support Files/Pods-HQCacheTests/Pods-HQCacheTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/HQFoundation/HQFoundation.framework",
+				"${BUILT_PRODUCTS_DIR}/HQSqlite/HQSqlite.framework",
 			);
-			name = "Run Script";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HQFoundation.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HQSqlite.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HQCacheTests/Pods-HQCacheTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		94EC54C7F66A44E044979495 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HQCache-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EB892F74FD66877297575C56 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HQCacheTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -408,6 +449,7 @@
 		};
 		8A650AE1206869CD00C95462 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F18CBAA341C7FE07ED4F19B0 /* Pods-HQCache.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -417,11 +459,8 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				INFOPLIST_FILE = HQCache/Info.plist;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(SRCROOT)/HQCache/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -436,6 +475,7 @@
 		};
 		8A650AE2206869CD00C95462 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7094902778AD5D005BF3ED50 /* Pods-HQCache.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -445,11 +485,8 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				INFOPLIST_FILE = HQCache/Info.plist;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(SRCROOT)/HQCache/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -463,6 +500,7 @@
 		};
 		8A650AE4206869CD00C95462 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A2B85769AEFDFC92CB35CC9B /* Pods-HQCacheTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -478,6 +516,7 @@
 		};
 		8A650AE5206869CD00C95462 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6E0E3F1059CE6349C6D73658 /* Pods-HQCacheTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
