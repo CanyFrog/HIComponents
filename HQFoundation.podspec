@@ -2,7 +2,6 @@ Pod::Spec.new do |s|
 
   s.name         = "HQFoundation"
   s.version      = "2018.8.30"
-  s.source       = { :git => "git@github.com:HonQii/HIComponents.git", :tag => "#{s.name}.#{s.version}" }
   s.homepage     = "https://github.com/HonQii/HIComponents"
   s.license      = { :type => "MIT", :file => "LICENSE" }
 
@@ -19,6 +18,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.module_name  = 'HQFoundation'
 
+  s.source       = { :git => "https://github.com/HonQii/HIComponents.git", :tag => "#{s.name}.#{s.version}" }
   s.source_files = ["HQFoundation/HQFoundation/*.swift",
                      "HQFoundation/HQFoundation/**/*.swift", 
                      "HQFoundation/HQFoundation/*.h"]
