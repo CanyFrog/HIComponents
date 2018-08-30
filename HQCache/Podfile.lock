@@ -1,0 +1,20 @@
+PODS:
+  - HQFoundation (2018.8.30)
+  - HQSqlite (2018.8.30)
+
+DEPENDENCIES:
+  - HQFoundation (~> 2018.0)
+  - HQSqlite (~> 2018.0)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - HQFoundation
+    - HQSqlite
+
+SPEC CHECKSUMS:
+  HQFoundation: aeffbdf71b67bf0acd0d4588e7e5f77b33670c56
+  HQSqlite: dc9672b9f4948c7e6d18b903c70e67e45b3efdc9
+
+PODFILE CHECKSUM: abdaaa5b4175d46be94ce779606dc03e5ab1c064
+
+COCOAPODS: 1.5.3
