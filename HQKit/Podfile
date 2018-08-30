@@ -4,7 +4,8 @@ platform :ios, '9.0'
 use_frameworks!
 
 target 'HQKit' do
-  pod 'HQFoundation', :path=>'../HQFoundation.podspec'
+  # pod 'HQFoundation', :path=>'../HQFoundation.podspec'
+  pod 'HQFoundation', '~> 2018.0' 
 
   target 'HQKitDemo' do
     inherit! :search_paths

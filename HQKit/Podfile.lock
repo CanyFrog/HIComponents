@@ -1,16 +1,16 @@
 PODS:
-  - HQFoundation (2018.6.16)
+  - HQFoundation (2018.8.30)
 
 DEPENDENCIES:
-  - HQFoundation (from `../HQFoundation.podspec`)
+  - HQFoundation (~> 2018.0)
 
-EXTERNAL SOURCES:
-  HQFoundation:
-    :path: "../HQFoundation.podspec"
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - HQFoundation
 
 SPEC CHECKSUMS:
-  HQFoundation: ab4a6de36b353401632156d85bd077b0afcf63f2
+  HQFoundation: aeffbdf71b67bf0acd0d4588e7e5f77b33670c56
 
-PODFILE CHECKSUM: a310834d5ae9cb692aa75cfb207405c6e002ac0f
+PODFILE CHECKSUM: 6fce6035fdb7785f9bcbecfc2e9f248e2a1b19ab
 
 COCOAPODS: 1.5.3
