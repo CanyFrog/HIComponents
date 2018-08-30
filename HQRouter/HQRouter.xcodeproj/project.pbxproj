@@ -112,12 +112,11 @@
 		606E41BC20A59784009E4AA5 /* HQRouter */ = {
 			isa = PBXGroup;
 			children = (
-				606E41BD20A59784009E4AA5 /* HQRouter.h */,
-				606E41BE20A59784009E4AA5 /* Info.plist */,
 				604BA95820AD2A550014D30C /* Component.swift */,
 				604BA95420AD29FB0014D30C /* DataProvider.swift */,
 				606E41C520A597DD009E4AA5 /* RouterURL.swift */,
 				606E41C720A59BD3009E4AA5 /* Router.swift */,
+				60BE4A3F2137A891000134B7 /* Supporting Files */,
 			);
 			path = HQRouter;
 			sourceTree = "<group>";
@@ -130,6 +129,15 @@
 				60757AAE20AD845700EBD87A /* Info.plist */,
 			);
 			path = HQRouterTests;
+			sourceTree = "<group>";
+		};
+		60BE4A3F2137A891000134B7 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				606E41BD20A59784009E4AA5 /* HQRouter.h */,
+				606E41BE20A59784009E4AA5 /* Info.plist */,
+			);
+			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		8A8B65B520AB12F9008975ED /* HQRouterDemo */ = {
@@ -475,11 +483,8 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				INFOPLIST_FILE = HQRouter/Info.plist;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(SRCROOT)/HQRouter/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -506,11 +511,8 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				INFOPLIST_FILE = HQRouter/Info.plist;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(SRCROOT)/HQRouter/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
