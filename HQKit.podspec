@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.source_files = ["HQKit/HQKit/*.swift",
                      "HQKit/HQKit/**/*.swift", 
                      "HQKit/HQKit/*.h"]
-  s.resources    = 'HQKit/HQKit/Assets.xcassets'
+  s.resources    = 'HQKit/HQKit/*/Assets.xcassets'
   s.dependency 'HQFoundation'
 
 end
