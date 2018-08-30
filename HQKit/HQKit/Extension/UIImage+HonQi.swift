@@ -1,5 +1,5 @@
 //
-//  UIImage+Extension.swift
+//  UIImage+HonQi.swift
 //  HQKit
 //
 //  Created by HonQi on 2018/5/17.
@@ -8,7 +8,6 @@
 
 import HQFoundation
 import Accelerate
-
 
 extension Namespace where T: UIImage {
     

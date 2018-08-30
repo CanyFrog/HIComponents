@@ -19,7 +19,8 @@ class ViewController: UITableViewController {
         DemoConfig(title: "TipViewDemo", controller: TipViewDemo.self),
         DemoConfig(title: "RotaryCircleDemo", controller: RotaryCircleDemo.self),
         DemoConfig(title: "RefreshDemo", controller: RefreshDemo.self),
-        DemoConfig(title: "WebViewDemo", controller: WebViewDemo.self)
+        DemoConfig(title: "WebViewDemo", controller: WebViewDemo.self),
+        DemoConfig(title: "NavigationDemo", controller: NavigationDemo.self),
     ]
     override func viewDidLoad() {
         super.viewDidLoad()
