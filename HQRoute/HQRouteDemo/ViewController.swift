@@ -1,13 +1,13 @@
 //
 //  ViewController.swift
-//  HQRouterDemo
+//  HQRouteDemo
 //
-//  Created by HonQi on 2018/5/15.
-//  Copyright © 2018年 HonQi Indie. All rights reserved.
+//  Created by Magee Huang on 8/30/18.
+//  Copyright © 2018 HonQi Indie. All rights reserved.
 //
 
 import UIKit
-import HQRouter
+import HQRoute
 
 class ViewController: UIViewController {
     var pushBtn: UIButton!
