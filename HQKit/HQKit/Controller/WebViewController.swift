@@ -411,28 +411,18 @@ extension WebViewController: WKUIDelegate {
 
 extension WebViewController: WKNavigationDelegate {
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        guard navigationDelegate == nil else {
-            navigationDelegate!.webView?(webView, decidePolicyFor: navigationAction, decisionHandler: decisionHandler)
-            return
-        }
+        guard let delegate = navigationDelegate,
+            delegate.responds(to: #selector(webView(_:decidePolicyFor:decisionHandler:) as (WKWebView, WKNavigationAction, @escaping (WKNavigationActionPolicy) -> Void) -> Void )) else { decisionHandler(.allow); return }
         
-        if let scheme = navigationAction.request.url?.scheme,
-            scheme.hasPrefix("http") && scheme.hasPrefix("file") {
-            UIApplication.shared.openURL(navigationAction.request.url!)
-            decisionHandler(.cancel)
-        }
-        else {
-            decisionHandler(.allow)
-        }
+        delegate.webView!(webView, decidePolicyFor: navigationAction, decisionHandler: decisionHandler)
     }
     
     public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-        guard navigationDelegate == nil else {
-            navigationDelegate!.webView?(webView, decidePolicyFor: navigationResponse, decisionHandler: decisionHandler)
-            return
+        guard let delegate = navigationDelegate,
+            delegate.responds(to: #selector(webView(_:decidePolicyFor:decisionHandler:) as (WKWebView, WKNavigationResponse, @escaping (WKNavigationResponsePolicy) -> Void) -> Void )) else {
+                decisionHandler(.allow); return
         }
-        
-        decisionHandler(.allow)
+        delegate.webView!(webView, decidePolicyFor: navigationResponse, decisionHandler: decisionHandler)
     }
     
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
