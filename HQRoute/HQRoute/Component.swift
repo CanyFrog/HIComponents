@@ -25,13 +25,13 @@ public protocol Component: class {
     var router: Router? { get set }
     
     /// Component instance's navigate mode
-    var navigateMode: RouterNavigateMode { get set }
+    var navigateMode: RouterNavigateMode! { get set }
     
     /// Component's main entry UIViewController
     var viewController: UIViewController { get set }
     
     /// Component's data provider
-    var dataProvider: DataProvider { get set }
+    var dataProvider: DataProvider! { get set }
     
     
     /// componentWIllMount() is invoked immediately before a component is mounted into component hierarchy tree
