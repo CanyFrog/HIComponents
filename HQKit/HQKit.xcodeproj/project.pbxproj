@@ -13,6 +13,7 @@
 		605335D420C8D34400F3434E /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605335D320C8D34400F3434E /* GradientView.swift */; };
 		605335DD20C8F91400F3434E /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605335DC20C8F91400F3434E /* WebViewController.swift */; };
 		606E2B4420CE3A140095AA86 /* WebViewDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E2B4320CE3A140095AA86 /* WebViewDemo.swift */; };
+		607A1832213E401A00B42F02 /* UISearchBar+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607A1831213E401A00B42F02 /* UISearchBar+HonQi.swift */; };
 		60B098C120B3B98300013A0B /* RefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B098C020B3B98300013A0B /* RefreshView.swift */; };
 		60B098C320B4035100013A0B /* UIScrollView+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B098C220B4035100013A0B /* UIScrollView+HonQi.swift */; };
 		60B9009A213640F6001EB2C1 /* NavigationDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B90099213640F6001EB2C1 /* NavigationDemo.swift */; };
@@ -57,6 +58,7 @@
 		605335D320C8D34400F3434E /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		605335DC20C8F91400F3434E /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		606E2B4320CE3A140095AA86 /* WebViewDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewDemo.swift; sourceTree = "<group>"; };
+		607A1831213E401A00B42F02 /* UISearchBar+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISearchBar+HonQi.swift"; sourceTree = "<group>"; };
 		60B098C020B3B98300013A0B /* RefreshView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshView.swift; sourceTree = "<group>"; };
 		60B098C220B4035100013A0B /* UIScrollView+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+HonQi.swift"; sourceTree = "<group>"; };
 		60B90099213640F6001EB2C1 /* NavigationDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationDemo.swift; sourceTree = "<group>"; };
@@ -229,6 +231,7 @@
 				8A47702720B1B298002E4A17 /* UIWindow+HonQi.swift */,
 				8A47703120B1C2B0002E4A17 /* UINavigationBar+HonQi.swift */,
 				60B098C220B4035100013A0B /* UIScrollView+HonQi.swift */,
+				607A1831213E401A00B42F02 /* UISearchBar+HonQi.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -448,6 +451,7 @@
 				8A86236B20B0220700F8CF73 /* TipView.swift in Sources */,
 				8A5CD8BD20AD03210053EE51 /* UIImage+HonQi.swift in Sources */,
 				605335D420C8D34400F3434E /* GradientView.swift in Sources */,
+				607A1832213E401A00B42F02 /* UISearchBar+HonQi.swift in Sources */,
 				8A5CD8B920AD00260053EE51 /* UIView+HonQi.swift in Sources */,
 				8A8B65DD20ABA9C0008975ED /* UIViewController+HonQi.swift in Sources */,
 				8A86236920B01AA500F8CF73 /* Refreshable.swift in Sources */,
