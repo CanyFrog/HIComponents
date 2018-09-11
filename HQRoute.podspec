@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "HQRoute"
-  s.version      = "2018.8.30"
+  s.version      = "2018.9.1"
   s.homepage     = "https://github.com/HonQii/HIComponents"
   s.license      = { :type => "MIT", :file => "LICENSE" }
 
