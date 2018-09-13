@@ -22,25 +22,25 @@ open class WebViewController: UIViewController {
     open var closeBlock: (()->Void)?
     
     public private(set) var webView: WKWebView!
-    public private(set) var contentView: UIView = UIView.hq.autoLayout()
+    public private(set) var contentView: UIView = UIView.hq.init()
     
     
     
     var request: URLRequest?
     
     /// UI
-    var navBar = UIView.hq.autoLayout()
-    var navBarContent = UIView.hq.autoLayout()
-    var toolBar = UIView.hq.autoLayout()
-    var toolBarContent = UIView.hq.autoLayout()
-    var progressView = UIProgressView.hq.autoLayout()
+    var navBar = UIView.hq.init()
+    var navBarContent = UIView.hq.init()
+    var toolBar = UIView.hq.init()
+    var toolBarContent = UIView.hq.init()
+    var progressView = UIProgressView.hq.init()
     
-    var moreButton = UIButton.hq.autoLayout()
-    var titleLabel = UILabel.hq.autoLayout()
-    var backButton = UIButton.hq.autoLayout()
-    var forwardButton = UIButton.hq.autoLayout()
-    var refreshButton = UIButton.hq.autoLayout()
-    var closeButton = UIButton.hq.autoLayout()
+    var moreButton = UIButton.hq.init()
+    var titleLabel = UILabel.hq.init()
+    var backButton = UIButton.hq.init()
+    var forwardButton = UIButton.hq.init()
+    var refreshButton = UIButton.hq.init()
+    var closeButton = UIButton.hq.init()
     
     var navBarHeight: CGFloat = 46
     var compactNavBarHeight: CGFloat { return UIDevice.current.userInterfaceIdiom == .pad ? 35 : 27 }

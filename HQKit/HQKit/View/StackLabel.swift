@@ -55,7 +55,7 @@ open class StackLabel: UIStackView {
     
     public convenience init(texts: [String]) {
         let labels = texts.compactMap{ (text) -> UILabel in
-            let label = UILabel.hq.autoLayout()
+            let label = UILabel.hq.init()
             label.text = text
             return label
         }
