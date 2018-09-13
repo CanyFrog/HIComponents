@@ -165,7 +165,7 @@ extension Namespace where T: UIView {
     ///   - offset: shadow offset size, default is (5,5), means x axis offset to right 5, y axis offset to bottom 5
     ///   - opacity: shadow opacity, default is 0.3
     ///   - radius: shadow edges radis, default is 3
-    public func shadow(color: UIColor = UIColor.black, offset: CGSize = CGSize(width: 5, height: 5), opacity: Float = 0.3, radius: CGFloat = 3) {
+    public func shadow(offset: CGSize = CGSize(width: 5, height: 5), opacity: Float = 0.3, radius: CGFloat = 3, color: UIColor = UIColor.black) {
         instance.layer.shadowColor = color.cgColor
         instance.layer.shadowOffset = offset
         instance.layer.shadowOpacity = opacity

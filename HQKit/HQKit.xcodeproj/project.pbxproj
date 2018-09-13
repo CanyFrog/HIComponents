@@ -22,6 +22,8 @@
 		60E62A102148DE7700C7B197 /* KeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E62A0F2148DE7700C7B197 /* KeyPath.swift */; };
 		60E62A122148DE9D00C7B197 /* TimingFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E62A112148DE9D00C7B197 /* TimingFunction.swift */; };
 		60E62A142148DEDC00C7B197 /* CAAnimation+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E62A132148DEDC00C7B197 /* CAAnimation+HonQi.swift */; };
+		60E62A1B214A65CE00C7B197 /* ActionSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E62A19214A65CE00C7B197 /* ActionSheetController.swift */; };
+		60E62A1C214A65CE00C7B197 /* ActionSheetPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E62A1A214A65CE00C7B197 /* ActionSheetPresentation.swift */; };
 		8A47702820B1B298002E4A17 /* UIWindow+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A47702720B1B298002E4A17 /* UIWindow+HonQi.swift */; };
 		8A47703220B1C2B0002E4A17 /* UINavigationBar+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A47703120B1C2B0002E4A17 /* UINavigationBar+HonQi.swift */; };
 		8A52E7DC20ABACE700E93C5C /* ScreenShot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A52E7DB20ABACE700E93C5C /* ScreenShot.swift */; };
@@ -71,6 +73,8 @@
 		60E62A0F2148DE7700C7B197 /* KeyPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPath.swift; sourceTree = "<group>"; };
 		60E62A112148DE9D00C7B197 /* TimingFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimingFunction.swift; sourceTree = "<group>"; };
 		60E62A132148DEDC00C7B197 /* CAAnimation+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CAAnimation+HonQi.swift"; sourceTree = "<group>"; };
+		60E62A19214A65CE00C7B197 /* ActionSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionSheetController.swift; sourceTree = "<group>"; };
+		60E62A1A214A65CE00C7B197 /* ActionSheetPresentation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionSheetPresentation.swift; sourceTree = "<group>"; };
 		7AF70B022397BCFB236E7F8D /* Pods-HQKitDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HQKitDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HQKitDemo/Pods-HQKitDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		80077D2348E6ED848B8C536E /* Pods-HQKitDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HQKitDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-HQKitDemo/Pods-HQKitDemo.release.xcconfig"; sourceTree = "<group>"; };
 		8A47702720B1B298002E4A17 /* UIWindow+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+HonQi.swift"; sourceTree = "<group>"; };
@@ -125,6 +129,8 @@
 			isa = PBXGroup;
 			children = (
 				605335DC20C8F91400F3434E /* WebViewController.swift */,
+				60E62A19214A65CE00C7B197 /* ActionSheetController.swift */,
+				60E62A1A214A65CE00C7B197 /* ActionSheetPresentation.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -464,6 +470,7 @@
 			files = (
 				60E62A142148DEDC00C7B197 /* CAAnimation+HonQi.swift in Sources */,
 				605335D220C8D1EA00F3434E /* ScrollLabel.swift in Sources */,
+				60E62A1B214A65CE00C7B197 /* ActionSheetController.swift in Sources */,
 				604E0AE920CA2F2600F6BF53 /* StackLabel.swift in Sources */,
 				60E62A122148DE9D00C7B197 /* TimingFunction.swift in Sources */,
 				60B098C120B3B98300013A0B /* RefreshView.swift in Sources */,
@@ -476,6 +483,7 @@
 				8A86236920B01AA500F8CF73 /* Refreshable.swift in Sources */,
 				8A47702820B1B298002E4A17 /* UIWindow+HonQi.swift in Sources */,
 				60B098C320B4035100013A0B /* UIScrollView+HonQi.swift in Sources */,
+				60E62A1C214A65CE00C7B197 /* ActionSheetPresentation.swift in Sources */,
 				60E62A102148DE7700C7B197 /* KeyPath.swift in Sources */,
 				8A52E7DC20ABACE700E93C5C /* ScreenShot.swift in Sources */,
 				8A47703220B1C2B0002E4A17 /* UINavigationBar+HonQi.swift in Sources */,
