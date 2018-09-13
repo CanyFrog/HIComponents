@@ -15,14 +15,14 @@ extension Namespace where T: UIScrollView {
     }
     
     public var offsetY: CGFloat { return instance.contentOffset.y }
-    public func set(offsetY: CGFloat) { instance.contentOffset.y = offsetY }
+    public func offsetY(_ value: CGFloat) { instance.contentOffset.y = value }
     
     public var offsetX: CGFloat { return instance.contentOffset.x }
-    public func set(offsetX: CGFloat) { instance.contentOffset.x = offsetX }
+    public func offsetX(_ value: CGFloat) { instance.contentOffset.x = value }
     
     public var contentWidth: CGFloat { return instance.contentSize.width }
-    public func set(contentWidth: CGFloat) { instance.contentSize.width = contentWidth }
+    public func contentWidth(_ value: CGFloat) { instance.contentSize.width = value }
     
     public var contentHeight: CGFloat { return instance.contentSize.height }
-    public func set(contentHeight: CGFloat) { instance.contentSize.height = contentHeight }
+    public func contentHeight(_ value: CGFloat) { instance.contentSize.height = value }
 }

@@ -13,14 +13,14 @@ extension Namespace where T: UINavigationBar {
     /// Set back button image, only change image
     public var backButtonImage: UIImage? { return instance.backIndicatorImage }
 
-    public func set(backButtonImage: UIImage?) {
-        instance.backIndicatorImage = backButtonImage
-        instance.backIndicatorTransitionMaskImage = backButtonImage
+    public func backButton(image: UIImage?) {
+        instance.backIndicatorImage = image
+        instance.backIndicatorTransitionMaskImage = image
     }
     
     /// Set backgroud iamge with white color and alpha
-    public func set(backAlpha: CGFloat) {
-        instance.setBackgroundImage(UIImage.hq.image(color: UIColor.white.withAlphaComponent(backAlpha), size: UIScreen.main.bounds.size), for: .default)
+    public func backImage(alpha: CGFloat) {
+        instance.setBackgroundImage(UIImage.hq.image(color: UIColor.white.withAlphaComponent(alpha), size: UIScreen.main.bounds.size), for: .default)
     }
     
     /// Hidden navigation bar bottom line
