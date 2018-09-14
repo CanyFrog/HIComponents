@@ -6,7 +6,7 @@
 //  Copyright © 2018年 HonQi Indie. All rights reserved.
 //
 
-private var EventClosureKey: UInt8 = 0
+private var EventClosureKey: UInt8 = 010
 private protocol Eventable: class {
     var eventClosure: (()->Void)? { get set }
     func eventTriggerFunction()
@@ -31,9 +31,9 @@ extension UIControl: Eventable {
     }
 }
 extension Namespace where T : UIControl {
-    public func addEvent(_ closure: (() -> Void)?, _ events: UIControlEvents) {
+    public func addEvent(_ closure: (() -> Void)?, for events: UIControlEvents) {
         instance.eventClosure = closure
-        instance.addTarget(self, action: #selector(UIControl.eventTriggerFunction), for: events)
+        instance.addTarget(instance, action: #selector(UIControl.eventTriggerFunction), for: events)
     }
 }
 
@@ -64,6 +64,12 @@ extension UIGestureRecognizer: Eventable {
 extension Namespace where T: UIGestureRecognizer {
     public func addEvent(_ closure: (() -> Void)?) {
         instance.eventClosure = closure
-        instance.addTarget(self, action: #selector(UIGestureRecognizer.eventTriggerFunction))
+        instance.addTarget(instance, action: #selector(UIGestureRecognizer.eventTriggerFunction))
+    }
+    
+    public static func `init`(_ closure: (() -> Void)?) -> T {
+        let obj = T()
+        obj.hq.addEvent(closure)
+        return obj
     }
 }
