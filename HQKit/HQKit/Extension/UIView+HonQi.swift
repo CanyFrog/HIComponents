@@ -48,6 +48,7 @@ extension Namespace where T: UIView {
 
 
 
+// MARK: - Layout
 extension Namespace where T: UIView {
     public var safeAreaBottomAnchor: NSLayoutYAxisAnchor {
         if #available(iOS 11.0, *) {
@@ -64,39 +65,39 @@ extension Namespace where T: UIView {
     }
     
     public var left: CGFloat { return instance.frame.origin.x }
-    public func set(left: CGFloat) { instance.frame.origin.x = left }
+    public func left(_ value: CGFloat) { instance.frame.origin.x = value }
     
     public var top: CGFloat { return instance.frame.origin.y }
-    public func set(top: CGFloat) { instance.frame.origin.y = top }
+    public func top(_ value: CGFloat) { instance.frame.origin.y = value }
     
     public var width: CGFloat { return instance.frame.size.width }
-    public func set(width: CGFloat) { instance.frame.size.width = width }
+    public func width(_ value: CGFloat) { instance.frame.size.width = value }
     
     public var height: CGFloat { return instance.frame.size.height }
-    public func set(height: CGFloat) { instance.frame.size.height = height }
+    public func height(_ value: CGFloat) { instance.frame.size.height = value }
     
     public var right: CGFloat { return left + width }
-    public func set(right: CGFloat) { instance.frame.origin.x = right - width }
+    public func right(_ value: CGFloat) { instance.frame.origin.x = value - width }
     
     public var bottom: CGFloat { return instance.hq.top + instance.hq.height }
-    public func set(bottom: CGFloat) { instance.frame.origin.y = bottom - height }
+    public func bottom(_ value: CGFloat) { instance.frame.origin.y = value - height }
     
     public var origin: CGPoint { return instance.frame.origin }
-    public func set(origin: CGPoint) { instance.frame.origin = origin }
+    public func origin(_ value: CGPoint) { instance.frame.origin = value }
     
     public var size: CGSize { return instance.frame.size }
-    public func set(size: CGSize) { instance.frame.size = size }
+    public func size(_ value: CGSize) { instance.frame.size = value }
     
     public var centerX: CGFloat { return instance.center.x }
-    public func set(centerX: CGFloat) { instance.center.x = centerX }
+    public func centerX(_ value: CGFloat) { instance.center.x = value }
     
     public var centerY: CGFloat { return instance.center.y }
-    public func set(centerY: CGFloat) { instance.center.y = centerY }
+    public func centerY(_ value: CGFloat) { instance.center.y = value }
     
-    public static func autoLayout() -> T {
-        let v = T(frame: .zero)
-        v.translatesAutoresizingMaskIntoConstraints = false
-        return v
+    public static func `init`() -> T {
+        let view = T()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
     
     public func constrainEqualWithSuperview() {
@@ -113,5 +114,90 @@ extension Namespace where T: UIView {
             instance.centerYAnchor.constraint(equalTo: instance.superview!.centerYAnchor)
             ])
     }
+}
 
+
+// MARK: - Layer
+extension Namespace where T: UIView {
+    public func contents(_ image: UIImage) {
+        instance.layer.contents = image.cgImage
+    }
+    
+    
+    /// Only display rect contents
+    ///
+    /// - Parameter contentsRect: rect range is (0, 1)
+    public func contents(rect: CGRect) {
+        instance.layer.contentsRect = rect
+    }
+    
+
+    /// Define conents can resize area
+    /// note: If contents bigger than container, the area will be squeezing and hidden; otherwise will be stretch
+    public func contents(center: CGRect) {
+        instance.layer.contentsCenter = center
+    }
+    
+    
+    /// Default corner radis only affect to background color,
+    /// if you want affect to subviews and back image, set masks to true; and default is true
+    public func corner(radis: CGFloat, masks: Bool = true) {
+        instance.layer.cornerRadius = radis
+        instance.layer.masksToBounds = true
+    }
+    
+    
+    /// Set border
+    ///
+    /// - Parameters:
+    ///   - borderWidth: border width
+    ///   - color: Default is white
+    public func border(width: CGFloat, color: UIColor = UIColor.white) {
+        instance.layer.borderWidth = width
+        instance.layer.borderColor = color.cgColor
+    }
+    
+    
+    /// Set shadow
+    ///
+    /// - Parameters:
+    ///   - color: shadow color, default is black
+    ///   - offset: shadow offset size, default is (5,5), means x axis offset to right 5, y axis offset to bottom 5
+    ///   - opacity: shadow opacity, default is 0.3
+    ///   - radius: shadow edges radis, default is 3
+    public func shadow(offset: CGSize = CGSize(width: 5, height: 5), opacity: Float = 0.3, radius: CGFloat = 3, color: UIColor = UIColor.black) {
+        instance.layer.shadowColor = color.cgColor
+        instance.layer.shadowOffset = offset
+        instance.layer.shadowOpacity = opacity
+        instance.layer.shadowRadius = radius
+    }
+    
+    
+    /// Set shadow shape from custom path; Performance better
+    ///
+    /// - Parameter rect: create CGPath with shadow shape rect
+    public func shadow(path rect: CGRect) {
+        instance.layer.shadowPath = UIBezierPath(rect: rect).cgPath
+    }
+    
+    
+    /// Package all subviews as a group and set alpha
+    ///
+    /// - Parameter uniteAlpha: alpha
+    public func subviews(alpha: CGFloat) {
+        instance.alpha = alpha
+        // Prevent packaged view pixelation
+        instance.layer.rasterizationScale = UIScreen.main.scale
+        instance.layer.shouldRasterize = true
+    }
+    
+    public func transform3D(_ value: CATransform3D) {
+        instance.layer.transform = value
+    }
+    
+    
+    /// Set transform3D for all subviews
+    public func subviews(transform3D: CATransform3D) {
+        instance.layer.sublayerTransform = transform3D
+    }
 }
