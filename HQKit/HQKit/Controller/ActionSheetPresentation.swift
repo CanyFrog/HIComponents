@@ -11,6 +11,7 @@ import UIKit
 class ActionSheetPresentation: UIPresentationController {
     var dimmingView: UIView?
     var wrapperView: UIView?
+    var preferredHeight: CGFloat = UIScreen.main.bounds.height - 64
     
     /// Return the wrapping view created in -presentationTransitionWillBegin.
     override var presentedView: UIView? { return wrapperView }
@@ -20,7 +21,6 @@ class ActionSheetPresentation: UIPresentationController {
         wrapperView = {
            let wrapper = UIView(frame: frameOfPresentedViewInContainerView)
             wrapper.hq.shadow(offset: CGSize(width: 0, height: -6.0), opacity: 0.44, radius: 13.0)
-            
             let cornerRadis: CGFloat = 16.0
             
             wrapper.addSubview({
@@ -47,24 +47,14 @@ class ActionSheetPresentation: UIPresentationController {
             
             return wrapper
         }()
-
-//        let pan = UIScreenEdgePanGestureRecognizer()
-//        pan.hq.addEvent { [weak pan] in
-//            
-//        }
-//        wrapperView?.addGestureRecognizer(<#T##gestureRecognizer: UIGestureRecognizer##UIGestureRecognizer#>)
         
         
-        dimmingView = {
+        dimmingView = { [weak self] in
            let dimming = UIView(frame: containerView!.bounds)
             dimming.backgroundColor = UIColor.black
             dimming.isOpaque = false
-            
-            let tap = UITapGestureRecognizer()
-            dimming.addGestureRecognizer(tap)
-            tap.hq.addEvent({ [weak self] in
-                self?.presentingViewController.dismiss(animated: true, completion: nil)
-            })
+            dimming.isUserInteractionEnabled = true
+            dimming.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dimmingTap)))
             return dimming
         }()
         
@@ -72,8 +62,12 @@ class ActionSheetPresentation: UIPresentationController {
         
         dimmingView?.alpha = 0
         presentingViewController.transitionCoordinator?.animate(alongsideTransition: { [weak self] (_) in
-            self?.dimmingView?.alpha = 0.5
+            self?.dimmingView?.alpha = 0.4
         }, completion: nil)
+    }
+    
+    @objc private func dimmingTap() {
+        presentedViewController.dismiss(animated: true, completion: nil)
     }
     
     open override func presentationTransitionDidEnd(_ completed: Bool) {
@@ -105,7 +99,9 @@ class ActionSheetPresentation: UIPresentationController {
     
     open override func size(forChildContentContainer container: UIContentContainer, withParentContainerSize parentSize: CGSize) -> CGSize {
         if container as? UIViewController == presentedViewController {
-            return container.preferredContentSize
+            var size = container.preferredContentSize
+            size.height = preferredHeight
+            return size
         }
         return super.size(forChildContentContainer: container, withParentContainerSize: parentSize)
     }
@@ -128,48 +124,42 @@ class ActionSheetPresentation: UIPresentationController {
     }
 }
 
-extension ActionSheetController: UIViewControllerAnimatedTransitioning {
+extension ActionSheetPresentation: UIViewControllerAnimatedTransitioning {
     public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return transitionContext?.isAnimated ?? false ? 0.35 : 0
+        return transitionContext?.isAnimated ?? false ? 0.4 : 0
     }
     
     public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        let fromVC = transitionContext.viewController(forKey: .from)!
-        let toVC = transitionContext.viewController(forKey: .to)!
+        // For a Presentation:
+        //      fromView = The presenting view.
+        //      toView   = The presented view.
+        // For a Dismissal:
+        //      fromView = The presented view.
+        //      toView   = The presenting view.
         
-        let container = transitionContext.containerView
+        guard let toVC = transitionContext.viewController(forKey: .to),
+            let fromVC = transitionContext.viewController(forKey: .from) else { return }
         
-        let toView = transitionContext.view(forKey: .to)!
-        let fromView = transitionContext.view(forKey: .from)!
+        let completion = { (completed: Bool) in
+            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+        }
         
-        let isPresented = fromVC == presentedViewController
-
-        var fromVFinalFrame = transitionContext.finalFrame(for: fromVC)
-        
-        var toVInitFrame = transitionContext.initialFrame(for: toVC)
-        let toVFinalFrame = transitionContext.finalFrame(for: toVC)
-        
-        container.addSubview(toView)
-        
-        if isPresented {
-            toVInitFrame.origin = CGPoint(x: container.bounds.minX, y: container.bounds.maxY)
-            toVInitFrame.size = toVFinalFrame.size
-            toView.frame = toVInitFrame
+        if toVC == presentedViewController { // is presenting
+            let toView = transitionContext.view(forKey: .to)! // Only presenting can get view from view(forkey:) function, this view can present in container
+            let container = transitionContext.containerView
+            container.addSubview(toView)
+            
+            let toFrame = transitionContext.finalFrame(for: toVC)
+            toView.frame = CGRect(origin: .init(x: container.hq.left, y: container.hq.bottom), size: toFrame.size)
+            
+            UIView.animate(withDuration: transitionDuration(using: transitionContext), animations: {
+                toView.frame = toFrame
+            }, completion: completion)
         }
         else {
-            fromVFinalFrame = fromView.frame.offsetBy(dx: 0, dy: fromView.frame.height)
-        }
-        
-        let duration = transitionDuration(using: transitionContext)
-        UIView.animate(withDuration: duration, animations: {
-            if isPresented {
-                toView.frame = toVFinalFrame
-            }
-            else {
-                fromView.frame = fromVFinalFrame
-            }
-        }) { (_) in
-            transitionContext.completeTransition(transitionContext.transitionWasCancelled)
+            UIView.animate(withDuration: transitionDuration(using: transitionContext), animations: {
+                fromVC.view.frame.origin = CGPoint(x: toVC.view.hq.left, y: toVC.view.hq.bottom)
+            }, completion: completion)
         }
     }
 }
@@ -181,10 +171,10 @@ extension ActionSheetPresentation: UIViewControllerTransitioningDelegate {
     }
     
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return self as? UIViewControllerAnimatedTransitioning
+        return self
     }
     
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return self as? UIViewControllerAnimatedTransitioning
+        return self
     }
 }
