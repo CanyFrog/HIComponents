@@ -23,4 +23,13 @@ extension Namespace where T: UIViewController {
             return instance
         }
     }
+    
+    public func modal(viewController: UIViewController, preferredHeight: CGFloat, animated: Bool, completion: (()->Void)? = nil) {
+        let presentation = ActionSheetPresentation(presentedViewController: viewController, presenting: instance)
+        presentation.preferredHeight = preferredHeight
+    
+        viewController.modalPresentationStyle = .custom
+        viewController.transitioningDelegate = presentation
+        instance.present(viewController, animated: animated, completion: completion)
+    }
 }

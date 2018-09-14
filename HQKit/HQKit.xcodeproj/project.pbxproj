@@ -13,11 +13,18 @@
 		605335D420C8D34400F3434E /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605335D320C8D34400F3434E /* GradientView.swift */; };
 		605335DD20C8F91400F3434E /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605335DC20C8F91400F3434E /* WebViewController.swift */; };
 		606E2B4420CE3A140095AA86 /* WebViewDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E2B4320CE3A140095AA86 /* WebViewDemo.swift */; };
+		607A1832213E401A00B42F02 /* UISearchBar+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607A1831213E401A00B42F02 /* UISearchBar+HonQi.swift */; };
 		60B098C120B3B98300013A0B /* RefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B098C020B3B98300013A0B /* RefreshView.swift */; };
 		60B098C320B4035100013A0B /* UIScrollView+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B098C220B4035100013A0B /* UIScrollView+HonQi.swift */; };
 		60B9009A213640F6001EB2C1 /* NavigationDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B90099213640F6001EB2C1 /* NavigationDemo.swift */; };
 		60BE4A3A2137A043000134B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60BE4A372137A043000134B7 /* Assets.xcassets */; };
 		60BE4A3B2137A043000134B7 /* HQKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 60BE4A382137A043000134B7 /* HQKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		60E62A102148DE7700C7B197 /* KeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E62A0F2148DE7700C7B197 /* KeyPath.swift */; };
+		60E62A122148DE9D00C7B197 /* TimingFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E62A112148DE9D00C7B197 /* TimingFunction.swift */; };
+		60E62A142148DEDC00C7B197 /* CAAnimation+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E62A132148DEDC00C7B197 /* CAAnimation+HonQi.swift */; };
+		60E62A1C214A65CE00C7B197 /* ActionSheetPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E62A1A214A65CE00C7B197 /* ActionSheetPresentation.swift */; };
+		60E62A1E214B62D800C7B197 /* PresentationDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E62A1D214B62D800C7B197 /* PresentationDemo.swift */; };
+		60E62A1F214B675F00C7B197 /* HQKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A8B65D020ABA98D008975ED /* HQKit.framework */; };
 		8A47702820B1B298002E4A17 /* UIWindow+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A47702720B1B298002E4A17 /* UIWindow+HonQi.swift */; };
 		8A47703220B1C2B0002E4A17 /* UINavigationBar+HonQi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A47703120B1C2B0002E4A17 /* UINavigationBar+HonQi.swift */; };
 		8A52E7DC20ABACE700E93C5C /* ScreenShot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A52E7DB20ABACE700E93C5C /* ScreenShot.swift */; };
@@ -57,12 +64,18 @@
 		605335D320C8D34400F3434E /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		605335DC20C8F91400F3434E /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		606E2B4320CE3A140095AA86 /* WebViewDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewDemo.swift; sourceTree = "<group>"; };
+		607A1831213E401A00B42F02 /* UISearchBar+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISearchBar+HonQi.swift"; sourceTree = "<group>"; };
 		60B098C020B3B98300013A0B /* RefreshView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshView.swift; sourceTree = "<group>"; };
 		60B098C220B4035100013A0B /* UIScrollView+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+HonQi.swift"; sourceTree = "<group>"; };
 		60B90099213640F6001EB2C1 /* NavigationDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationDemo.swift; sourceTree = "<group>"; };
 		60BE4A372137A043000134B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		60BE4A382137A043000134B7 /* HQKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HQKit.h; sourceTree = "<group>"; };
 		60BE4A392137A043000134B7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		60E62A0F2148DE7700C7B197 /* KeyPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPath.swift; sourceTree = "<group>"; };
+		60E62A112148DE9D00C7B197 /* TimingFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimingFunction.swift; sourceTree = "<group>"; };
+		60E62A132148DEDC00C7B197 /* CAAnimation+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CAAnimation+HonQi.swift"; sourceTree = "<group>"; };
+		60E62A1A214A65CE00C7B197 /* ActionSheetPresentation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionSheetPresentation.swift; sourceTree = "<group>"; };
+		60E62A1D214B62D800C7B197 /* PresentationDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationDemo.swift; sourceTree = "<group>"; };
 		7AF70B022397BCFB236E7F8D /* Pods-HQKitDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HQKitDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HQKitDemo/Pods-HQKitDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		80077D2348E6ED848B8C536E /* Pods-HQKitDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HQKitDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-HQKitDemo/Pods-HQKitDemo.release.xcconfig"; sourceTree = "<group>"; };
 		8A47702720B1B298002E4A17 /* UIWindow+HonQi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+HonQi.swift"; sourceTree = "<group>"; };
@@ -97,6 +110,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60E62A1F214B675F00C7B197 /* HQKit.framework in Frameworks */,
 				8A86237520B0305300F8CF73 /* HQFoundation.framework in Frameworks */,
 				57D56B70192322B9C0EA0FD5 /* Pods_HQKitDemo.framework in Frameworks */,
 			);
@@ -117,6 +131,7 @@
 			isa = PBXGroup;
 			children = (
 				605335DC20C8F91400F3434E /* WebViewController.swift */,
+				60E62A1A214A65CE00C7B197 /* ActionSheetPresentation.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -141,6 +156,16 @@
 				60BE4A392137A043000134B7 /* Info.plist */,
 			);
 			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		60E62A0E2148DE6200C7B197 /* Animation */ = {
+			isa = PBXGroup;
+			children = (
+				60E62A0F2148DE7700C7B197 /* KeyPath.swift */,
+				60E62A112148DE9D00C7B197 /* TimingFunction.swift */,
+				60E62A132148DEDC00C7B197 /* CAAnimation+HonQi.swift */,
+			);
+			path = Animation;
 			sourceTree = "<group>";
 		};
 		7AAED04E2121B13000D4B169 /* Feature */ = {
@@ -182,6 +207,7 @@
 				8A86237320B02B1F00F8CF73 /* RefreshDemo.swift */,
 				606E2B4320CE3A140095AA86 /* WebViewDemo.swift */,
 				60B90099213640F6001EB2C1 /* NavigationDemo.swift */,
+				60E62A1D214B62D800C7B197 /* PresentationDemo.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -209,6 +235,7 @@
 		8A8B65D220ABA98D008975ED /* HQKit */ = {
 			isa = PBXGroup;
 			children = (
+				60E62A0E2148DE6200C7B197 /* Animation */,
 				7AAED04E2121B13000D4B169 /* Feature */,
 				60247E8120CF9E0700B050A3 /* Controller */,
 				605335D020C8D1CC00F3434E /* View */,
@@ -229,6 +256,7 @@
 				8A47702720B1B298002E4A17 /* UIWindow+HonQi.swift */,
 				8A47703120B1C2B0002E4A17 /* UINavigationBar+HonQi.swift */,
 				60B098C220B4035100013A0B /* UIScrollView+HonQi.swift */,
+				607A1831213E401A00B42F02 /* UISearchBar+HonQi.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -430,6 +458,7 @@
 			files = (
 				606E2B4420CE3A140095AA86 /* WebViewDemo.swift in Sources */,
 				8A86237020B0294800F8CF73 /* TipViewDemo.swift in Sources */,
+				60E62A1E214B62D800C7B197 /* PresentationDemo.swift in Sources */,
 				8A86237220B02B0C00F8CF73 /* RotaryCircleDemo.swift in Sources */,
 				8A86235920B0197F00F8CF73 /* ViewController.swift in Sources */,
 				60B9009A213640F6001EB2C1 /* NavigationDemo.swift in Sources */,
@@ -442,17 +471,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60E62A142148DEDC00C7B197 /* CAAnimation+HonQi.swift in Sources */,
 				605335D220C8D1EA00F3434E /* ScrollLabel.swift in Sources */,
 				604E0AE920CA2F2600F6BF53 /* StackLabel.swift in Sources */,
+				60E62A122148DE9D00C7B197 /* TimingFunction.swift in Sources */,
 				60B098C120B3B98300013A0B /* RefreshView.swift in Sources */,
 				8A86236B20B0220700F8CF73 /* TipView.swift in Sources */,
 				8A5CD8BD20AD03210053EE51 /* UIImage+HonQi.swift in Sources */,
 				605335D420C8D34400F3434E /* GradientView.swift in Sources */,
+				607A1832213E401A00B42F02 /* UISearchBar+HonQi.swift in Sources */,
 				8A5CD8B920AD00260053EE51 /* UIView+HonQi.swift in Sources */,
 				8A8B65DD20ABA9C0008975ED /* UIViewController+HonQi.swift in Sources */,
 				8A86236920B01AA500F8CF73 /* Refreshable.swift in Sources */,
 				8A47702820B1B298002E4A17 /* UIWindow+HonQi.swift in Sources */,
 				60B098C320B4035100013A0B /* UIScrollView+HonQi.swift in Sources */,
+				60E62A1C214A65CE00C7B197 /* ActionSheetPresentation.swift in Sources */,
+				60E62A102148DE7700C7B197 /* KeyPath.swift in Sources */,
 				8A52E7DC20ABACE700E93C5C /* ScreenShot.swift in Sources */,
 				8A47703220B1C2B0002E4A17 /* UINavigationBar+HonQi.swift in Sources */,
 				8A5CD8BB20AD01B40053EE51 /* UIColor+HonQi.swift in Sources */,

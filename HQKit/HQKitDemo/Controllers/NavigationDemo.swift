@@ -33,7 +33,7 @@ class NavigationVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.cyan
-        navigationController?.navigationBar.hq.set(backAlpha: 0.4)
+        navigationController?.navigationBar.hq.backImage(alpha: 0.4)
         navigationController?.navigationBar.hq.hiddenLine()
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Aack", style: .plain, target: nil, action: nil)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Forword", style: .plain, target: nil, action: nil)
