@@ -11,16 +11,16 @@
 		601BA7622071F77500C62A11 /* FoundationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA7612071F77500C62A11 /* FoundationTests.swift */; };
 		601BA7642071F77600C62A11 /* HQFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 601BA7562071F77500C62A11 /* HQFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		601BA76F2071F79A00C62A11 /* Lock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA76E2071F79A00C62A11 /* Lock.swift */; };
-		601BA7732071FAB100C62A11 /* Timer+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA7722071FAB100C62A11 /* Timer+extension.swift */; };
-		601EF95420B5262700155668 /* Formatter+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EF95320B5262700155668 /* Formatter+Extension.swift */; };
-		601EF95620B5289B00155668 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EF95520B5289B00155668 /* Date+Extension.swift */; };
-		606E2B4620CE4B520095AA86 /* UIDevice+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E2B4520CE4B520095AA86 /* UIDevice+Extension.swift */; };
+		601BA7732071FAB100C62A11 /* Timer+Honqi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA7722071FAB100C62A11 /* Timer+Honqi.swift */; };
+		601EF95420B5262700155668 /* Formatter+Honqi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EF95320B5262700155668 /* Formatter+Honqi.swift */; };
+		601EF95620B5289B00155668 /* Date+Honqi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EF95520B5289B00155668 /* Date+Honqi.swift */; };
+		606E2B4620CE4B520095AA86 /* UIDevice+Honqi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E2B4520CE4B520095AA86 /* UIDevice+Honqi.swift */; };
 		60F9101020A97AD90072AB55 /* NameSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F9100F20A97AD90072AB55 /* NameSpace.swift */; };
-		60F9101220A983AC0072AB55 /* Timeinterval+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F9101120A983AC0072AB55 /* Timeinterval+extension.swift */; };
+		60F9101220A983AC0072AB55 /* Timeinterval+Honqi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F9101120A983AC0072AB55 /* Timeinterval+Honqi.swift */; };
 		8A13EA2B20A12A0F0076549A /* KeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A13EA2A20A12A0F0076549A /* KeyChain.swift */; };
-		8A52E7DE20ABAE8E00E93C5C /* Collection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A52E7DD20ABAE8E00E93C5C /* Collection+Extension.swift */; };
-		8AC9160920881FDD00A9CEA1 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9160820881FDD00A9CEA1 /* Event.swift */; };
-		8AC9160C2088220D00A9CEA1 /* NSObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9160B2088220D00A9CEA1 /* NSObject+Extension.swift */; };
+		8A52E7DE20ABAE8E00E93C5C /* Collection+Honqi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A52E7DD20ABAE8E00E93C5C /* Collection+Honqi.swift */; };
+		8AC9160920881FDD00A9CEA1 /* Event+Honqi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9160820881FDD00A9CEA1 /* Event+Honqi.swift */; };
+		8AC9160C2088220D00A9CEA1 /* NSObject+Honqi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9160B2088220D00A9CEA1 /* NSObject+Honqi.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,17 +41,16 @@
 		601BA7612071F77500C62A11 /* FoundationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationTests.swift; sourceTree = "<group>"; };
 		601BA7632071F77600C62A11 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		601BA76E2071F79A00C62A11 /* Lock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lock.swift; sourceTree = "<group>"; };
-		601BA7722071FAB100C62A11 /* Timer+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Timer+extension.swift"; sourceTree = "<group>"; };
-		601BA7742071FCD100C62A11 /* Runloop.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Runloop.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		601EF95320B5262700155668 /* Formatter+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Formatter+Extension.swift"; sourceTree = "<group>"; };
-		601EF95520B5289B00155668 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
-		606E2B4520CE4B520095AA86 /* UIDevice+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Extension.swift"; sourceTree = "<group>"; };
+		601BA7722071FAB100C62A11 /* Timer+Honqi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Timer+Honqi.swift"; sourceTree = "<group>"; };
+		601EF95320B5262700155668 /* Formatter+Honqi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Formatter+Honqi.swift"; sourceTree = "<group>"; };
+		601EF95520B5289B00155668 /* Date+Honqi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Honqi.swift"; sourceTree = "<group>"; };
+		606E2B4520CE4B520095AA86 /* UIDevice+Honqi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Honqi.swift"; sourceTree = "<group>"; };
 		60F9100F20A97AD90072AB55 /* NameSpace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameSpace.swift; sourceTree = "<group>"; };
-		60F9101120A983AC0072AB55 /* Timeinterval+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Timeinterval+extension.swift"; sourceTree = "<group>"; };
+		60F9101120A983AC0072AB55 /* Timeinterval+Honqi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Timeinterval+Honqi.swift"; sourceTree = "<group>"; };
 		8A13EA2A20A12A0F0076549A /* KeyChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChain.swift; sourceTree = "<group>"; };
-		8A52E7DD20ABAE8E00E93C5C /* Collection+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extension.swift"; sourceTree = "<group>"; };
-		8AC9160820881FDD00A9CEA1 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
-		8AC9160B2088220D00A9CEA1 /* NSObject+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Extension.swift"; sourceTree = "<group>"; };
+		8A52E7DD20ABAE8E00E93C5C /* Collection+Honqi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Honqi.swift"; sourceTree = "<group>"; };
+		8AC9160820881FDD00A9CEA1 /* Event+Honqi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+Honqi.swift"; sourceTree = "<group>"; };
+		8AC9160B2088220D00A9CEA1 /* NSObject+Honqi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Honqi.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,14 +93,9 @@
 		601BA7552071F77500C62A11 /* HQFoundation */ = {
 			isa = PBXGroup;
 			children = (
-				601BA76E2071F79A00C62A11 /* Lock.swift */,
-				8A13EA2A20A12A0F0076549A /* KeyChain.swift */,
-				60F9100F20A97AD90072AB55 /* NameSpace.swift */,
-				8AC9160720881F9900A9CEA1 /* Control&Event */,
-				601BA7712071FA9800C62A11 /* Timer */,
-				601BA7702071FA8D00C62A11 /* Extension */,
-				601BA7562071F77500C62A11 /* HQFoundation.h */,
-				601BA7572071F77500C62A11 /* Info.plist */,
+				6036970321211C510064A61C /* Feature */,
+				6036970121211B2F0064A61C /* Extensions */,
+				6036970221211C260064A61C /* Supporting Files */,
 			);
 			path = HQFoundation;
 			sourceTree = "<group>";
@@ -115,34 +109,38 @@
 			path = HQFoundationTests;
 			sourceTree = "<group>";
 		};
-		601BA7702071FA8D00C62A11 /* Extension */ = {
+		6036970121211B2F0064A61C /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				8AC9160B2088220D00A9CEA1 /* NSObject+Extension.swift */,
-				8A52E7DD20ABAE8E00E93C5C /* Collection+Extension.swift */,
-				601EF95320B5262700155668 /* Formatter+Extension.swift */,
-				601EF95520B5289B00155668 /* Date+Extension.swift */,
-				606E2B4520CE4B520095AA86 /* UIDevice+Extension.swift */,
+				8AC9160820881FDD00A9CEA1 /* Event+Honqi.swift */,
+				8AC9160B2088220D00A9CEA1 /* NSObject+Honqi.swift */,
+				8A52E7DD20ABAE8E00E93C5C /* Collection+Honqi.swift */,
+				606E2B4520CE4B520095AA86 /* UIDevice+Honqi.swift */,
+				601EF95320B5262700155668 /* Formatter+Honqi.swift */,
+				601EF95520B5289B00155668 /* Date+Honqi.swift */,
+				601BA7722071FAB100C62A11 /* Timer+Honqi.swift */,
+				60F9101120A983AC0072AB55 /* Timeinterval+Honqi.swift */,
 			);
-			path = Extension;
+			path = Extensions;
 			sourceTree = "<group>";
 		};
-		601BA7712071FA9800C62A11 /* Timer */ = {
+		6036970221211C260064A61C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				601BA7722071FAB100C62A11 /* Timer+extension.swift */,
-				60F9101120A983AC0072AB55 /* Timeinterval+extension.swift */,
-				601BA7742071FCD100C62A11 /* Runloop.playground */,
+				601BA7562071F77500C62A11 /* HQFoundation.h */,
+				601BA7572071F77500C62A11 /* Info.plist */,
 			);
-			path = Timer;
+			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		8AC9160720881F9900A9CEA1 /* Control&Event */ = {
+		6036970321211C510064A61C /* Feature */ = {
 			isa = PBXGroup;
 			children = (
-				8AC9160820881FDD00A9CEA1 /* Event.swift */,
+				601BA76E2071F79A00C62A11 /* Lock.swift */,
+				8A13EA2A20A12A0F0076549A /* KeyChain.swift */,
+				60F9100F20A97AD90072AB55 /* NameSpace.swift */,
 			);
-			path = "Control&Event";
+			path = Feature;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -257,15 +255,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				8A13EA2B20A12A0F0076549A /* KeyChain.swift in Sources */,
-				601BA7732071FAB100C62A11 /* Timer+extension.swift in Sources */,
-				8AC9160C2088220D00A9CEA1 /* NSObject+Extension.swift in Sources */,
-				606E2B4620CE4B520095AA86 /* UIDevice+Extension.swift in Sources */,
-				601EF95420B5262700155668 /* Formatter+Extension.swift in Sources */,
-				8A52E7DE20ABAE8E00E93C5C /* Collection+Extension.swift in Sources */,
-				8AC9160920881FDD00A9CEA1 /* Event.swift in Sources */,
-				601EF95620B5289B00155668 /* Date+Extension.swift in Sources */,
+				601BA7732071FAB100C62A11 /* Timer+Honqi.swift in Sources */,
+				8AC9160C2088220D00A9CEA1 /* NSObject+Honqi.swift in Sources */,
+				606E2B4620CE4B520095AA86 /* UIDevice+Honqi.swift in Sources */,
+				601EF95420B5262700155668 /* Formatter+Honqi.swift in Sources */,
+				8A52E7DE20ABAE8E00E93C5C /* Collection+Honqi.swift in Sources */,
+				8AC9160920881FDD00A9CEA1 /* Event+Honqi.swift in Sources */,
+				601EF95620B5289B00155668 /* Date+Honqi.swift in Sources */,
 				601BA76F2071F79A00C62A11 /* Lock.swift in Sources */,
-				60F9101220A983AC0072AB55 /* Timeinterval+extension.swift in Sources */,
+				60F9101220A983AC0072AB55 /* Timeinterval+Honqi.swift in Sources */,
 				60F9101020A97AD90072AB55 /* NameSpace.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -418,7 +416,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = HQFoundation/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/HQFoundation/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -446,7 +444,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = HQFoundation/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/HQFoundation/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -92,13 +92,12 @@
 		609FF113206CC185004092B1 /* HQSqlite */ = {
 			isa = PBXGroup;
 			children = (
-				609FF114206CC185004092B1 /* HQSqlite.h */,
-				609FF115206CC185004092B1 /* Info.plist */,
 				609FF12F206CC2A0004092B1 /* Utils.swift */,
 				609FF12B206CC1B6004092B1 /* Connection.swift */,
 				609FF131206CC312004092B1 /* SqliteError.swift */,
 				602D547B206CC67400CE9AE0 /* Statement.swift */,
 				602D547D206DDED800CE9AE0 /* Mapping.swift */,
+				60BE4A3D2137A41E000134B7 /* Supporting Files */,
 			);
 			path = HQSqlite;
 			sourceTree = "<group>";
@@ -113,6 +112,15 @@
 				609FF121206CC185004092B1 /* Info.plist */,
 			);
 			path = HQSqliteTests;
+			sourceTree = "<group>";
+		};
+		60BE4A3D2137A41E000134B7 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				609FF114206CC185004092B1 /* HQSqlite.h */,
+				609FF115206CC185004092B1 /* Info.plist */,
+			);
+			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -389,7 +397,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = HQSqlite/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/HQSqlite/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -413,7 +421,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = HQSqlite/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/HQSqlite/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

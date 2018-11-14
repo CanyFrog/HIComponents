@@ -14,6 +14,7 @@ open class WebViewController: UIViewController {
     
     /// Public
     open weak var navigationDelegate: WKNavigationDelegate?
+    public var backColor: UIColor = UIColor.hq.info
     
     open var hasToolBar: Bool = true
     open var hasMoreOptionsButton: Bool = true
@@ -21,23 +22,25 @@ open class WebViewController: UIViewController {
     open var closeBlock: (()->Void)?
     
     public private(set) var webView: WKWebView!
-    public private(set) var contentView: UIView = UIView.hq.autoLayout()
+    public private(set) var contentView: UIView = UIView.hq.init()
+    
+    
     
     var request: URLRequest?
     
     /// UI
-    var navBar = UIView.hq.autoLayout()
-    var navBarContent = UIView.hq.autoLayout()
-    var toolBar = UIView.hq.autoLayout()
-    var toolBarContent = UIView.hq.autoLayout()
-    var progressView = UIProgressView.hq.autoLayout()
+    var navBar = UIView.hq.init()
+    var navBarContent = UIView.hq.init()
+    var toolBar = UIView.hq.init()
+    var toolBarContent = UIView.hq.init()
+    var progressView = UIProgressView.hq.init()
     
-    var moreButton = UIButton.hq.autoLayout()
-    var titleLabel = UILabel.hq.autoLayout()
-    var backButton = UIButton.hq.autoLayout()
-    var forwardButton = UIButton.hq.autoLayout()
-    var refreshButton = UIButton.hq.autoLayout()
-    var closeButton = UIButton.hq.autoLayout()
+    var moreButton = UIButton.hq.init()
+    var titleLabel = UILabel.hq.init()
+    var backButton = UIButton.hq.init()
+    var forwardButton = UIButton.hq.init()
+    var refreshButton = UIButton.hq.init()
+    var closeButton = UIButton.hq.init()
     
     var navBarHeight: CGFloat = 46
     var compactNavBarHeight: CGFloat { return UIDevice.current.userInterfaceIdiom == .pad ? 35 : 27 }
@@ -79,7 +82,7 @@ open class WebViewController: UIViewController {
     func initializeViews() {
         /// View contains to navbar and content view
         view.addSubview({
-          navBar.backgroundColor = UIColor.hq.info
+          navBar.backgroundColor = backColor
             return navBar
         }())
         
@@ -127,7 +130,7 @@ open class WebViewController: UIViewController {
         
         contentView.addSubview({
             toolBar.isHidden = !self.hasToolBar
-            toolBar.backgroundColor = UIColor.hq.info
+            toolBar.backgroundColor = backColor
             return toolBar
             }())
         
@@ -408,28 +411,18 @@ extension WebViewController: WKUIDelegate {
 
 extension WebViewController: WKNavigationDelegate {
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        guard navigationDelegate == nil else {
-            navigationDelegate!.webView?(webView, decidePolicyFor: navigationAction, decisionHandler: decisionHandler)
-            return
-        }
+        guard let delegate = navigationDelegate,
+            delegate.responds(to: #selector(webView(_:decidePolicyFor:decisionHandler:) as (WKWebView, WKNavigationAction, @escaping (WKNavigationActionPolicy) -> Void) -> Void )) else { decisionHandler(.allow); return }
         
-        if let scheme = navigationAction.request.url?.scheme,
-            scheme.hasPrefix("http") && scheme.hasPrefix("file") {
-            UIApplication.shared.openURL(navigationAction.request.url!)
-            decisionHandler(.cancel)
-        }
-        else {
-            decisionHandler(.allow)
-        }
+        delegate.webView!(webView, decidePolicyFor: navigationAction, decisionHandler: decisionHandler)
     }
     
     public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-        guard navigationDelegate == nil else {
-            navigationDelegate!.webView?(webView, decidePolicyFor: navigationResponse, decisionHandler: decisionHandler)
-            return
+        guard let delegate = navigationDelegate,
+            delegate.responds(to: #selector(webView(_:decidePolicyFor:decisionHandler:) as (WKWebView, WKNavigationResponse, @escaping (WKNavigationResponsePolicy) -> Void) -> Void )) else {
+                decisionHandler(.allow); return
         }
-        
-        decisionHandler(.allow)
+        delegate.webView!(webView, decidePolicyFor: navigationResponse, decisionHandler: decisionHandler)
     }
     
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
