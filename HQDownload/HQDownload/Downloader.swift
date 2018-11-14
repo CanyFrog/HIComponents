@@ -2,169 +2,262 @@
 //  Downloader.swift
 //  HQDownload
 //
-//  Created by HonQi on 5/31/18.
-//  Copyright © 2018 HonQi Indie. All rights reserved.
+//  Created by HonQi on 2018/3/27.
+//  Copyright © 2018年 HonQi Indie. All rights reserved.
 //
 
 import HQFoundation
-import HQCache
 
-class Item: Codable {
-    enum State: Int, Codable { case wait, download, failure, completed }
-    var name: String = ""
-    var completed: Int64 = 0
-    var excepted: Int64 = 0
-    var state: State = .wait
-    
-    func toOptions() -> OptionsInfo {
-        return [.fileName(name), .completedCount(completed), .exceptedCount(excepted)]
-    }
-}
-
-typealias Items = [URL: Item]
-
-public class Downloader: Eventable {
-    static public let `default` = Downloader([.cacheDirectory(URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!).appendingPathComponent("me.HonQi.Downloader", isDirectory: true))])
-    
+public final class Downloader: Operation, Eventable {
     var eventsMap = InnerKeyMap<Eventable.EventWrap>()
     var eventsLock = DispatchSemaphore(value: 1)
     
-    private let name: String
-    private var items: Items
-    private let options: OptionsInfo
-    private let cache: Cache
-    private let scheduler: Scheduler
+    /// Configuator
+    private var options: OptionsInfo = [.handleCookies, .useUrlCache]
+    private var backgroundTaskId: UIBackgroundTaskIdentifier?
     
-//    private let backScheduler: Scheduler
+    /// Save data to file queue
+    private let source: URL
+    private var stream: OutputStream?
+    private var progress: Progress?
     
-    public init(_ infos: OptionsInfo) {
-        guard let item = infos.lastMatchIgnoringAssociatedValue(.cacheDirectory(holderUrl)),
-            case .cacheDirectory(let directory) = item else {
-            fatalError("Must be setting data storage directory!")
+    /// Session
+    private weak var outerSession: URLSession?
+    private lazy var innerSession: URLSession = {
+        let dele = Delegate()
+        dele.operators.hq.addObject(self)
+        let se = URLSession.hq.create(options, delegate: dele)
+        return se
+    }()
+    
+    private var session: URLSession { return outerSession ?? innerSession }
+    var dataTask: URLSessionDataTask?
+    
+    
+    /// Opertion properties
+    public override var isConcurrent: Bool { return true }
+    public override var isAsynchronous: Bool { return true }
+    public override var isExecuting: Bool { return _executing }
+    private var _executing = false {
+        willSet { willChangeValue(forKey: "isExecuting") }
+        didSet { didChangeValue(forKey: "isExecuting") }
+    }
+
+    public override var isFinished: Bool { return _finished }
+    private var _finished = false {
+        willSet { willChangeValue(forKey: "isFinished") }
+        didSet { didChangeValue(forKey: "isFinished") }
+    }
+    
+    public init(_ infos: OptionsInfo, session: URLSession? = nil) {
+        source = infos.sourceUrl!
+        super.init()
+        options += infos
+        outerSession = session
+    }
+    
+    public convenience init(url: URL) {
+        self.init([.sourceUrl(url)])
+    }
+    
+    public override func start() {
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        
+        guard !isCancelled else {
+            trigger(source, .error(.cancel("Operator state is cancelled!")))
+            _finished = true
+            return
         }
         
-        options = infos
-        name = directory.lastPathComponent
-
-        cache = Cache(options.cacheDirectory)
-        items = cache.object(forKey: name) ?? Items()
-        scheduler = Scheduler(options)
-        schedulerSubscribe(scheduler)
+        // Register background task
+        let app = UIApplication.shared
+        if (options.taskInBackground) {
+            backgroundTaskId = app.beginBackgroundTask(expirationHandler: { [weak self] in
+                guard let wSelf = self else { return }
+                wSelf.cancel()
+                app.endBackgroundTask(wSelf.backgroundTaskId!)
+                wSelf.backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: convertFromUIBackgroundTaskIdentifier(UIBackgroundTaskIdentifier.invalid))
+            })
+        }
         
-//        backScheduler = Scheduler(options)
+        guard let request = URLRequest.hq.create(options) else {
+            // completion
+            trigger(source, .error(.cancel("Source : \(source) init request failure!")))
+            cancel()
+            return
+        }
+        dataTask = session.dataTask(with: request)
+        dataTask?.priority = options.priority
+        
+        dataTask!.resume()
+        _executing = true
+        
+        // Cancel background task
+        if let taskId = backgroundTaskId, taskId != UIBackgroundTaskIdentifier.invalid {
+            app.endBackgroundTask(taskId)
+            backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: convertFromUIBackgroundTaskIdentifier(UIBackgroundTaskIdentifier.invalid))
+        }
+    }
+    
+    public override func cancel() {
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        
+        if isFinished { return }
+        super.cancel()
+        closeStream()
+        
+        if let task = dataTask {
+            task.cancel()
+            if isExecuting { _executing = false }
+            if !isFinished { _finished = true }
+        }
     }
     
     deinit {
-        cache.setObject(items, forKey: name)
+        closeStream()
         eventsMap.removeAll()
+        if outerSession == nil {
+            innerSession.invalidateAndCancel()
+        }
+    }
+}
+
+extension Operator {
+    private func openStream(fileName: String) {
+        guard stream == nil else { return }
+        
+        let dire = options.cacheDirectory
+        if !FileManager.default.fileExists(atPath: dire.path) {
+            do {
+                try FileManager.default.createDirectory(at: dire, withIntermediateDirectories: true, attributes: nil)
+            }
+            catch let err {
+                trigger(source, .error(.cancel(err.localizedDescription)))
+                cancel()
+                return
+            }
+        }
+        
+        guard let s = OutputStream(url: dire.appendingPathComponent(fileName), append: true) else {
+            trigger(source, .error(.cancel("Output stream open failure!")))
+            cancel()
+            return
+        }
+        stream = s
+        stream?.open()
+    }
+    
+    private func done() {
+        _finished = true
+        _executing = false
+        closeStream()
+    }
+    
+    private func closeStream() {
+        stream?.close()
+        stream?.remove(from: RunLoop.current, forMode: RunLoop.Mode.default)
+        stream = nil
     }
 }
 
 
-extension Downloader {
-    public func pause(source: URL) {
-        /// return resume data
-        scheduler.cancel(url: source)
-        let item = items[source]
-        item?.state = .wait
-        cache.setObject(item!.toOptions(), forKey: source.absoluteString)
-    }
-    
-    public func cancel(source: URL) {
-        // remove task and delete options
-        scheduler.cancel(url: source)
-        items.removeValue(forKey: source)
-        cache.removeObject(forKey: source.absoluteString)
-    }
-    
-    public func download(source: URL) -> Downloader? {
-        return download(infos: [.sourceUrl(source)])
-    }
-    
-    public func download(source: String) -> Downloader? {
-        guard let url = URL(string: source) else {
-            assertionFailure("Source string: \(source) is empty or can not convert to URL!")
-            return nil
-        }
-        return download(source: url)
-    }
-    
-    public func download(infos: OptionsInfo) -> Downloader? {
-        guard let url = infos.sourceUrl else {
-            assertionFailure("Source URL can not be empty!")
-            return nil
+// MARK: - Session Delegate callback
+extension Operator {
+    func receive(response: URLResponse) -> URLSession.ResponseDisposition {
+        let statusCode = (response as? HTTPURLResponse)?.statusCode
+        guard let code = statusCode,
+            (200..<400).contains(code) else {
+                trigger(source, .error(.statusCodeInvalid(statusCode ?? 404)))
+                return .cancel
         }
         
-        var itemInfos = infos
-        if let cacheInfo: OptionsInfo = cache.object(forKey: url.absoluteString),
-            let completed = cacheInfo.completedCount,
-            let total = cacheInfo.exceptedCount {
-            if completed >= total {
-                trigger(url, .completed(options.cacheDirectory.appendingPathComponent(cacheInfo.fileName!)))
-                return self
+        if code == 304,
+            let request = dataTask?.originalRequest,
+            (session.configuration.urlCache ?? URLCache.shared).cachedResponse(for: request)?.data == nil
+        {
+            // '304 Not Modified' is an exceptional one. It should be treated as cancelled if no cache data
+            // URLSession current behavior will return 200 status code when the server respond 304 and URLCache hit. But this is not a standard behavior and we just add a check
+            trigger(source, .error(.noCache304))
+            return .cancel
+        }
+        
+        let size = response.expectedContentLength
+        
+        var name: String! = options.fileName
+        if name == nil {
+            name = (response.suggestedFilename ?? dataTask?.originalRequest?.url?.lastPathComponent) ?? UUID().uuidString
+            options.append(.fileName(name))
+        }
+        
+        openStream(fileName: name)
+        progress = Progress(totalUnitCount: size)
+        trigger(source, .start(name, size))
+        return .allow
+    }
+    
+    func receive(data: Data) {
+        if let stream = stream, stream.hasSpaceAvailable {
+            stream.write([UInt8](data), maxLength: data.count)
+            progress?.completedUnitCount += Int64(data.count)
+            trigger(source, .data(data))
+            trigger(source, .progress(progress!))
+        }
+        else {
+            trigger(source, .error(.cancel("Disk no enough space!")))
+            cancel()
+        }
+    }
+    
+    func complete(error: Error?) {
+        guard let err = error else {
+            done()
+            trigger(source, .completed(options.cacheDirectory.appendingPathComponent(options.fileName!)))
+            return
+        }
+        
+        // Task cancel, did not retry
+        guard (err as NSError).code != -999 else {
+            trigger(source, .error(.cancel("Task is cancelled!")))
+            return
+        }
+        
+        if options.retryCount <= 0 {
+            trigger(source, .error(.error(err)))
+            done()
+        }
+        else {
+            // TODO: retry
+            
+            let count = options.retryCount
+            options = options.removeAllMatchesIgnoringAssociatedValue(.retryCount(0))
+            options.append(.retryCount(count-1))
+        }
+    }
+    
+    func receive(challenge: URLAuthenticationChallenge) -> (URLSession.AuthChallengeDisposition, URLCredential?) {
+        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust { // method is trust server
+            if options.allowInvalidSSLCert {
+                // when authenticationMethod is ServerTrust, must be not nil
+                return (.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
             }
-            else {
-                itemInfos = cacheInfo + infos
-            }
+            // TODO: allow trust host
         }
         
-        var item = items[url]
-        if item == nil {
-            item = Item()
+        if let cred = options.urlCredential, challenge.previousFailureCount == 0 { // previos never failure
+            return (.useCredential, cred)
         }
-        item?.state = .wait
-        items[url] = item
         
-        
-//        if items.backgroundSession {
-//            // TODO: back taks identifier
-//            backScheduler.download(info: items)
-//        }
-//        else {
-            scheduler.download(info: itemInfos)
-//        }
-        
-        return self
+        return (.performDefaultHandling, nil)
+    }
+    
+    func cachedResponse() -> Bool {
+        return options.useUrlCache
     }
 }
 
-
-extension Downloader {
-    private func schedulerSubscribe(_ scheduler: Scheduler){
-        scheduler.subscribe(
-            .start({ [weak self] (source, name, size) in
-                self?.trigger(source, .start(name, size))
-                
-                let item = self?.items[source]
-                item?.name = name
-                item?.excepted = size
-                item?.completed = 0
-                item?.state = .download
-            }),
-            .progress({ [weak self] (source, rate) in
-                self?.trigger(source, .progress(rate))
-                
-                let item = self?.items[source]
-                item?.completed = rate.completedUnitCount
-                
-                if rate.fractionCompleted >= 1.0 && item != nil {
-                    item?.state = .completed
-                    self?.cache.setObject(item!.toOptions(), forKey: source.absoluteString)
-                }
-            }),
-            .data({ [weak self] (source, data) in
-                self?.trigger(source, .data(data))
-            }),
-            .completed({ [weak self] (source, file) in
-                self?.trigger(source, .completed(file))
-            }),
-            .error({ [weak self] (source, err) in
-                self?.trigger(source, .error(err))
-                if let item = self?.items[source] {
-                    item.state = .failure
-                    self?.cache.setObject(item.toOptions(), forKey: source.absoluteString)
-                }
-            })
-        )
-    }
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIBackgroundTaskIdentifier(_ input: UIBackgroundTaskIdentifier) -> Int {
+	return input.rawValue
 }
