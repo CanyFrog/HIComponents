@@ -1,31 +1,45 @@
-# HIComponents
+<h1 align="center">HIComponents</h1>
+<p align="center"> This is a pure-Swift module collection that common features for iOS development and Contains common UI widgets, extensions, downloads, etc. </p>
 
-[![Build Status](https://travis-ci.org/CanyFrog/HIComponents.svg?branch=master)](https://travis-ci.org/CanyFrog/HIComponents) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![License](https://img.shields.io/cocoapods/l/HIComponents.svg?style=flat)](https://github.com/CanyFrog/HIComponents/blob/master/LICENSE)
+<p align="center">
+<a href="https://travis-ci.org/HonQii/HIComponents"><img src="https://travis-ci.org/HonQii/HIComponents.svg"></a>
+<a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat"></a>
+<a href="https://raw.githubusercontent.com/HonQii/HIComponents/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg?style=flat"></a>
+</p>
 
--------
+## Documentation
+I prepared a simple [documents](https://honqii.github.io/HIComponents/#/). You can find a good deal of useful things  here
 
-Personally organized components commonly used in iOS development!
+## Completed
+* [x] Foundation
 
-## Modules
-* [x] [Foundation]()
-* [x] [Kit]()
-* [x] [Sqlite]()
-* [x] [Router]()
-* [ ] [Download]()
+    > Common useful classes, methods, and extensions
 
-## Foundation
-Foundation module containing the basic method and class.
+* [x] Kit
+    
+    > Common UI widget
+    
+* [x] Sqlite
+    
+    > Wrappers for operations with sqlite
 
-## Kit
-Kit module containing UI widget.
+* [x] Router
+    
+    > Routing class
+    
 
-## Sqlite
-Basic Sqlite connection module.
 
-## Router
-Module routing class.
+## Plan
+* [ ] Download
+    
+    > Downloader with features such as caching, progress callbacks, etc.
 
-## Download
-File resource download module
+## Requirements
+* Swift 4
+* iOS 9.0+
+
+## License
+This is released under the MIT license. See LICENSE for details.
+
 
 
