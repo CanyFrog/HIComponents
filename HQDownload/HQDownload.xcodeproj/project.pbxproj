@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B94374E37A8A78450308188 /* Pods_HQDownload.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEF9211001E57ED9F84A542A /* Pods_HQDownload.framework */; };
 		600173FB210998E700509CDD /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F0F208095DA0088A579 /* HQCache.framework */; };
 		600173FC210998E700509CDD /* HQFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F10208095DA0088A579 /* HQFoundation.framework */; };
 		600173FD210998E700509CDD /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; };
@@ -30,6 +31,7 @@
 		605CE549208F20510014DDB3 /* SingleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE548208F20510014DDB3 /* SingleViewController.swift */; };
 		605CE54B208F25160014DDB3 /* MultipleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE54A208F25160014DDB3 /* MultipleViewController.swift */; };
 		605CE54E20902A930014DDB3 /* ContinueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE54D20902A930014DDB3 /* ContinueViewController.swift */; };
+		605D6579219BCBAF00994BE5 /* SaveStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605D6578219BCBAF00994BE5 /* SaveStream.swift */; };
 		605E7CB620EB20350004CC05 /* Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E7CB520EB20350004CC05 /* Delegate.swift */; };
 		609AF3412099652F002C76D4 /* BackgroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609AF3402099652F002C76D4 /* BackgroundViewController.swift */; };
 		60BE176B20EC869E0014459E /* InnerKeyMapTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BE176A20EC869E0014459E /* InnerKeyMapTest.swift */; };
@@ -47,6 +49,7 @@
 		8AC9161B20896BC700A9CEA1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8AC9161920896BC700A9CEA1 /* Main.storyboard */; };
 		8AC9161D20896BC800A9CEA1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AC9161C20896BC800A9CEA1 /* Assets.xcassets */; };
 		8AC9162020896BC800A9CEA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8AC9161E20896BC800A9CEA1 /* LaunchScreen.storyboard */; };
+		9513D1DFDBE3CFFA888CA620 /* Pods_HQDownloadTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 932D68656753B1B7D50E7E22 /* Pods_HQDownloadTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +99,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		02AFA698D2D4E29752AE8C42 /* Pods-HQDownloadTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HQDownloadTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HQDownloadTests/Pods-HQDownloadTests.release.xcconfig"; sourceTree = "<group>"; };
 		6001740221099F7C00509CDD /* OperatorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorTest.swift; sourceTree = "<group>"; };
 		601225F620BFD2C1008467CB /* Options.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Options.swift; sourceTree = "<group>"; };
 		601225F820BFE197008467CB /* Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
@@ -106,6 +110,7 @@
 		605CE548208F20510014DDB3 /* SingleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleViewController.swift; sourceTree = "<group>"; };
 		605CE54A208F25160014DDB3 /* MultipleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleViewController.swift; sourceTree = "<group>"; };
 		605CE54D20902A930014DDB3 /* ContinueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueViewController.swift; sourceTree = "<group>"; };
+		605D6578219BCBAF00994BE5 /* SaveStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStream.swift; sourceTree = "<group>"; };
 		605E7CB520EB20350004CC05 /* Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delegate.swift; sourceTree = "<group>"; };
 		609AF3402099652F002C76D4 /* BackgroundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundViewController.swift; sourceTree = "<group>"; };
 		60BE176A20EC869E0014459E /* InnerKeyMapTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InnerKeyMapTest.swift; sourceTree = "<group>"; };
@@ -113,6 +118,7 @@
 		60DC2F0F208095DA0088A579 /* HQCache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQCache.framework; path = Carthage/Build/iOS/HQCache.framework; sourceTree = "<group>"; };
 		60DC2F10208095DA0088A579 /* HQFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQFoundation.framework; path = Carthage/Build/iOS/HQFoundation.framework; sourceTree = "<group>"; };
 		60DC2F13208097E80088A579 /* HQSqlite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQSqlite.framework; path = Carthage/Build/iOS/HQSqlite.framework; sourceTree = "<group>"; };
+		7905565BFC9CFBEC8C14AE8C /* Pods-HQDownloadTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HQDownloadTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HQDownloadTests/Pods-HQDownloadTests.debug.xcconfig"; sourceTree = "<group>"; };
 		8A650AF62069119200C95462 /* HQDownload.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HQDownload.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A650AF92069119200C95462 /* HQDownload.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HQDownload.h; sourceTree = "<group>"; };
 		8A650AFA2069119200C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -128,6 +134,10 @@
 		8AC9161C20896BC800A9CEA1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8AC9161F20896BC800A9CEA1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8AC9162120896BC800A9CEA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		932D68656753B1B7D50E7E22 /* Pods_HQDownloadTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HQDownloadTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DDB8D05BAA6699237C77AEAB /* Pods-HQDownload.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HQDownload.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HQDownload/Pods-HQDownload.debug.xcconfig"; sourceTree = "<group>"; };
+		ED29852BA8C23F1955FB761F /* Pods-HQDownload.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HQDownload.release.xcconfig"; path = "Pods/Target Support Files/Pods-HQDownload/Pods-HQDownload.release.xcconfig"; sourceTree = "<group>"; };
+		EEF9211001E57ED9F84A542A /* Pods_HQDownload.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HQDownload.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +148,7 @@
 				60DC2F14208097E80088A579 /* HQSqlite.framework in Frameworks */,
 				60DC2F11208095DA0088A579 /* HQCache.framework in Frameworks */,
 				60DC2F12208095DA0088A579 /* HQFoundation.framework in Frameworks */,
+				1B94374E37A8A78450308188 /* Pods_HQDownload.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,6 +160,7 @@
 				600173FC210998E700509CDD /* HQFoundation.framework in Frameworks */,
 				600173FD210998E700509CDD /* HQSqlite.framework in Frameworks */,
 				8A650B002069119200C95462 /* HQDownload.framework in Frameworks */,
+				9513D1DFDBE3CFFA888CA620 /* Pods_HQDownloadTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -165,6 +177,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3156A62521BEEB0ADBD32218 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				DDB8D05BAA6699237C77AEAB /* Pods-HQDownload.debug.xcconfig */,
+				ED29852BA8C23F1955FB761F /* Pods-HQDownload.release.xcconfig */,
+				7905565BFC9CFBEC8C14AE8C /* Pods-HQDownloadTests.debug.xcconfig */,
+				02AFA698D2D4E29752AE8C42 /* Pods-HQDownloadTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		6036970421211CB60064A61C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -182,6 +205,7 @@
 				8AC9161420896BC700A9CEA1 /* HQDownloadDemo */,
 				8A650AF72069119200C95462 /* Products */,
 				8ABF2B9720785F11001EDDA5 /* Frameworks */,
+				3156A62521BEEB0ADBD32218 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -207,6 +231,7 @@
 				60247E8220CFBD0D00B050A3 /* Extensions.swift */,
 				6036970921211E310064A61C /* InnerKeyMap.swift */,
 				6036970721211DC70064A61C /* Eventable.swift */,
+				605D6578219BCBAF00994BE5 /* SaveStream.swift */,
 				6036970421211CB60064A61C /* Supporting Files */,
 			);
 			path = HQDownload;
@@ -229,6 +254,8 @@
 				60DC2F13208097E80088A579 /* HQSqlite.framework */,
 				60DC2F0F208095DA0088A579 /* HQCache.framework */,
 				60DC2F10208095DA0088A579 /* HQFoundation.framework */,
+				EEF9211001E57ED9F84A542A /* Pods_HQDownload.framework */,
+				932D68656753B1B7D50E7E22 /* Pods_HQDownloadTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -269,6 +296,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8A650B0A2069119200C95462 /* Build configuration list for PBXNativeTarget "HQDownload" */;
 			buildPhases = (
+				ECEF77568DBD3EBD8820E55B /* [CP] Check Pods Manifest.lock */,
 				600173FA21096A4F00509CDD /* ShellScript */,
 				8A650AF12069119200C95462 /* Sources */,
 				8A650AF22069119200C95462 /* Frameworks */,
@@ -289,10 +317,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8A650B0D2069119200C95462 /* Build configuration list for PBXNativeTarget "HQDownloadTests" */;
 			buildPhases = (
+				92A001A282560DB9FCE8F2FA /* [CP] Check Pods Manifest.lock */,
 				8A650AFB2069119200C95462 /* Sources */,
 				8A650AFC2069119200C95462 /* Frameworks */,
 				8A650AFD2069119200C95462 /* Resources */,
 				600173FE210999DC00509CDD /* CopyFiles */,
+				4CAF9C65D5F7482C6A87295B /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -396,6 +426,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		4CAF9C65D5F7482C6A87295B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-HQDownloadTests/Pods-HQDownloadTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/HQCache/HQCache.framework",
+				"${BUILT_PRODUCTS_DIR}/HQFoundation/HQFoundation.framework",
+				"${BUILT_PRODUCTS_DIR}/HQSqlite/HQSqlite.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HQCache.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HQFoundation.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HQSqlite.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HQDownloadTests/Pods-HQDownloadTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		600173FA21096A4F00509CDD /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 8;
@@ -425,6 +477,42 @@
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
+		92A001A282560DB9FCE8F2FA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HQDownloadTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ECEF77568DBD3EBD8820E55B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HQDownload-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -440,6 +528,7 @@
 				605E7CB620EB20350004CC05 /* Delegate.swift in Sources */,
 				601225F920BFE197008467CB /* Downloader.swift in Sources */,
 				6036970A21211E310064A61C /* InnerKeyMap.swift in Sources */,
+				605D6579219BCBAF00994BE5 /* SaveStream.swift in Sources */,
 				8A650B4F206BD61800C95462 /* Scheduler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -622,6 +711,7 @@
 		};
 		8A650B0B2069119200C95462 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DDB8D05BAA6699237C77AEAB /* Pods-HQDownload.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -650,6 +740,7 @@
 		};
 		8A650B0C2069119200C95462 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = ED29852BA8C23F1955FB761F /* Pods-HQDownload.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -677,6 +768,7 @@
 		};
 		8A650B0E2069119200C95462 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7905565BFC9CFBEC8C14AE8C /* Pods-HQDownloadTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -696,6 +788,7 @@
 		};
 		8A650B0F2069119200C95462 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 02AFA698D2D4E29752AE8C42 /* Pods-HQDownloadTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
