@@ -8,42 +8,28 @@
 
 /* Begin PBXBuildFile section */
 		1B94374E37A8A78450308188 /* Pods_HQDownload.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEF9211001E57ED9F84A542A /* Pods_HQDownload.framework */; };
-		600173FB210998E700509CDD /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F0F208095DA0088A579 /* HQCache.framework */; };
-		600173FC210998E700509CDD /* HQFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F10208095DA0088A579 /* HQFoundation.framework */; };
-		600173FD210998E700509CDD /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; };
-		600173FF210999F100509CDD /* HQSqlite.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		60017400210999F100509CDD /* HQCache.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 60DC2F0F208095DA0088A579 /* HQCache.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		60017401210999F100509CDD /* HQFoundation.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 60DC2F10208095DA0088A579 /* HQFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6001740321099F7C00509CDD /* OperatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6001740221099F7C00509CDD /* OperatorTest.swift */; };
 		601225F720BFD2C1008467CB /* Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601225F620BFD2C1008467CB /* Options.swift */; };
-		601225F920BFE197008467CB /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601225F820BFE197008467CB /* Downloader.swift */; };
+		601225F920BFE197008467CB /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601225F820BFE197008467CB /* Scheduler.swift */; };
 		60247E8320CFBD0D00B050A3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60247E8220CFBD0D00B050A3 /* Extensions.swift */; };
 		6036970621211D140064A61C /* DownloadError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6036970521211D140064A61C /* DownloadError.swift */; };
 		6036970821211DC70064A61C /* Eventable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6036970721211DC70064A61C /* Eventable.swift */; };
 		6036970A21211E310064A61C /* InnerKeyMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6036970921211E310064A61C /* InnerKeyMap.swift */; };
 		605CE53E208F1B960014DDB3 /* HQDownload.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8A650AF62069119200C95462 /* HQDownload.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		605CE542208F1BB60014DDB3 /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; };
 		605CE543208F1BB60014DDB3 /* HQSqlite.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		605CE544208F1BB60014DDB3 /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F0F208095DA0088A579 /* HQCache.framework */; };
 		605CE545208F1BB60014DDB3 /* HQCache.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F0F208095DA0088A579 /* HQCache.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		605CE546208F1BB60014DDB3 /* HQFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F10208095DA0088A579 /* HQFoundation.framework */; };
 		605CE547208F1BB60014DDB3 /* HQFoundation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F10208095DA0088A579 /* HQFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		605CE549208F20510014DDB3 /* SingleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE548208F20510014DDB3 /* SingleViewController.swift */; };
 		605CE54B208F25160014DDB3 /* MultipleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE54A208F25160014DDB3 /* MultipleViewController.swift */; };
 		605CE54E20902A930014DDB3 /* ContinueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE54D20902A930014DDB3 /* ContinueViewController.swift */; };
-		605D6579219BCBAF00994BE5 /* SaveStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605D6578219BCBAF00994BE5 /* SaveStream.swift */; };
-		605E7CB620EB20350004CC05 /* Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E7CB520EB20350004CC05 /* Delegate.swift */; };
+		605E7CB620EB20350004CC05 /* SessionUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E7CB520EB20350004CC05 /* SessionUtil.swift */; };
 		609AF3412099652F002C76D4 /* BackgroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609AF3402099652F002C76D4 /* BackgroundViewController.swift */; };
-		60BE176B20EC869E0014459E /* InnerKeyMapTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BE176A20EC869E0014459E /* InnerKeyMapTest.swift */; };
 		60CB0462210AB6A10090AB0D /* MultipleCacheViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CB0461210AB6A10090AB0D /* MultipleCacheViewController.swift */; };
-		60DC2F11208095DA0088A579 /* HQCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F0F208095DA0088A579 /* HQCache.framework */; };
-		60DC2F12208095DA0088A579 /* HQFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F10208095DA0088A579 /* HQFoundation.framework */; };
-		60DC2F14208097E80088A579 /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DC2F13208097E80088A579 /* HQSqlite.framework */; };
 		8A650B002069119200C95462 /* HQDownload.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A650AF62069119200C95462 /* HQDownload.framework */; };
 		8A650B052069119200C95462 /* DownloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B042069119200C95462 /* DownloadTests.swift */; };
 		8A650B072069119200C95462 /* HQDownload.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A650AF92069119200C95462 /* HQDownload.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8A650B4B206A79D000C95462 /* Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4A206A79D000C95462 /* Operator.swift */; };
-		8A650B4F206BD61800C95462 /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4E206BD61800C95462 /* Scheduler.swift */; };
+		8A650B4B206A79D000C95462 /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4A206A79D000C95462 /* Downloader.swift */; };
+		8A650B4F206BD61800C95462 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4E206BD61800C95462 /* Queue.swift */; };
 		8AC9161620896BC700A9CEA1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9161520896BC700A9CEA1 /* AppDelegate.swift */; };
 		8AC9161820896BC700A9CEA1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9161720896BC700A9CEA1 /* ViewController.swift */; };
 		8AC9161B20896BC700A9CEA1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8AC9161920896BC700A9CEA1 /* Main.storyboard */; };
@@ -70,18 +56,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		600173FE210999DC00509CDD /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				600173FF210999F100509CDD /* HQSqlite.framework in CopyFiles */,
-				60017400210999F100509CDD /* HQCache.framework in CopyFiles */,
-				60017401210999F100509CDD /* HQFoundation.framework in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		605CE541208F1B960014DDB3 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -102,7 +76,7 @@
 		02AFA698D2D4E29752AE8C42 /* Pods-HQDownloadTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HQDownloadTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HQDownloadTests/Pods-HQDownloadTests.release.xcconfig"; sourceTree = "<group>"; };
 		6001740221099F7C00509CDD /* OperatorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorTest.swift; sourceTree = "<group>"; };
 		601225F620BFD2C1008467CB /* Options.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Options.swift; sourceTree = "<group>"; };
-		601225F820BFE197008467CB /* Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
+		601225F820BFE197008467CB /* Scheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
 		60247E8220CFBD0D00B050A3 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		6036970521211D140064A61C /* DownloadError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadError.swift; sourceTree = "<group>"; };
 		6036970721211DC70064A61C /* Eventable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eventable.swift; sourceTree = "<group>"; };
@@ -110,10 +84,8 @@
 		605CE548208F20510014DDB3 /* SingleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleViewController.swift; sourceTree = "<group>"; };
 		605CE54A208F25160014DDB3 /* MultipleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleViewController.swift; sourceTree = "<group>"; };
 		605CE54D20902A930014DDB3 /* ContinueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueViewController.swift; sourceTree = "<group>"; };
-		605D6578219BCBAF00994BE5 /* SaveStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStream.swift; sourceTree = "<group>"; };
-		605E7CB520EB20350004CC05 /* Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delegate.swift; sourceTree = "<group>"; };
+		605E7CB520EB20350004CC05 /* SessionUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionUtil.swift; sourceTree = "<group>"; };
 		609AF3402099652F002C76D4 /* BackgroundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundViewController.swift; sourceTree = "<group>"; };
-		60BE176A20EC869E0014459E /* InnerKeyMapTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InnerKeyMapTest.swift; sourceTree = "<group>"; };
 		60CB0461210AB6A10090AB0D /* MultipleCacheViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleCacheViewController.swift; sourceTree = "<group>"; };
 		60DC2F0F208095DA0088A579 /* HQCache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQCache.framework; path = Carthage/Build/iOS/HQCache.framework; sourceTree = "<group>"; };
 		60DC2F10208095DA0088A579 /* HQFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQFoundation.framework; path = Carthage/Build/iOS/HQFoundation.framework; sourceTree = "<group>"; };
@@ -125,8 +97,8 @@
 		8A650AFF2069119200C95462 /* HQDownloadTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HQDownloadTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A650B042069119200C95462 /* DownloadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTests.swift; sourceTree = "<group>"; };
 		8A650B062069119200C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8A650B4A206A79D000C95462 /* Operator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operator.swift; sourceTree = "<group>"; };
-		8A650B4E206BD61800C95462 /* Scheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
+		8A650B4A206A79D000C95462 /* Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
+		8A650B4E206BD61800C95462 /* Queue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		8AC9161320896BC700A9CEA1 /* HQDownloadDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HQDownloadDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AC9161520896BC700A9CEA1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8AC9161720896BC700A9CEA1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -145,9 +117,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60DC2F14208097E80088A579 /* HQSqlite.framework in Frameworks */,
-				60DC2F11208095DA0088A579 /* HQCache.framework in Frameworks */,
-				60DC2F12208095DA0088A579 /* HQFoundation.framework in Frameworks */,
 				1B94374E37A8A78450308188 /* Pods_HQDownload.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -156,9 +125,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				600173FB210998E700509CDD /* HQCache.framework in Frameworks */,
-				600173FC210998E700509CDD /* HQFoundation.framework in Frameworks */,
-				600173FD210998E700509CDD /* HQSqlite.framework in Frameworks */,
 				8A650B002069119200C95462 /* HQDownload.framework in Frameworks */,
 				9513D1DFDBE3CFFA888CA620 /* Pods_HQDownloadTests.framework in Frameworks */,
 			);
@@ -168,9 +134,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				605CE546208F1BB60014DDB3 /* HQFoundation.framework in Frameworks */,
-				605CE544208F1BB60014DDB3 /* HQCache.framework in Frameworks */,
-				605CE542208F1BB60014DDB3 /* HQSqlite.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,6 +158,16 @@
 				8A650AFA2069119200C95462 /* Info.plist */,
 			);
 			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		605D657A219BCE6600994BE5 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				6036970721211DC70064A61C /* Eventable.swift */,
+				605E7CB520EB20350004CC05 /* SessionUtil.swift */,
+				60247E8220CFBD0D00B050A3 /* Extensions.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		8A650AEC2069119200C95462 = {
@@ -222,16 +195,13 @@
 		8A650AF82069119200C95462 /* HQDownload */ = {
 			isa = PBXGroup;
 			children = (
-				601225F820BFE197008467CB /* Downloader.swift */,
-				8A650B4E206BD61800C95462 /* Scheduler.swift */,
-				8A650B4A206A79D000C95462 /* Operator.swift */,
-				605E7CB520EB20350004CC05 /* Delegate.swift */,
+				605D657A219BCE6600994BE5 /* Utils */,
+				601225F820BFE197008467CB /* Scheduler.swift */,
+				8A650B4E206BD61800C95462 /* Queue.swift */,
+				8A650B4A206A79D000C95462 /* Downloader.swift */,
 				601225F620BFD2C1008467CB /* Options.swift */,
 				6036970521211D140064A61C /* DownloadError.swift */,
-				60247E8220CFBD0D00B050A3 /* Extensions.swift */,
 				6036970921211E310064A61C /* InnerKeyMap.swift */,
-				6036970721211DC70064A61C /* Eventable.swift */,
-				605D6578219BCBAF00994BE5 /* SaveStream.swift */,
 				6036970421211CB60064A61C /* Supporting Files */,
 			);
 			path = HQDownload;
@@ -242,7 +212,6 @@
 			children = (
 				8A650B062069119200C95462 /* Info.plist */,
 				6001740221099F7C00509CDD /* OperatorTest.swift */,
-				60BE176A20EC869E0014459E /* InnerKeyMapTest.swift */,
 				8A650B042069119200C95462 /* DownloadTests.swift */,
 			);
 			path = HQDownloadTests;
@@ -297,12 +266,10 @@
 			buildConfigurationList = 8A650B0A2069119200C95462 /* Build configuration list for PBXNativeTarget "HQDownload" */;
 			buildPhases = (
 				ECEF77568DBD3EBD8820E55B /* [CP] Check Pods Manifest.lock */,
-				600173FA21096A4F00509CDD /* ShellScript */,
 				8A650AF12069119200C95462 /* Sources */,
 				8A650AF22069119200C95462 /* Frameworks */,
 				8A650AF32069119200C95462 /* Headers */,
 				8A650AF42069119200C95462 /* Resources */,
-				8ABF2B8220785BE6001EDDA5 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -321,7 +288,6 @@
 				8A650AFB2069119200C95462 /* Sources */,
 				8A650AFC2069119200C95462 /* Frameworks */,
 				8A650AFD2069119200C95462 /* Resources */,
-				600173FE210999DC00509CDD /* CopyFiles */,
 				4CAF9C65D5F7482C6A87295B /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
@@ -365,11 +331,12 @@
 				TargetAttributes = {
 					8A650AF52069119200C95462 = {
 						CreatedOnToolsVersion = 9.2;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 					};
 					8A650AFE2069119200C95462 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 					};
 					8AC9161220896BC700A9CEA1 = {
@@ -448,35 +415,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HQDownloadTests/Pods-HQDownloadTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		600173FA21096A4F00509CDD /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = ../update_self.sh;
-		};
-		8ABF2B8220785BE6001EDDA5 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/HQFoundation.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/HQCache.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/HQSqlite.framework",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
 		92A001A282560DB9FCE8F2FA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -523,13 +461,12 @@
 				6036970821211DC70064A61C /* Eventable.swift in Sources */,
 				601225F720BFD2C1008467CB /* Options.swift in Sources */,
 				6036970621211D140064A61C /* DownloadError.swift in Sources */,
-				8A650B4B206A79D000C95462 /* Operator.swift in Sources */,
+				8A650B4B206A79D000C95462 /* Downloader.swift in Sources */,
 				60247E8320CFBD0D00B050A3 /* Extensions.swift in Sources */,
-				605E7CB620EB20350004CC05 /* Delegate.swift in Sources */,
-				601225F920BFE197008467CB /* Downloader.swift in Sources */,
+				605E7CB620EB20350004CC05 /* SessionUtil.swift in Sources */,
+				601225F920BFE197008467CB /* Scheduler.swift in Sources */,
 				6036970A21211E310064A61C /* InnerKeyMap.swift in Sources */,
-				605D6579219BCBAF00994BE5 /* SaveStream.swift in Sources */,
-				8A650B4F206BD61800C95462 /* Scheduler.swift in Sources */,
+				8A650B4F206BD61800C95462 /* Queue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -539,7 +476,6 @@
 			files = (
 				8A650B052069119200C95462 /* DownloadTests.swift in Sources */,
 				6001740321099F7C00509CDD /* OperatorTest.swift in Sources */,
-				60BE176B20EC869E0014459E /* InnerKeyMapTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -721,10 +657,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/HQDownload/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -733,7 +666,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -750,10 +683,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/HQDownload/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -761,7 +691,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = me.HonQi.Download;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -781,7 +711,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.HonQi.DownloadTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -801,7 +731,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.HonQi.DownloadTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

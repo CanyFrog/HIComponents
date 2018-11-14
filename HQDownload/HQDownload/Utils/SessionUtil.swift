@@ -1,5 +1,5 @@
 //
-//  Delegate.swift
+//  SessionUtil.swift
 //  HQDownload
 //
 //  Created by HonQi on 7/3/18.
@@ -8,32 +8,56 @@
 
 import HQFoundation
 
-class Delegate: NSObject {
+class SessionUtil: NSObject {
     var operators = NSPointerArray.weakObjects()
     var isEmpty: Bool {
         operators.compact()
         return operators.count <= 0
     }
     
-    func forEach(_ transform: (Operator)->Void) {
+    let session: URLSession
+    
+    init(options: OptionsInfo) {
+        super.init()
+//        var config = URLSessionConfiguration.background(withIdentifier: <#T##String#>)
+        // https://www.jianshu.com/p/1211cf99dfc3
+        
+        var config = URLSessionConfiguration.background(withIdentifier: "me.HonQi.Download.BackgroundTask")
+        session = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: nil)
+    }
+    
+    func addDelegateObserver(ob: Downloader) {
+        operators.hq.addObject(ob)
+    }
+    
+    func createDataRequest(request: URLRequest) -> URLSessionDataTask {
+        return session.dataTask(with: request)
+    }
+}
+
+
+/// Util function
+extension SessionUtil {
+    func forEach(_ transform: (Downloader)->Void) {
         operators.compact()
         operators.allObjects.forEach { (obj) in
-            if let op = obj as? Operator {
+            if let op = obj as? Downloader {
                 transform(op)
             }
         }
     }
     
-    func contains(_ url: URL) -> Operator? {
+    func contains(_ url: URL) -> Downloader? {
         operators.compact()
         let ops = operators.allObjects.filter { (obj) -> Bool in
-            return (obj as? Operator)?.dataTask?.originalRequest?.url == url
+            return (obj as? Downloader)?.dataTask?.originalRequest?.url == url
         }
-        return ops.last as? Operator
+        return ops.last as? Downloader
     }
 }
 
-extension Delegate: URLSessionDataDelegate {
+
+extension SessionUtil: URLSessionDataDelegate {
     
     // MARK: - URLSessionDataDelegate
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
@@ -97,7 +121,9 @@ extension Delegate: URLSessionDataDelegate {
         }
     }
     
+    
+    /// All task completed
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
-        // notify all isinvalid
+        
     }
 }
