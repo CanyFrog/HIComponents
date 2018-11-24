@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		1B94374E37A8A78450308188 /* Pods_HQDownload.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEF9211001E57ED9F84A542A /* Pods_HQDownload.framework */; };
 		6001740321099F7C00509CDD /* OperatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6001740221099F7C00509CDD /* OperatorTest.swift */; };
-		601225F720BFD2C1008467CB /* Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601225F620BFD2C1008467CB /* Options.swift */; };
-		601225F920BFE197008467CB /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601225F820BFE197008467CB /* Scheduler.swift */; };
+		601225F720BFD2C1008467CB /* DownloadOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601225F620BFD2C1008467CB /* DownloadOptions.swift */; };
+		601225F920BFE197008467CB /* DownloadScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601225F820BFE197008467CB /* DownloadScheduler.swift */; };
 		60247E8320CFBD0D00B050A3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60247E8220CFBD0D00B050A3 /* Extensions.swift */; };
 		6036970621211D140064A61C /* DownloadError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6036970521211D140064A61C /* DownloadError.swift */; };
 		6036970821211DC70064A61C /* Eventable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6036970721211DC70064A61C /* Eventable.swift */; };
@@ -22,14 +22,14 @@
 		605CE549208F20510014DDB3 /* SingleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE548208F20510014DDB3 /* SingleViewController.swift */; };
 		605CE54B208F25160014DDB3 /* MultipleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE54A208F25160014DDB3 /* MultipleViewController.swift */; };
 		605CE54E20902A930014DDB3 /* ContinueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605CE54D20902A930014DDB3 /* ContinueViewController.swift */; };
-		605E7CB620EB20350004CC05 /* SessionUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E7CB520EB20350004CC05 /* SessionUtil.swift */; };
+		605E7CB620EB20350004CC05 /* DownloadSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E7CB520EB20350004CC05 /* DownloadSession.swift */; };
 		609AF3412099652F002C76D4 /* BackgroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609AF3402099652F002C76D4 /* BackgroundViewController.swift */; };
 		60CB0462210AB6A10090AB0D /* MultipleCacheViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CB0461210AB6A10090AB0D /* MultipleCacheViewController.swift */; };
 		8A650B002069119200C95462 /* HQDownload.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A650AF62069119200C95462 /* HQDownload.framework */; };
 		8A650B052069119200C95462 /* DownloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B042069119200C95462 /* DownloadTests.swift */; };
 		8A650B072069119200C95462 /* HQDownload.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A650AF92069119200C95462 /* HQDownload.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8A650B4B206A79D000C95462 /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4A206A79D000C95462 /* Downloader.swift */; };
-		8A650B4F206BD61800C95462 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4E206BD61800C95462 /* Queue.swift */; };
+		8A650B4F206BD61800C95462 /* DownloadQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A650B4E206BD61800C95462 /* DownloadQueue.swift */; };
 		8AC9161620896BC700A9CEA1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9161520896BC700A9CEA1 /* AppDelegate.swift */; };
 		8AC9161820896BC700A9CEA1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9161720896BC700A9CEA1 /* ViewController.swift */; };
 		8AC9161B20896BC700A9CEA1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8AC9161920896BC700A9CEA1 /* Main.storyboard */; };
@@ -75,8 +75,8 @@
 /* Begin PBXFileReference section */
 		02AFA698D2D4E29752AE8C42 /* Pods-HQDownloadTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HQDownloadTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HQDownloadTests/Pods-HQDownloadTests.release.xcconfig"; sourceTree = "<group>"; };
 		6001740221099F7C00509CDD /* OperatorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorTest.swift; sourceTree = "<group>"; };
-		601225F620BFD2C1008467CB /* Options.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Options.swift; sourceTree = "<group>"; };
-		601225F820BFE197008467CB /* Scheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
+		601225F620BFD2C1008467CB /* DownloadOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadOptions.swift; sourceTree = "<group>"; };
+		601225F820BFE197008467CB /* DownloadScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadScheduler.swift; sourceTree = "<group>"; };
 		60247E8220CFBD0D00B050A3 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		6036970521211D140064A61C /* DownloadError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadError.swift; sourceTree = "<group>"; };
 		6036970721211DC70064A61C /* Eventable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eventable.swift; sourceTree = "<group>"; };
@@ -84,7 +84,7 @@
 		605CE548208F20510014DDB3 /* SingleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleViewController.swift; sourceTree = "<group>"; };
 		605CE54A208F25160014DDB3 /* MultipleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleViewController.swift; sourceTree = "<group>"; };
 		605CE54D20902A930014DDB3 /* ContinueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueViewController.swift; sourceTree = "<group>"; };
-		605E7CB520EB20350004CC05 /* SessionUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionUtil.swift; sourceTree = "<group>"; };
+		605E7CB520EB20350004CC05 /* DownloadSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadSession.swift; sourceTree = "<group>"; };
 		609AF3402099652F002C76D4 /* BackgroundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundViewController.swift; sourceTree = "<group>"; };
 		60CB0461210AB6A10090AB0D /* MultipleCacheViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleCacheViewController.swift; sourceTree = "<group>"; };
 		60DC2F0F208095DA0088A579 /* HQCache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HQCache.framework; path = Carthage/Build/iOS/HQCache.framework; sourceTree = "<group>"; };
@@ -98,7 +98,7 @@
 		8A650B042069119200C95462 /* DownloadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTests.swift; sourceTree = "<group>"; };
 		8A650B062069119200C95462 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8A650B4A206A79D000C95462 /* Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
-		8A650B4E206BD61800C95462 /* Queue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
+		8A650B4E206BD61800C95462 /* DownloadQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadQueue.swift; sourceTree = "<group>"; };
 		8AC9161320896BC700A9CEA1 /* HQDownloadDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HQDownloadDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AC9161520896BC700A9CEA1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8AC9161720896BC700A9CEA1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -160,14 +160,16 @@
 			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		605D657A219BCE6600994BE5 /* Utils */ = {
+		605D657A219BCE6600994BE5 /* Private */ = {
 			isa = PBXGroup;
 			children = (
+				6036970921211E310064A61C /* InnerKeyMap.swift */,
 				6036970721211DC70064A61C /* Eventable.swift */,
-				605E7CB520EB20350004CC05 /* SessionUtil.swift */,
 				60247E8220CFBD0D00B050A3 /* Extensions.swift */,
+				605E7CB520EB20350004CC05 /* DownloadSession.swift */,
+				6036970521211D140064A61C /* DownloadError.swift */,
 			);
-			path = Utils;
+			path = Private;
 			sourceTree = "<group>";
 		};
 		8A650AEC2069119200C95462 = {
@@ -195,13 +197,11 @@
 		8A650AF82069119200C95462 /* HQDownload */ = {
 			isa = PBXGroup;
 			children = (
-				605D657A219BCE6600994BE5 /* Utils */,
-				601225F820BFE197008467CB /* Scheduler.swift */,
-				8A650B4E206BD61800C95462 /* Queue.swift */,
+				605D657A219BCE6600994BE5 /* Private */,
+				601225F820BFE197008467CB /* DownloadScheduler.swift */,
+				8A650B4E206BD61800C95462 /* DownloadQueue.swift */,
 				8A650B4A206A79D000C95462 /* Downloader.swift */,
-				601225F620BFD2C1008467CB /* Options.swift */,
-				6036970521211D140064A61C /* DownloadError.swift */,
-				6036970921211E310064A61C /* InnerKeyMap.swift */,
+				601225F620BFD2C1008467CB /* DownloadOptions.swift */,
 				6036970421211CB60064A61C /* Supporting Files */,
 			);
 			path = HQDownload;
@@ -459,14 +459,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				6036970821211DC70064A61C /* Eventable.swift in Sources */,
-				601225F720BFD2C1008467CB /* Options.swift in Sources */,
+				601225F720BFD2C1008467CB /* DownloadOptions.swift in Sources */,
 				6036970621211D140064A61C /* DownloadError.swift in Sources */,
 				8A650B4B206A79D000C95462 /* Downloader.swift in Sources */,
 				60247E8320CFBD0D00B050A3 /* Extensions.swift in Sources */,
-				605E7CB620EB20350004CC05 /* SessionUtil.swift in Sources */,
-				601225F920BFE197008467CB /* Scheduler.swift in Sources */,
+				605E7CB620EB20350004CC05 /* DownloadSession.swift in Sources */,
+				601225F920BFE197008467CB /* DownloadScheduler.swift in Sources */,
 				6036970A21211E310064A61C /* InnerKeyMap.swift in Sources */,
-				8A650B4F206BD61800C95462 /* Queue.swift in Sources */,
+				8A650B4F206BD61800C95462 /* DownloadQueue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

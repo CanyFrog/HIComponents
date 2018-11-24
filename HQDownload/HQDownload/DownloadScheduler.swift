@@ -5,10 +5,31 @@
 ////  Created by HonQi on 5/31/18.
 ////  Copyright © 2018 HonQi Indie. All rights reserved.
 ////
-//
-//import HQFoundation
-//import HQCache
-//
+
+import HQFoundation
+import HQCache
+
+public class DownloadScheduler {
+    let options: OptionsInfo
+    let queue = OperationQueue()
+    
+    init(options: OptionsInfo) {
+        self.options = options
+    }
+}
+
+
+extension DownloadScheduler: Eventable {
+    @discardableResult
+    func subscribe(url: URL, _ events: DownloadClosure...) -> UInt64 {
+        
+    }
+    
+    func unsubscribe(_ key: UInt64) {
+        
+    }
+}
+
 //class Item: Codable {
 //    enum State: Int, Codable { case wait, download, failure, completed }
 //    var name: String = ""

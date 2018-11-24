@@ -2,7 +2,7 @@
 //  InnerKeyMap.swift
 //  HQDownload
 //
-//  Created by Magee Huang on 8/13/18.
+//  Created by HonQi on 8/13/18.
 //  Copyright © 2018 HonQi Indie. All rights reserved.
 //
 
