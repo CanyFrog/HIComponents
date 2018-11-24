@@ -9,9 +9,15 @@
 import HQFoundation
 
 public final class Downloader: Operation, Eventable {
-    var eventsMap = InnerKeyMap<Eventable.EventWrap>()
-    var eventsLock = DispatchSemaphore(value: 1)
+    func subscribe(url: URL, _ events: DownloadClosure...) -> UInt64 {
+        <#code#>
+    }
     
+    func unsubscribe(_ key: UInt64) {
+        <#code#>
+    }
+    
+
     /// Configuator
     private var options: OptionsInfo = [.handleCookies, .useUrlCache]
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
