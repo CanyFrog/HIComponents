@@ -23,3 +23,5 @@ public struct Namespace<T> {
     public let instance: T
     public init(value: T) { self.instance = value }
 }
+
+extension NSObject: Namespaceable {}
