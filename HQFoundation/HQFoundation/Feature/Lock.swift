@@ -6,6 +6,67 @@
 //  Copyright © 2018 HonQi Indie. All rights reserved.
 //
 
+public protocol HQLocking {
+    func tryLock(_ closure: () -> Void) -> Bool
+    
+    /// Auto lock & unlock
+    func autoLock(_ closure: () -> Void)
+    
+    /// Auto lock & unlock and return value
+    func autoLock<T>(_ closure: () -> T) -> T
+    
+    /// Auto lock & unlock and return value, If happen error, can throw error
+    func autoLock<T>(_ closure: () throws -> T) rethrows -> T
+}
+extension HQLocking {
+    public func tryLock(_ closure: () -> Void) -> Bool {
+        return false
+    }
+}
+
+extension HQLocking where Self: NSLocking {
+    public func autoLock(_ closure: () -> Void) {
+        lock()
+        defer { unlock() }
+        closure()
+    }
+    
+    public func autoLock<T>(_ closure: () -> T) -> T {
+        lock()
+        defer { unlock() }
+        return closure()
+    }
+
+    public func autoLock<T>(_ closure: () throws -> T) rethrows -> T {
+        lock()
+        defer { unlock() }
+        return try closure()
+    }
+}
+
+typealias Locking = NSLocking & HQLocking
+
+extension NSLock: HQLocking {}
+extension DispatchSemaphore: HQLocking {
+    public func autoLock(_ closure: () -> Void) {
+        let _ = wait(timeout: .distantFuture)
+        defer { signal() }
+        closure()
+    }
+    
+    public func autoLock<T>(_ closure: () -> T) -> T {
+        let _ = wait(timeout: .distantFuture)
+        defer { signal() }
+        return closure()
+    }
+    
+    public func autoLock<T>(_ closure: () throws -> T) rethrows -> T {
+        let _ = wait(timeout: .distantFuture)
+        defer { signal() }
+        return try closure()
+    }
+}
+
 public struct Lock {
     // MARK: - Dispatch lock
     public static func semaphore(_ lock: DispatchSemaphore, closure: () -> Void) {
