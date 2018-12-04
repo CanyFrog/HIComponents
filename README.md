@@ -1,5 +1,4 @@
 <h1 align="center">HIComponents</h1>
-<p align="center"> This is a pure-Swift module collection that common features for iOS development and Contains common UI widgets, extensions, downloads, etc. </p>
 
 <p align="center">
 <a href="https://travis-ci.org/HonQii/HIComponents"><img src="https://travis-ci.org/HonQii/HIComponents.svg"></a>
@@ -7,36 +6,30 @@
 <a href="https://raw.githubusercontent.com/HonQii/HIComponents/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg?style=flat"></a>
 </p>
 
-## Documentation
-I prepared a simple [documents](https://honqii.github.io/HIComponents/#/). You can find a good deal of useful things  here
+<p align="center"> This is a pure-Swift module collection that common features for iOS development and Contains common UI widgets, extensions, downloads, etc. </p>
 
-## Completed
-* [x] Foundation
 
-    > Common useful classes, methods, and extensions
-
+## Done  
+* [x] Foundation - Basic function class and extensions
 * [x] Kit
-    
-    > Common UI widget
-    
+* [x] Cache 
 * [x] Sqlite
-    
-    > Wrappers for operations with sqlite
-
 * [x] Router
-    
-    > Routing class
-    
+* [x] XMLDoc
 
-
-## Plan
+## Doing
 * [ ] Download
-    
-    > Downloader with features such as caching, progress callbacks, etc.
+
+## TODO
+* [ ] Media View
+* [ ] Video Player
 
 ## Requirements
 * Swift 4
 * iOS 9.0+
+
+## Documents
+
 
 ## License
 This is released under the MIT license. See LICENSE for details.
