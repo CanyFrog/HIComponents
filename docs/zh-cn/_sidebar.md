@@ -1,9 +1,9 @@
-- [安装指南](/zh-cn/install.md)
+- [安装指南](/zh-cn/Install.md)
 - 模块文档
-    - [Foundation](/zh-cn/foundation.md) 
-    - [Kit](/zh-cn/hqfoundation.md) 
-    - [SQLite](/zh-cn/sqlite.md)
-    - [Cache](/zh-cn/hqfoundation.md) 
+    - [Foundation](/zh-cn/Foundation.md) 
+    - [Kit](/zh-cn/Kit.md) 
+    - [SQLite](/zh-cn/SQLite.md)
+    - [Cache](/zh-cn/Cache.md) 
 - 其他
 
 
