@@ -8,7 +8,6 @@
 
 import ObjectiveC
 
-extension NSObject: Namespaceable {}
 extension Namespace where T: NSObject {
     /// Gets the Obj-C reference for the instance object within the UIView extension.
     /// If nil, initializer object and associated.

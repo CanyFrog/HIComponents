@@ -15,7 +15,7 @@ public enum OptionItem: Codable {
     /// Maximum cache count, if exceeded, will delete the oldest item, default is Int.max
     case maxCacheCount(Int)
     
-    /// Maximum cache time, if exceeded, item will be deleted, default is 30 days
+    /// Maximum cache time, if exceeded, item will be deleted, default is 7 days
     case maxCacheAge(TimeInterval)
     
     /// Ignore cache and download new data
@@ -149,7 +149,7 @@ public extension Collection where Iterator.Element == OptionItem {
             case .cacheDirectory(let directory) = item {
             return directory
         }
-        return URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
+        return URL(fileURLWithPath: NSTemporaryDirectory())
     }
     
     public var maxCacheCount: Int {
@@ -293,7 +293,7 @@ public extension Collection where Iterator.Element == OptionItem {
 /// Only save recover task must infos
 extension OptionItem {
     enum CodeKeys: String, CodingKey {
-        case cacheDirectory
+//        case cacheDirectory
         case fileName
         case completedCount
         case exceptedCount
@@ -303,9 +303,9 @@ extension OptionItem {
         let coder = try decoder.container(keyedBy: CodeKeys.self)
         
         switch coder.allKeys.last! {
-        case .cacheDirectory:
-            let directory = try coder.decode(URL.self, forKey: .cacheDirectory)
-            self = .cacheDirectory(directory)
+//        case .cacheDirectory:
+//            let directory = try coder.decode(URL.self, forKey: .cacheDirectory)
+//            self = .cacheDirectory(directory)
         case .fileName:
             let name = try coder.decode(String.self, forKey: .fileName)
             self = .fileName(name)
@@ -316,15 +316,13 @@ extension OptionItem {
             let total = try coder.decode(Int64.self, forKey: .exceptedCount)
             self = .exceptedCount(total)
         }
-        /// Coder is empty, means sqlite is error. Throw
-        throw DownloadError.cacheError
     }
 
     public func encode(to encoder: Encoder) throws {
         var coder = encoder.container(keyedBy: CodeKeys.self)
         switch self {
-        case .cacheDirectory(let dire):
-            try coder.encode(dire, forKey: .cacheDirectory)
+//        case .cacheDirectory(let dire):
+//            try coder.encode(dire, forKey: .cacheDirectory)
         case .fileName(let name):
             try coder.encode(name, forKey: .fileName)
         case .completedCount(let comp):

@@ -21,6 +21,8 @@ extension Namespace where T: Collection {
     public func all(match predicate: (T.Iterator.Element) -> Bool) -> Bool {
         return !any{ !predicate($0) }
     }
+    
+    
 }
 
 
@@ -70,7 +72,7 @@ extension Namespace where T: NSPointerArray {
     
     public func removeObject(at index: Int) {
         guard index < instance.count else { return }
-        
+
         instance.removePointer(at: index)
     }
 }

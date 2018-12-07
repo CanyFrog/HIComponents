@@ -1,17 +1,18 @@
 //
-//  MultipleViewController.swift
+//  MultipleCacheViewController.swift
 //  HQDownloadDemo
 //
-//  Created by HonQi on 4/24/18.
+//  Created by Magee Huang on 7/27/18.
 //  Copyright © 2018 HonQi Indie. All rights reserved.
 //
 
 import UIKit
 import HQDownload
 
-class MultipleViewController: UIViewController, UICollectionViewDataSource {
+class MultipleCacheViewController: UIViewController, UICollectionViewDataSource {
+
     var collectionView: UICollectionView!
-    var scheduler = Scheduler([])
+    var downloader = Downloader.default
     let source = [
         "https://cdn.pixabay.com/photo/2015/06/16/16/46/meadow-811339_1280.jpg",
         "https://cdn.pixabay.com/photo/2018/01/12/10/19/fantasy-3077928_1280.jpg",
@@ -26,7 +27,7 @@ class MultipleViewController: UIViewController, UICollectionViewDataSource {
     ]
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "多个文件下载"
+        title = "多个文件缓存下载"
         let layout = UICollectionViewFlowLayout()
         let width = view.frame.width / 2
         layout.minimumLineSpacing = 0
@@ -36,54 +37,22 @@ class MultipleViewController: UIViewController, UICollectionViewDataSource {
         collectionView.backgroundColor = UIColor.white
         collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
         collectionView?.dataSource = self
-
+        
         view.addSubview(collectionView)
-        scheduler.subscribe(.completed({ (source, file) in
-            print("\n\n Completed \(source.absoluteString) \(file.absoluteString)")
-        }))
     }
 }
 
-extension MultipleViewController {
+extension MultipleCacheViewController {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return source.count
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CollectionViewCell
-        
         let url = URL(string: source[indexPath.row])!
-        scheduler.download(info: [.sourceUrl(url)])?.subscribe(url: url, .completed({ (_, file) in
-            cell.setImage(file: file)
+        downloader.download(source: url)?.subscribe(url: url, .completed({ [weak cell] (source, file) in
+            cell?.setImage(file: file)
         }))
-//        scheduler.download(info: [.sourceUrl(URL(string: source[indexPath.row])!)])?.subscribe(
-//            .completed({ [weak self] (_, file) in
-//                let c = self?.collectionView.cellForItem(at: indexPath) as? CollectionViewCell
-//                c?.setImage(file: file)
-//            })
-//        )
         return cell
-    }
-}
-
-class CollectionViewCell: UICollectionViewCell {
-    var imageView = UIImageView()
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        layer.borderColor = UIColor.white.cgColor
-        layer.borderWidth = 1
-        backgroundColor = UIColor.gray
-        imageView.frame = bounds
-        imageView.contentMode = .scaleAspectFit
-        contentView.addSubview(imageView)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    public func setImage(file: URL) {
-        imageView.image = UIImage(contentsOfFile: file.path)
     }
 }

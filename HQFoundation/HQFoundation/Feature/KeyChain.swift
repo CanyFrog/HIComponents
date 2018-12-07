@@ -10,7 +10,7 @@ import Security
 import Foundation
 
 public struct KeyChain {
-    public static let service = "keychain.service.me.HonQi"
+    public static let service = "KeyChain.Foundation.me.HonQi"
     public static let accessGroup: String? = nil
     
     public enum KeychainError: Error {
