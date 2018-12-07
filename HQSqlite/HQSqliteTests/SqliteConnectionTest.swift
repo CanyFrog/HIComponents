@@ -65,7 +65,7 @@ class HQSqliteConnectionTest: HQSqliteTests {
         XCTAssertThrowsError(
             try connect.run("INSERT INTO \"users\" (email, age, admin) values ('error_user', 12, 'null')"), "insert error")
         { (err) in
-            if case SqliteError.error(message: _, code: let code, statement: _) = err {
+            if case SQLError.error(message: _, code: let code, statement: _) = err {
                 XCTAssertEqual(SQLITE_CONSTRAINT, code) // sqlite3 failer code
             }
             else {
