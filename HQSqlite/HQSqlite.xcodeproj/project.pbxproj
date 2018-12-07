@@ -8,18 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		602D547C206CC67400CE9AE0 /* Statement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602D547B206CC67400CE9AE0 /* Statement.swift */; };
-		602D547E206DDED800CE9AE0 /* Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602D547D206DDED800CE9AE0 /* Mapping.swift */; };
-		604A7D6620734EE50060A869 /* Utils.swift in Headers */ = {isa = PBXBuildFile; fileRef = 609FF12F206CC2A0004092B1 /* Utils.swift */; };
+		602D547E206DDED800CE9AE0 /* Cursor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602D547D206DDED800CE9AE0 /* Cursor.swift */; };
+		604A7D6620734EE50060A869 /* Connection+Enum.swift in Headers */ = {isa = PBXBuildFile; fileRef = 609FF12F206CC2A0004092B1 /* Connection+Enum.swift */; };
 		604A7D6720734EE80060A869 /* Connection.swift in Headers */ = {isa = PBXBuildFile; fileRef = 609FF12B206CC1B6004092B1 /* Connection.swift */; };
-		604A7D6820734EEB0060A869 /* SqliteError.swift in Headers */ = {isa = PBXBuildFile; fileRef = 609FF131206CC312004092B1 /* SqliteError.swift */; };
+		604A7D6820734EEB0060A869 /* Error.swift in Headers */ = {isa = PBXBuildFile; fileRef = 609FF131206CC312004092B1 /* Error.swift */; };
 		604A7D6920734EED0060A869 /* Statement.swift in Headers */ = {isa = PBXBuildFile; fileRef = 602D547B206CC67400CE9AE0 /* Statement.swift */; };
-		604A7D6A20734EF00060A869 /* Mapping.swift in Headers */ = {isa = PBXBuildFile; fileRef = 602D547D206DDED800CE9AE0 /* Mapping.swift */; };
+		604A7D6A20734EF00060A869 /* Cursor.swift in Headers */ = {isa = PBXBuildFile; fileRef = 602D547D206DDED800CE9AE0 /* Cursor.swift */; };
 		609FF11B206CC185004092B1 /* HQSqlite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 609FF111206CC185004092B1 /* HQSqlite.framework */; };
 		609FF120206CC185004092B1 /* SqliteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609FF11F206CC185004092B1 /* SqliteTests.swift */; };
 		609FF122206CC185004092B1 /* HQSqlite.h in Headers */ = {isa = PBXBuildFile; fileRef = 609FF114206CC185004092B1 /* HQSqlite.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		609FF12C206CC1B6004092B1 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609FF12B206CC1B6004092B1 /* Connection.swift */; };
-		609FF130206CC2A0004092B1 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609FF12F206CC2A0004092B1 /* Utils.swift */; };
-		609FF132206CC312004092B1 /* SqliteError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609FF131206CC312004092B1 /* SqliteError.swift */; };
+		609FF130206CC2A0004092B1 /* Connection+Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609FF12F206CC2A0004092B1 /* Connection+Enum.swift */; };
+		609FF132206CC312004092B1 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609FF131206CC312004092B1 /* Error.swift */; };
 		8A77B6ED20706DE200E5CA66 /* SqliteConnectionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A77B6EC20706DE200E5CA66 /* SqliteConnectionTest.swift */; };
 		8A77B6EF2070A79800E5CA66 /* SqliteStatementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A77B6EE2070A79800E5CA66 /* SqliteStatementTest.swift */; };
 		8A77B6F12070A7BB00E5CA66 /* SqliteErrorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A77B6F02070A7BB00E5CA66 /* SqliteErrorTest.swift */; };
@@ -37,7 +37,7 @@
 
 /* Begin PBXFileReference section */
 		602D547B206CC67400CE9AE0 /* Statement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Statement.swift; sourceTree = "<group>"; };
-		602D547D206DDED800CE9AE0 /* Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mapping.swift; sourceTree = "<group>"; };
+		602D547D206DDED800CE9AE0 /* Cursor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cursor.swift; sourceTree = "<group>"; };
 		609FF111206CC185004092B1 /* HQSqlite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HQSqlite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		609FF114206CC185004092B1 /* HQSqlite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HQSqlite.h; sourceTree = "<group>"; };
 		609FF115206CC185004092B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -45,8 +45,8 @@
 		609FF11F206CC185004092B1 /* SqliteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SqliteTests.swift; sourceTree = "<group>"; };
 		609FF121206CC185004092B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		609FF12B206CC1B6004092B1 /* Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
-		609FF12F206CC2A0004092B1 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		609FF131206CC312004092B1 /* SqliteError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SqliteError.swift; sourceTree = "<group>"; };
+		609FF12F206CC2A0004092B1 /* Connection+Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Connection+Enum.swift"; sourceTree = "<group>"; };
+		609FF131206CC312004092B1 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		8A77B6EC20706DE200E5CA66 /* SqliteConnectionTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SqliteConnectionTest.swift; sourceTree = "<group>"; };
 		8A77B6EE2070A79800E5CA66 /* SqliteStatementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SqliteStatementTest.swift; sourceTree = "<group>"; };
 		8A77B6F02070A7BB00E5CA66 /* SqliteErrorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SqliteErrorTest.swift; sourceTree = "<group>"; };
@@ -92,11 +92,11 @@
 		609FF113206CC185004092B1 /* HQSqlite */ = {
 			isa = PBXGroup;
 			children = (
-				609FF12F206CC2A0004092B1 /* Utils.swift */,
 				609FF12B206CC1B6004092B1 /* Connection.swift */,
-				609FF131206CC312004092B1 /* SqliteError.swift */,
+				609FF12F206CC2A0004092B1 /* Connection+Enum.swift */,
+				602D547D206DDED800CE9AE0 /* Cursor.swift */,
 				602D547B206CC67400CE9AE0 /* Statement.swift */,
-				602D547D206DDED800CE9AE0 /* Mapping.swift */,
+				609FF131206CC312004092B1 /* Error.swift */,
 				60BE4A3D2137A41E000134B7 /* Supporting Files */,
 			);
 			path = HQSqlite;
@@ -131,11 +131,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				609FF122206CC185004092B1 /* HQSqlite.h in Headers */,
-				604A7D6620734EE50060A869 /* Utils.swift in Headers */,
-				604A7D6A20734EF00060A869 /* Mapping.swift in Headers */,
+				604A7D6620734EE50060A869 /* Connection+Enum.swift in Headers */,
+				604A7D6A20734EF00060A869 /* Cursor.swift in Headers */,
 				604A7D6920734EED0060A869 /* Statement.swift in Headers */,
 				604A7D6720734EE80060A869 /* Connection.swift in Headers */,
-				604A7D6820734EEB0060A869 /* SqliteError.swift in Headers */,
+				604A7D6820734EEB0060A869 /* Error.swift in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,9 +239,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				609FF132206CC312004092B1 /* SqliteError.swift in Sources */,
-				609FF130206CC2A0004092B1 /* Utils.swift in Sources */,
-				602D547E206DDED800CE9AE0 /* Mapping.swift in Sources */,
+				609FF132206CC312004092B1 /* Error.swift in Sources */,
+				609FF130206CC2A0004092B1 /* Connection+Enum.swift in Sources */,
+				602D547E206DDED800CE9AE0 /* Cursor.swift in Sources */,
 				602D547C206CC67400CE9AE0 /* Statement.swift in Sources */,
 				609FF12C206CC1B6004092B1 /* Connection.swift in Sources */,
 			);

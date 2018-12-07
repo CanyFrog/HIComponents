@@ -20,12 +20,12 @@ public final class Connection {
     
     // MARK: - Queue
     /// connection sync queue
-    private var queue = DispatchQueue(label: "connection.sqlite.personal.HQ", attributes: [])
+    private var queue = DispatchQueue(label: "connection.me.HonQi.Sqlite", attributes: [])
     private static let queueKey = DispatchSpecificKey<Int>()
     private lazy var queueContext: Int = unsafeBitCast(self, to: Int.self)
     
     // MARK: - Public property
-    
+
     /// Whether or not the database was opened in a read-only state.
     public var readonly: Bool { return sqlite3_db_readonly(handle, nil) == 1 }
     
@@ -379,7 +379,6 @@ public extension Connection {
     public func interrupt() {
         sqlite3_interrupt(handle)
     }
-
 }
 
 
@@ -389,7 +388,7 @@ internal extension Connection {
     /// checkCode
     @discardableResult
     func checkCode(_ resultCode: Int32, statement: Statement? = nil) throws -> Int32 {
-        guard let error = SqliteError(errorCode: resultCode, connection: self, statement: statement) else { return resultCode }
+        guard let error = SQLError(errorCode: resultCode, connection: self, statement: statement) else { return resultCode }
         throw error
     }
     
