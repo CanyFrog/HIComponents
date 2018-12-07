@@ -108,7 +108,7 @@ extension Statement {
         guard bindings.isEmpty else { return try run(bindings) }
         
         reset(false)
-        repeat {} while try step() // repear until success
+        repeat {} while try step() // repeat until success
         return self
     }
     

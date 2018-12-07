@@ -2,6 +2,7 @@
 - 模块文档
     - [Foundation](/zh-cn/foundation.md) 
     - [Kit](/zh-cn/hqfoundation.md) 
+    - [SQLite](/zh-cn/sqlite.md)
     - [Cache](/zh-cn/hqfoundation.md) 
 - 其他
 

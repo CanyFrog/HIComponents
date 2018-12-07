@@ -1,5 +1,5 @@
 //
-//  Utils.swift
+//  Connection+Enum.swift
 //  HQSqlite
 //
 //  Created by HonQi on 3/29/18.
