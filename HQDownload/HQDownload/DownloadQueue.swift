@@ -46,19 +46,22 @@ extension Scheduler {
     }
     
     @discardableResult
-    public func download(info: OptionsInfo) -> Operator? {
+    public func download(info: OptionsInfo) -> Scheduler? {
         guard let url = info.sourceUrl else {
             assertionFailure("Source url can not be empty!!!")
             return nil
         }
-        if let oldOp = sessionDelegate.contains(url) {
-            return oldOp
+        if let _ = sessionDelegate.contains(url) {
+            return self
         }
         
         let op = Operator(options + info, session: session)
         op.subscribe(
             .start({ [weak self] (source, name, size) in
                 self?.trigger(source, .start(name, size))
+            }),
+            .data({ [weak self] (source, data) in
+                self?.trigger(source, .data(data))
             }),
             .progress({ [weak self] (source, rate) in
                 self?.trigger(source, .progress(rate))
@@ -78,6 +81,6 @@ extension Scheduler {
             lastedOperation?.addDependency(op)
             lastedOperation = op
         }
-        return op
+        return self
     }
 }
