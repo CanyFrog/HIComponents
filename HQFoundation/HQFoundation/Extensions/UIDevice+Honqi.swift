@@ -65,6 +65,7 @@ extension Namespace where T: UIDevice {
         return UIDevice.hq.ipAddress(name: "pdp_ip0")
     }
     
+    /// Default is wifi address
     public static func ipAddress(name: String = "en0") -> String? {
         var address: String?
         var ifaddr: UnsafeMutablePointer<ifaddrs>? = nil
