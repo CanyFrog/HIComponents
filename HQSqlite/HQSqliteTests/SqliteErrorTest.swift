@@ -14,19 +14,19 @@ class HQSqliteErrorTest: XCTestCase {
     let conn = try! Connection()
     
     func testErrorWithCodeOK() {
-        XCTAssertNil(SqliteError(errorCode: SQLITE_OK, connection: conn))
+        XCTAssertNil(SQLError(errorCode: SQLITE_OK, connection: conn))
     }
     
     func testErrorWithCodeROW() {
-        XCTAssertNil(SqliteError(errorCode: SQLITE_ROW, connection: conn))
+        XCTAssertNil(SQLError(errorCode: SQLITE_ROW, connection: conn))
     }
     
     func testErrorWithCodeDONE() {
-        XCTAssertNil(SqliteError(errorCode: SQLITE_DONE, connection: conn))
+        XCTAssertNil(SQLError(errorCode: SQLITE_DONE, connection: conn))
     }
     
     func testErrorWithCodeError() {
-        if case .some(.error(let message, let code, let statement)) = SqliteError(errorCode: SQLITE_MISUSE, connection: conn) {
+        if case .some(.error(let message, let code, let statement)) = SQLError(errorCode: SQLITE_MISUSE, connection: conn) {
             XCTAssertEqual("not an error", message)
             XCTAssertEqual(SQLITE_MISUSE, code)
             XCTAssertNil(statement)
@@ -38,11 +38,11 @@ class HQSqliteErrorTest: XCTestCase {
     }
     
     func testErrorWithCodeErrorAndDesc() {
-        XCTAssertEqual("not an error (code: 21)", SqliteError(errorCode: SQLITE_MISUSE, connection: conn)?.description)
+        XCTAssertEqual("not an error (code: 21)", SQLError(errorCode: SQLITE_MISUSE, connection: conn)?.description)
     }
     
     func testErrorWithCodeErrorAndStatement() {
         let stmt = try! conn.prepare("SELECT 1")
-        XCTAssertEqual("not an error (SELECT 1) (code: 21)", SqliteError(errorCode: SQLITE_MISUSE, connection: conn, statement: stmt)?.description)
+        XCTAssertEqual("not an error (SELECT 1) (code: 21)", SQLError(errorCode: SQLITE_MISUSE, connection: conn, statement: stmt)?.description)
     }
 }

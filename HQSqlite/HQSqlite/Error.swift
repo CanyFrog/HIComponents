@@ -1,5 +1,5 @@
 //
-//  SqliteError.swift
+//  Error.swift
 //  HQSqlite
 //
 //  Created by HonQi on 3/29/18.
@@ -9,19 +9,19 @@
 import Foundation
 import SQLite3
 
-public enum SqliteError: Error {
+public enum SQLError: Error {
     private static let successCode: Set = [SQLITE_OK, SQLITE_ROW, SQLITE_DONE]
     
     case error(message: String, code: Int32, statement: Statement?)
     
     init?(errorCode: Int32, connection: Connection, statement: Statement? = nil) {
-        guard !SqliteError.successCode.contains(errorCode) else { return nil } // success
+        guard !SQLError.successCode.contains(errorCode) else { return nil } // success
         let msg = String(cString: sqlite3_errmsg(connection.handle))
         self = .error(message: msg, code: errorCode, statement: statement)
     }
 }
 
-extension SqliteError: CustomStringConvertible {
+extension SQLError: CustomStringConvertible {
     public var description: String {
         switch self {
         case let .error(msg, code, stmt):
