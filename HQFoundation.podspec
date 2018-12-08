@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
                    DESC
                    
   s.authors            = { "honqi" => "honqi3514@gmail.com" }
-  s.social_media_url   = "https://blog.xxx.com"
+  s.social_media_url   = "https://honqii.github.io"
 
   s.swift_version = "4.0"
   s.platform     = :ios, '9.0'
