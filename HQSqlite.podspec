@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "HQSqlite"
-  s.version      = "2018.8.30"
+  s.version      = "2018.12.8"
   s.homepage     = "https://github.com/HonQii/HIComponents"
   s.license      = { :type => "MIT", :file => "LICENSE" }
 
@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
                    DESC
                    
   s.authors            = { "honqi" => "honqi3514@gmail.com" }
-  s.social_media_url   = "https://blog.xxx.com"
+  s.social_media_url   = "https://honqii.github.io"
 
   s.swift_version = "4.0"
   s.platform     = :ios, '9.0'
